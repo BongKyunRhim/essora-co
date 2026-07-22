@@ -108,3 +108,35 @@ button:hover {
   margin-top: 1.5rem;
   font-size: 0.85rem;
 }
+
+/* Dashboard */
+.page-wide {
+  max-width: 640px;
+}
+
+.muted {
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.card {
+  flex: 1 1 240px;
+  border: 1px solid #000;
+  padding: 1rem;
+}
+
+.card h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}

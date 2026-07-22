@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Sign-up page. Backbone only — collects the info an account needs.
 export default function SignUp() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -18,8 +19,10 @@ export default function SignUp() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    // No backend yet — just log the values so the form is wired up.
+    // No backend yet — just log the values, then go to the dashboard,
+    // carrying the chosen role along.
     console.log("sign up:", form);
+    navigate("/dashboard", { state: { role: form.role } });
   }
 
   return (

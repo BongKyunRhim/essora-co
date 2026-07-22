@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Login page. Email + password only.
 export default function Login() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
 
   function handleChange(event) {
@@ -12,8 +13,9 @@ export default function Login() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    // No backend yet — just log the values so the form is wired up.
+    // No backend yet — just log the values, then go to the dashboard.
     console.log("log in:", form);
+    navigate("/dashboard");
   }
 
   return (
