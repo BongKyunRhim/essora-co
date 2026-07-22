@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { supabase, isSupabaseConfigured } from "../lib/supabase.js";
 
-// Sign-up page. Backbone only — collects the info an account needs.
+// Sign-up page. Creates a real account in Supabase and records the chosen
+// role (applicant or reviewer), which decides what the user sees afterward.
 export default function SignUp() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -9,25 +11,60 @@ export default function SignUp() {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "applicant", // "applicant" or "reviewer"
+    role: "applicant",
   });
+  const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
+  const [busy, setBusy] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    // No backend yet — just log the values, then go to the dashboard,
-    // carrying the chosen role along.
-    console.log("sign up:", form);
-    navigate("/dashboard", { state: { role: form.role } });
+    setError("");
+    setNotice("");
+
+    if (!isSupabaseConfigured) {
+      setError(
+        "Storage isn't connected yet. Add your Supabase keys in src/lib/config.js."
+      );
+      return;
+    }
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    setBusy(true);
+    // The name and role are passed as metadata; a database trigger copies
+    // them into the user's profile row.
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email: form.email,
+      password: form.password,
+      options: { data: { full_name: form.name, role: form.role } },
+    });
+    setBusy(false);
+
+    if (signUpError) {
+      setError(signUpError.message);
+      return;
+    }
+    if (data.session) {
+      navigate("/dashboard");
+    } else {
+      setNotice("Account created. Check your email to confirm, then log in.");
+    }
   }
 
   return (
     <section className="page">
       <h1>Sign up</h1>
+
+      {error && <p className="error">{error}</p>}
+      {notice && <p className="notice">{notice}</p>}
 
       <form className="form" onSubmit={handleSubmit}>
         <label className="field">
@@ -98,7 +135,9 @@ export default function SignUp() {
           </label>
         </fieldset>
 
-        <button type="submit">Create account</button>
+        <button type="submit" disabled={busy}>
+          {busy ? "Creating…" : "Create account"}
+        </button>
       </form>
 
       <p className="switch">

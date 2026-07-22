@@ -1,30 +1,18 @@
-import { Link, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../app/AuthContext.jsx";
 
-// Dashboard is the hub you land on after logging in.
-// The rest of the site branches from here. Backbone only.
+// Dashboard is just a signpost: it sends each user to the right home page
+// based on the role they chose at sign up.
 export default function Dashboard() {
-  const location = useLocation();
-  // Role is passed along when arriving from sign up; default to applicant.
-  const role = location.state?.role ?? "applicant";
+  const { profile, loading } = useAuth();
+
+  if (loading) return <p className="page">Loading…</p>;
+  if (!profile) return <p className="page">Setting up your account…</p>;
 
   return (
-    <section className="page page-wide">
-      <h1>Dashboard</h1>
-      <p className="muted">Signed in as {role}.</p>
-
-      <div className="cards">
-        <article className="card">
-          <h2>Submit an essay</h2>
-          <p>Send a draft to a reviewer for feedback.</p>
-          <Link to="/submit">Go</Link>
-        </article>
-
-        <article className="card">
-          <h2>Review essays</h2>
-          <p>Pick up an essay waiting for feedback.</p>
-          <Link to="/review">Go</Link>
-        </article>
-      </div>
-    </section>
+    <Navigate
+      to={profile.role === "reviewer" ? "/reviewer" : "/applicant"}
+      replace
+    />
   );
 }
