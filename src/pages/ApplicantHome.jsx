@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../app/AuthContext.jsx";
+import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase.js";
+import Avatar from "../components/Avatar.jsx";
 
-// What an APPLICANT sees: the list of reviewers who have posted a profile.
+// What an APPLICANT sees under "Find reviewers": every reviewer as a card.
+// Clicking a card opens that reviewer's detailed page.
 export default function ApplicantHome() {
-  const { profile } = useAuth();
   const [reviewers, setReviewers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,11 +28,6 @@ export default function ApplicantHome() {
   return (
     <section className="page page-wide">
       <h1>Find a reviewer</h1>
-      {profile && (
-        <p className="muted">
-          Signed in as {profile.full_name || profile.email}.
-        </p>
-      )}
 
       {loading && <p>Loading reviewers…</p>}
       {!loading && reviewers.length === 0 && (
@@ -40,13 +36,15 @@ export default function ApplicantHome() {
 
       <div className="cards">
         {reviewers.map((r) => (
-          <article className="card" key={r.id}>
+          <Link className="card reviewer-card" to={`/reviewers/${r.id}`} key={r.id}>
+            <Avatar url={r.avatar_url} name={r.full_name} size={64} />
             <h2>{r.full_name || "Reviewer"}</h2>
-            <p>{r.bio || "No description yet."}</p>
-            <p className="price">
-              {r.price != null ? `$${r.price} per essay` : "Price not set"}
+            <p className="muted">
+              {[r.college, r.major].filter(Boolean).join(" · ") || "—"}
             </p>
-          </article>
+            {r.age != null && <p className="muted">Age {r.age}</p>}
+            {r.price != null && <p className="price">${r.price} / essay</p>}
+          </Link>
         ))}
       </div>
     </section>

@@ -3,18 +3,14 @@ import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import AvatarUpload from "../components/AvatarUpload.jsx";
 
-// What a REVIEWER sees: edit the profile applicants will browse, and set
-// the amount they charge per essay.
-export default function ReviewerHome() {
+// What an APPLICANT sees under "My account": edit their personal info.
+export default function Account() {
   const { profile, refreshProfile } = useAuth();
   const [form, setForm] = useState({
     full_name: profile?.full_name ?? "",
     age: profile?.age ?? "",
-    college: profile?.college ?? "",
-    major: profile?.major ?? "",
-    bio: profile?.bio ?? "",
-    long_bio: profile?.long_bio ?? "",
-    price: profile?.price ?? "",
+    high_school: profile?.high_school ?? "",
+    grad_year: profile?.grad_year ?? "",
   });
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url ?? "");
   const [status, setStatus] = useState("");
@@ -34,11 +30,8 @@ export default function ReviewerHome() {
       .update({
         full_name: form.full_name,
         age: form.age === "" ? null : Number(form.age),
-        college: form.college,
-        major: form.major,
-        bio: form.bio,
-        long_bio: form.long_bio,
-        price: form.price === "" ? null : Number(form.price),
+        high_school: form.high_school,
+        grad_year: form.grad_year === "" ? null : Number(form.grad_year),
       })
       .eq("id", profile.id);
 
@@ -47,9 +40,10 @@ export default function ReviewerHome() {
       return;
     }
     await refreshProfile();
-    setStatus("Saved. Applicants can now see this.");
+    setStatus("Saved.");
   }
 
+  // Photo is saved on its own as soon as it's uploaded.
   async function handleAvatar(url) {
     setAvatarUrl(url);
     await supabase.from("profiles").update({ avatar_url: url }).eq("id", profile.id);
@@ -58,7 +52,7 @@ export default function ReviewerHome() {
 
   return (
     <section className="page">
-      <h1>Your reviewer profile</h1>
+      <h1>My account</h1>
 
       <AvatarUpload
         userId={profile.id}
@@ -90,57 +84,27 @@ export default function ReviewerHome() {
         </label>
 
         <label className="field">
-          <span>College / university</span>
+          <span>High school (optional)</span>
           <input
             type="text"
-            name="college"
-            value={form.college}
+            name="high_school"
+            value={form.high_school}
             onChange={handleChange}
           />
         </label>
 
         <label className="field">
-          <span>Major</span>
-          <input
-            type="text"
-            name="major"
-            value={form.major}
-            onChange={handleChange}
-          />
-        </label>
-
-        <label className="field">
-          <span>Short tagline (shown on your card)</span>
-          <input
-            type="text"
-            name="bio"
-            value={form.bio}
-            onChange={handleChange}
-          />
-        </label>
-
-        <label className="field">
-          <span>Detailed bio (shown on your full page)</span>
-          <textarea
-            name="long_bio"
-            rows={6}
-            value={form.long_bio}
-            onChange={handleChange}
-          />
-        </label>
-
-        <label className="field">
-          <span>Price per essay (USD)</span>
+          <span>Expected graduation year (optional)</span>
           <input
             type="number"
-            name="price"
-            min="0"
-            value={form.price}
+            name="grad_year"
+            min="2020"
+            value={form.grad_year}
             onChange={handleChange}
           />
         </label>
 
-        <button type="submit">Save profile</button>
+        <button type="submit">Save</button>
       </form>
 
       {status && <p className="notice">{status}</p>}

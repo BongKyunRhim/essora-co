@@ -188,3 +188,61 @@ button:disabled {
   opacity: 0.5;
   cursor: default;
 }
+
+/* Profile photos */
+.avatar {
+  border: 1px solid #000;
+  object-fit: cover;
+  display: block;
+}
+
+.avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  background: #fff;
+}
+
+.avatar-upload {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.file-label {
+  display: inline-block;
+}
+
+/* Reviewer cards link to detail pages */
+.reviewer-card {
+  display: block;
+  text-decoration: none;
+  color: #000;
+}
+
+.reviewer-card:hover {
+  background: #000;
+  color: #fff;
+}
+
+.reviewer-card .avatar {
+  margin-bottom: 0.75rem;
+}
+
+.reviewer-card:hover .avatar {
+  border-color: #fff;
+}
+
+/* Reviewer detail header */
+.detail-head {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.detail-head h1 {
+  margin-bottom: 0.25rem;
+}

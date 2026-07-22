@@ -5,6 +5,8 @@ import Login from "../pages/Login.jsx";
 import Dashboard from "../pages/Dashboard.jsx";
 import ReviewerHome from "../pages/ReviewerHome.jsx";
 import ApplicantHome from "../pages/ApplicantHome.jsx";
+import Account from "../pages/Account.jsx";
+import ReviewerDetail from "../pages/ReviewerDetail.jsx";
 
 // Only lets logged-in users through; otherwise sends them to the login page.
 function ProtectedRoute({ children }) {
@@ -27,7 +29,15 @@ export default function App() {
         <nav className="app-nav">
           {user ? (
             <>
-              <span className="muted">{profile?.email ?? user.email}</span>
+              {profile?.role === "applicant" && (
+                <>
+                  <Link to="/applicant">Find reviewers</Link>
+                  <Link to="/account">My account</Link>
+                </>
+              )}
+              {profile?.role === "reviewer" && (
+                <Link to="/reviewer">My profile</Link>
+              )}
               <button type="button" className="linklike" onClick={signOut}>
                 Log out
               </button>
@@ -67,6 +77,22 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <ApplicantHome />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/account"
+            element={
+              <ProtectedRoute>
+                <Account />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/reviewers/:id"
+            element={
+              <ProtectedRoute>
+                <ReviewerDetail />
               </ProtectedRoute>
             }
           />
