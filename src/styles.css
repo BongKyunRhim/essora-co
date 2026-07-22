@@ -1,0 +1,110 @@
+/* Plain black-and-white. Structure and placement only. */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #000;
+  background: #fff;
+  line-height: 1.5;
+}
+
+a {
+  color: #000;
+}
+
+/* App shell */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #000;
+}
+
+.app-header .brand {
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-decoration: none;
+}
+
+.app-nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+/* Pages */
+.app-main {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+}
+
+.page {
+  width: 100%;
+  max-width: 360px;
+}
+
+.page h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Forms */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border: none;
+}
+
+.field > span,
+.field legend {
+  font-size: 0.85rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  padding: 0.5rem;
+  border: 1px solid #000;
+  background: #fff;
+  color: #000;
+  font-size: 1rem;
+}
+
+.radio {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+button {
+  padding: 0.6rem;
+  border: 1px solid #000;
+  background: #000;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #fff;
+  color: #000;
+}
+
+.switch {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+}
