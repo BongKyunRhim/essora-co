@@ -8,5 +8,6 @@
 // Until you replace these placeholders, the sign up / login pages
 // will show a "storage not connected yet" message instead of failing.
 
-export const SUPABASE_URL = "https://YOUR-PROJECT.supabase.co";
-export const SUPABASE_ANON_KEY = "YOUR-ANON-KEY";
+export const SUPABASE_URL = "https://hpfogpvschhzzyksbwcg.supabase.co";
+export const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwZm9ncHZzY2hoenp5a3Nid2NnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3MzkyNDMsImV4cCI6MjEwMDMxNTI0M30.4B8UsHlBGrMYCwwvzXDcB2otxmQpCUZOLi8jQcEBvw0";
