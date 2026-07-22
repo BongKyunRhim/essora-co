@@ -15,6 +15,7 @@ export default function ReviewerHome() {
     bio: profile?.bio ?? "",
     long_bio: profile?.long_bio ?? "",
     price: profile?.price ?? "",
+    is_listed: profile?.is_listed ?? true,
   });
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url ?? "");
   const [status, setStatus] = useState("");
@@ -22,8 +23,8 @@ export default function ReviewerHome() {
   if (!profile) return <p className="page">Loading…</p>;
 
   function handleChange(event) {
-    const { name, value } = event.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = event.target;
+    setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   }
 
   async function handleSave(event) {
@@ -39,6 +40,7 @@ export default function ReviewerHome() {
         bio: form.bio,
         long_bio: form.long_bio,
         price: form.price === "" ? null : Number(form.price),
+        is_listed: form.is_listed,
       })
       .eq("id", profile.id);
 
@@ -68,6 +70,16 @@ export default function ReviewerHome() {
       />
 
       <form className="form" onSubmit={handleSave}>
+        <label className="field checkbox">
+          <input
+            type="checkbox"
+            name="is_listed"
+            checked={form.is_listed}
+            onChange={handleChange}
+          />
+          <span>Show my profile to applicants</span>
+        </label>
+
         <label className="field">
           <span>Full name</span>
           <input

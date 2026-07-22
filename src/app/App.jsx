@@ -7,6 +7,7 @@ import ReviewerHome from "../pages/ReviewerHome.jsx";
 import ApplicantHome from "../pages/ApplicantHome.jsx";
 import Account from "../pages/Account.jsx";
 import ReviewerDetail from "../pages/ReviewerDetail.jsx";
+import ReviewerNotifications from "../pages/ReviewerNotifications.jsx";
 
 // Only lets logged-in users through; otherwise sends them to the login page.
 function ProtectedRoute({ children }) {
@@ -36,7 +37,10 @@ export default function App() {
                 </>
               )}
               {profile?.role === "reviewer" && (
-                <Link to="/reviewer">My profile</Link>
+                <>
+                  <Link to="/reviewer">My profile</Link>
+                  <Link to="/notifications">Notifications</Link>
+                </>
               )}
               <button type="button" className="linklike" onClick={signOut}>
                 Log out
@@ -93,6 +97,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <ReviewerDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              <ProtectedRoute>
+                <ReviewerNotifications />
               </ProtectedRoute>
             }
           />

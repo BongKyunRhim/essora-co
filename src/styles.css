@@ -246,3 +246,43 @@ button:disabled {
 .detail-head h1 {
   margin-bottom: 0.25rem;
 }
+
+/* Checkbox row (e.g. "Show my profile to applicants") */
+.checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Request a review */
+.request-box {
+  margin-top: 2rem;
+}
+
+/* Reviewer notifications list */
+.request-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.request {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  border: 1px solid #000;
+  padding: 1rem;
+}
+
+.request-body {
+  flex: 1;
+  font-size: 0.9rem;
+}
+
+.request-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}

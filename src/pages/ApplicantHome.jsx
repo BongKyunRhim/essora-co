@@ -15,6 +15,7 @@ export default function ApplicantHome() {
       .from("profiles")
       .select("*")
       .eq("role", "reviewer")
+      .eq("is_listed", true)
       .then(({ data }) => {
         if (!active) return;
         setReviewers(data ?? []);
