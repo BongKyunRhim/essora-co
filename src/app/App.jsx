@@ -9,6 +9,7 @@ import ApplicantHome from "../pages/ApplicantHome.jsx";
 import Account from "../pages/Account.jsx";
 import ReviewerDetail from "../pages/ReviewerDetail.jsx";
 import ReviewerNotifications from "../pages/ReviewerNotifications.jsx";
+import Landing from "../pages/Landing.jsx";
 
 // Only lets logged-in users through; otherwise sends them to the login page.
 function ProtectedRoute({ children }) {
@@ -16,6 +17,14 @@ function ProtectedRoute({ children }) {
   if (loading) return <p className="page">Loading…</p>;
   if (!user) return <Navigate to="/login" replace />;
   return children;
+}
+
+// The home route: show the public landing page to visitors, and send
+// logged-in users straight to their dashboard.
+function Home() {
+  const { user, loading } = useAuth();
+  if (loading) return null;
+  return user ? <Navigate to="/dashboard" replace /> : <Landing />;
 }
 
 // App is the shell that holds the whole site together.
@@ -58,7 +67,7 @@ export default function App() {
 
       <main className="app-main">
         <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route

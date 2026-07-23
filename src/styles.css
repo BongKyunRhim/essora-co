@@ -286,3 +286,197 @@ button:disabled {
   gap: 0.5rem;
   align-items: flex-end;
 }
+
+/* ---- Landing page ---- */
+.landing {
+  width: 100%;
+  max-width: 1000px;
+}
+
+/* Hero */
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0 3rem;
+  border-bottom: 1px solid #000;
+}
+
+.hero-text {
+  flex: 1 1 320px;
+}
+
+.hero-text h1 {
+  font-size: 2rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.lead {
+  margin-bottom: 1.5rem;
+}
+
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.btn {
+  display: inline-block;
+  border: 1px solid #000;
+  padding: 0.6rem 1.1rem;
+  background: #fff;
+  color: #000;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background: #000;
+  color: #fff;
+}
+
+.hero-logo {
+  flex: 0 0 auto;
+}
+
+/* Feature checklist */
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: space-between;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid #000;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.05rem;
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid #000;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  flex: 0 0 auto;
+}
+
+/* How it works */
+.how {
+  padding: 2.5rem 0;
+}
+
+.how h2 {
+  text-align: center;
+  letter-spacing: 0.15em;
+  margin-bottom: 2rem;
+}
+
+.how-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.how-box {
+  border: 1px solid #000;
+  min-height: 150px;
+  padding: 1rem;
+}
+
+.how-num {
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+/* Footer */
+.landing-footer {
+  border-top: 1px solid #000;
+  padding: 1.5rem 0;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.footer-links a {
+  color: #000;
+  font-size: 0.9rem;
+}
+
+/* ---- Compass logo ---- */
+.compass {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  max-width: 100%;
+}
+
+.compass-star {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.compass-star polygon {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.compass-letter {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.needle-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+}
+
+.needle {
+  position: absolute;
+  bottom: 0;
+  left: -5px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  /* Pin color — change #000 to a red (e.g. #e02424) to make it red */
+  border-bottom: 95px solid #000;
+  transform-origin: bottom center;
+}
+
+.compass:hover .needle {
+  animation: compass-spin 1.4s linear infinite;
+}
+
+@keyframes compass-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .how-grid {
+    grid-template-columns: 1fr;
+  }
+}
