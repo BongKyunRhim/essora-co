@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate, Link } from "react-router-dom";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { useAuth } from "./AuthContext.jsx";
 import SignUp from "../pages/SignUp.jsx";
 import Login from "../pages/Login.jsx";
@@ -111,6 +112,9 @@ export default function App() {
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </main>
+
+      {/* Vercel performance analytics (collects data once deployed on Vercel) */}
+      <SpeedInsights />
     </div>
   );
 }
