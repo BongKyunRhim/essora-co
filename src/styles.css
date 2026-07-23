@@ -419,22 +419,20 @@ button:disabled {
 /* ---- Compass logo ---- */
 .compass {
   position: relative;
-  width: 300px;
-  height: 300px;
+  width: 340px;
+  height: 340px;
   max-width: 100%;
 }
 
-.compass-star {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.compass-star polygon {
-  fill: none;
-  stroke: #000;
-  stroke-width: 2;
-  stroke-linejoin: round;
+/* The uploaded compass star, centered and sized so the letters sit outside it */
+.compass-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 64%;
+  height: 64%;
+  object-fit: contain;
+  transform: translate(-50%, -50%);
 }
 
 .compass-letter {
@@ -455,13 +453,13 @@ button:disabled {
 .needle {
   position: absolute;
   bottom: 0;
-  left: -5px;
+  left: -4px;
   width: 0;
   height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  /* Pin color — change #000 to a red (e.g. #e02424) to make it red */
-  border-bottom: 95px solid #000;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  /* Pin color — change this to #000 for black, or another value */
+  border-bottom: 70px solid #e02424;
   transform-origin: bottom center;
 }
 

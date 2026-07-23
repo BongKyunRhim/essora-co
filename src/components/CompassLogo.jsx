@@ -1,20 +1,14 @@
-// The ESSORA compass logo: an 8-point star with the letters of NAVIGATE
-// placed around it, and a pin in the middle that spins when you hover.
+import logo from "../assets/essora_simple.png";
+
+// The ESSORA compass logo: the uploaded compass-rose star in the middle,
+// the letters of NAVIGATE placed around it, and a pin that spins on hover.
 export default function CompassLogo() {
   const letters = "NAVIGATE".split("");
-  const radius = 44; // how far the letters sit from the center (% of box)
+  const radius = 46; // how far the letters sit from the center (% of box)
 
   return (
     <div className="compass" aria-label="ESSORA navigate compass logo">
-      <svg className="compass-star" viewBox="0 0 200 200" aria-hidden="true">
-        {/* Cardinal (long) points */}
-        <polygon points="100,8 110,90 192,100 110,110 100,192 90,110 8,100 90,90" />
-        {/* Diagonal (shorter) points, rotated 45° */}
-        <polygon
-          points="100,40 107,93 160,100 107,107 100,160 93,107 40,100 93,93"
-          transform="rotate(45 100 100)"
-        />
-      </svg>
+      <img className="compass-img" src={logo} alt="ESSORA compass" />
 
       {/* The spinning pin/needle, anchored at the exact center */}
       <div className="needle-wrap">
