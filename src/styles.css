@@ -9,7 +9,7 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
   color: #000;
-  background: #fff;
+  background: #f5f7fa;
   line-height: 1.5;
 }
 
@@ -150,6 +150,7 @@ button:hover {
   flex: 1 1 240px;
   border: 1px solid #000;
   padding: 1rem;
+  background: #fff;
 }
 
 .card h2 {
@@ -294,6 +295,7 @@ button:disabled {
   gap: 1rem;
   border: 1px solid #000;
   padding: 1rem;
+  background: #fff;
 }
 
 .request-body {
@@ -418,6 +420,7 @@ button:disabled {
   border: 1px solid #000;
   min-height: 240px;
   padding: 2rem;
+  background: #fff;
 }
 
 .how-num {
