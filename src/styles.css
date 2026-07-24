@@ -6,8 +6,13 @@
   box-sizing: border-box;
 }
 
+:root {
+  --font-body: "Inter", Arial, Helvetica, sans-serif;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+}
+
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
   color: #000;
   background: #fff;
   line-height: 1.5;
@@ -42,11 +47,12 @@ a {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-decoration: none;
   color: #000;
-  font-size: 1.25rem;
+  font-size: 1.4rem;
 }
 
 .brand-logo {
@@ -355,9 +361,18 @@ button:disabled {
 }
 
 .hero-text h1 {
-  font-size: 3.25rem;
-  line-height: 1.15;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 3.4rem;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
   margin-bottom: 1.75rem;
+}
+
+/* Emphasised phrase in the headline */
+.accent {
+  font-style: italic;
+  font-weight: 600;
 }
 
 .lead {

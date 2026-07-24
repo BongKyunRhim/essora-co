@@ -9,7 +9,8 @@ export default function Landing() {
       <section className="hero">
         <div className="hero-text">
           <h1>
-            Your college essay, reviewed by students who just got in.
+            Your college essay, reviewed by students{" "}
+            <span className="accent">who just got in.</span>
           </h1>
           <p className="lead">
             Get personalized feedback from verified college students who recently went through the application process — affordable, authentic, and powered by real human insight.
