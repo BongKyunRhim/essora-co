@@ -290,7 +290,7 @@ button:disabled {
 /* ---- Landing page ---- */
 .landing {
   width: 100%;
-  max-width: 1000px;
+  max-width: 1150px;
 }
 
 /* Hero */
@@ -342,7 +342,9 @@ button:disabled {
 }
 
 .hero-logo {
-  flex: 0 0 auto;
+  flex: 1 1 460px;
+  display: flex;
+  justify-content: center;
 }
 
 /* Feature checklist */
@@ -422,9 +424,9 @@ button:disabled {
 
 /* ---- Compass logo ---- */
 .compass {
-  width: 520px;
-  height: 520px;
-  max-width: 100%;
+  width: 100%;
+  max-width: 680px;
+  aspect-ratio: 1 / 1;
 }
 
 .compass-img {
