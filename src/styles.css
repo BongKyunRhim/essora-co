@@ -56,17 +56,6 @@ a {
   transform-origin: center;
 }
 
-/* Spin the nav logo while hovering the ESSORA brand */
-.brand:hover .brand-logo {
-  animation: brand-spin 1.6s linear infinite;
-}
-
-@keyframes brand-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .app-nav {
   display: flex;
   align-items: center;
