@@ -10,12 +10,10 @@ export default function Landing() {
       <section className="hero">
         <div className="hero-text">
           <h1>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Your college essay, reviewed by students who just got in.
           </h1>
           <p className="lead">
-            Placeholder subtext for now — sed do eiusmod tempor incididunt ut
-            labore et dolore magna aliqua. Replace this with the real pitch
-            later.
+            Get personalized feedback from verified college students who recently went through the application process — affordable, authentic, and powered by real human insight.
           </p>
           <div className="hero-buttons">
             <Link className="btn" to="/signup">
