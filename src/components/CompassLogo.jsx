@@ -10,8 +10,8 @@ export default function CompassLogo() {
   useEffect(() => {
     const state = { angle: 0, vel: 0, hovering: false, raf: 0, last: 0 };
 
-    const MAX = 540; // top speed, degrees/second
-    const ACCEL = 220; // how quickly it spins up while hovering
+    const MAX = 240; // top speed, degrees/second
+    const ACCEL = 120; // how quickly it spins up while hovering
     const FRICTION = 1.0; // how quickly it coasts to a stop (higher = sooner)
 
     function frame(t) {
