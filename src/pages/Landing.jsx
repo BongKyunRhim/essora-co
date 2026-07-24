@@ -1,12 +1,16 @@
 import { Link } from "react-router-dom";
+import paperBg from "../assets/paperbg.avif";
 
 // The public landing page (what visitors see before signing in).
 // Text is placeholder for now — replace the gibberish when copy is ready.
 export default function Landing() {
   return (
     <div className="landing">
-      {/* Hero: centered pitch */}
-      <section className="hero">
+      {/* Hero: centered pitch over the paper background */}
+      <section
+        className="hero"
+        style={{ backgroundImage: `url(${paperBg})` }}
+      >
         <div className="hero-text">
           <h1>
             Your college essay, reviewed by students who just got in.
