@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate, Link } from "react-router-dom";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { useAuth } from "./AuthContext.jsx";
+import logo from "../assets/essora_logo1.png";
 import SignUp from "../pages/SignUp.jsx";
 import Login from "../pages/Login.jsx";
 import Dashboard from "../pages/Dashboard.jsx";
@@ -35,6 +36,7 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <Link to="/" className="brand">
+          <img className="brand-logo" src={logo} alt="" />
           ESSORA
         </Link>
         <nav className="app-nav">

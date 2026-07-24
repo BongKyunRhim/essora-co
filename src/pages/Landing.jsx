@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
-import CompassLogo from "../components/CompassLogo.jsx";
 
 // The public landing page (what visitors see before signing in).
 // Text is placeholder for now — replace the gibberish when copy is ready.
 export default function Landing() {
   return (
     <div className="landing">
-      {/* Hero: pitch on the left, compass logo on the right */}
+      {/* Hero: centered pitch */}
       <section className="hero">
         <div className="hero-text">
           <h1>
@@ -23,10 +22,6 @@ export default function Landing() {
               Become a reviewer
             </Link>
           </div>
-        </div>
-
-        <div className="hero-logo">
-          <CompassLogo />
         </div>
       </section>
 
