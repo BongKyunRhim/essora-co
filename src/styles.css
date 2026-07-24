@@ -16,6 +16,7 @@ body {
   color: #000;
   background: #fff;
   line-height: 1.5;
+  overflow-x: hidden; /* allow full-bleed dividers without a sideways scrollbar */
 }
 
 /* Headings across the whole site use the display serif */
@@ -369,7 +370,7 @@ button:disabled {
   /* Fill the screen below the fixed nav bar, with the text centered in it */
   min-height: calc(100vh - var(--nav-h));
   padding: 2rem 1.5rem;
-  border-bottom: 1px solid #000;
+  position: relative;
 }
 
 .hero-text {
@@ -436,6 +437,18 @@ button:disabled {
   gap: 2rem;
   justify-content: space-between;
   padding: 3rem 0;
+  position: relative;
+}
+
+/* Full-screen-width divider lines between the landing sections */
+.hero::after,
+.features::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
   border-bottom: 1px solid #000;
 }
 
@@ -490,8 +503,18 @@ button:disabled {
 
 /* Footer */
 .landing-footer {
-  border-top: 1px solid #000;
+  position: relative;
   padding: 3rem 0;
+}
+
+.landing-footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  border-top: 1px solid #000;
 }
 
 .footer-links {
