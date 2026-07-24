@@ -44,6 +44,11 @@ a {
   padding: 3rem 1.5rem;
 }
 
+/* The landing page sits higher and reaches closer to the screen edges */
+.app-main:has(.landing) {
+  padding: 0.5rem 1rem 0;
+}
+
 .page {
   width: 100%;
   max-width: 360px;
@@ -290,7 +295,7 @@ button:disabled {
 /* ---- Landing page ---- */
 .landing {
   width: 100%;
-  max-width: 1150px;
+  max-width: 1320px;
 }
 
 /* Hero */
@@ -300,8 +305,7 @@ button:disabled {
   gap: 3rem;
   align-items: center;
   justify-content: space-between;
-  min-height: 70vh;
-  padding: 4rem 0 5rem;
+  padding: 1rem 0 4rem;
   border-bottom: 1px solid #000;
 }
 
@@ -425,7 +429,7 @@ button:disabled {
 /* ---- Compass logo ---- */
 .compass {
   width: 100%;
-  max-width: 680px;
+  max-width: 760px;
   aspect-ratio: 1 / 1;
 }
 
