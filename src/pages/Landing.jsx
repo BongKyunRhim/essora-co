@@ -36,10 +36,10 @@ export default function Landing() {
           <span className="check">✓</span> Verified reviewers
         </div>
         <div className="feature">
-          <span className="check">✓</span> Another thing
+          <span className="check">✓</span> Affordable feedback
         </div>
         <div className="feature">
-          <span className="check">✓</span> Another thing
+          <span className="check">✓</span> Personalized insights
         </div>
       </section>
 
