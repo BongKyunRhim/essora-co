@@ -9,7 +9,7 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
   color: #000;
-  background: #f5f7fa;
+  background: #fff;
   line-height: 1.5;
 }
 
@@ -18,14 +18,24 @@ a {
 }
 
 /* App shell */
+:root {
+  --nav-h: 88px;
+}
+
 .app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 84px;
-  padding: 1.5rem 2rem;
-  background: #213451;
-  color: #fff;
+  height: var(--nav-h);
+  padding: 0 2rem;
+  background: #fff;
+  color: #000;
+  border-bottom: 1px solid #000;
 }
 
 .app-header .brand {
@@ -35,14 +45,26 @@ a {
   font-weight: 700;
   letter-spacing: 0.2em;
   text-decoration: none;
-  color: #fff;
+  color: #000;
   font-size: 1.25rem;
 }
 
 .brand-logo {
-  height: 44px;
+  height: 48px;
   width: auto;
   display: block;
+  transform-origin: center;
+}
+
+/* Spin the nav logo while hovering the ESSORA brand */
+.brand:hover .brand-logo {
+  animation: brand-spin 1.6s linear infinite;
+}
+
+@keyframes brand-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .app-nav {
@@ -51,27 +73,28 @@ a {
   gap: 1.75rem;
 }
 
-/* Header links + the Log out button read as light on the dark bar */
+/* Header links + the Log out button */
 .app-nav a,
 .app-header .linklike {
-  color: #fff;
+  color: #000;
 }
 
 .app-nav a:hover,
 .app-header .linklike:hover {
-  color: #b9c4d6;
+  color: #555;
 }
 
 /* Pages */
 .app-main {
   display: flex;
   justify-content: center;
+  margin-top: var(--nav-h); /* clear the fixed nav bar */
   padding: 3rem 1.5rem;
 }
 
-/* The landing page sits higher and reaches closer to the screen edges */
+/* The landing page reaches to the screen edges with no extra top padding */
 .app-main:has(.landing) {
-  padding: 0.5rem 1rem 0;
+  padding: 0 1rem;
 }
 
 .page {
@@ -330,8 +353,11 @@ button:disabled {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
-  padding: 4rem 0 5rem;
+  /* Fill the screen below the fixed nav bar, with the text centered in it */
+  min-height: calc(100vh - var(--nav-h));
+  padding: 2rem 0;
   border-bottom: 1px solid #000;
 }
 
