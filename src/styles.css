@@ -438,6 +438,7 @@ button:disabled {
   height: 100%;
   object-fit: contain;
   display: block;
+  transform-origin: center;
 }
 
 @media (max-width: 640px) {
