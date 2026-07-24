@@ -22,19 +22,35 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid #000;
+  min-height: 84px;
+  padding: 1.5rem 2rem;
+  background: #213451;
+  color: #fff;
 }
 
 .app-header .brand {
   font-weight: 700;
   letter-spacing: 0.2em;
   text-decoration: none;
+  color: #fff;
+  font-size: 1.25rem;
 }
 
 .app-nav {
   display: flex;
-  gap: 1.5rem;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+/* Header links + the Log out button read as light on the dark bar */
+.app-nav a,
+.app-header .linklike {
+  color: #fff;
+}
+
+.app-nav a:hover,
+.app-header .linklike:hover {
+  color: #b9c4d6;
 }
 
 /* Pages */
