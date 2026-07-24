@@ -13,7 +13,7 @@ export default function Landing() {
             <span className="accent">who just got in.</span>
           </h1>
           <p className="lead">
-            Get personalized feedback from verified college students who recently went through the application process — affordable, authentic, and powered by real human insight.
+            Get personalized feedback from verified college students — affordable, authentic, and powered by real human insight.
           </p>
           <div className="hero-buttons">
             <Link className="btn" to="/signup">
