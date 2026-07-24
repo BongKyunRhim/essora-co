@@ -18,6 +18,22 @@ body {
   line-height: 1.5;
 }
 
+/* Headings across the whole site use the display serif */
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+/* Form controls inherit the body font (Inter) instead of the browser default */
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+}
+
 a {
   color: #000;
 }
