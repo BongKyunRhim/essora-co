@@ -219,6 +219,7 @@ input[type="number"] {
 }
 
 .radio {
+  display: flex;
   flex-direction: row;
   align-items: center;
   gap: 1.25rem;
@@ -257,7 +258,7 @@ input[type="number"] {
   font-weight: 500;
   line-height: 1;
   display: inline-block;
-  transform: translateY(-2px); /* optically align with the check square */
+  transform: translateY(-4px); /* optically align with the check square */
 }
 
 button {
