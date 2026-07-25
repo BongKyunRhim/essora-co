@@ -255,6 +255,9 @@ input[type="number"] {
   letter-spacing: 0;
   color: #000;
   font-weight: 500;
+  line-height: 1;
+  display: inline-block;
+  transform: translateY(-2px); /* optically align with the check square */
 }
 
 button {
