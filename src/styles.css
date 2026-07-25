@@ -221,8 +221,30 @@ input[type="number"] {
 .radio {
   flex-direction: row;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
   margin-top: 0.25rem;
+}
+
+/* Square check for the Applicant / Reviewer choice */
+.radio input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #000;
+  border-radius: 5px;
+  background: #fff;
+  cursor: pointer;
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+.radio input[type="radio"]:checked {
+  background-color: #000;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 13px;
 }
 
 /* "Applicant" / "Reviewer" labels under "I am a" */
