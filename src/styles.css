@@ -272,8 +272,8 @@ button {
 }
 
 button:hover {
-  background: #fff;
-  color: #000;
+  background: #213451;
+  color: #fff;
 }
 
 .switch {
@@ -592,7 +592,7 @@ button:disabled {
 }
 
 .btn:hover {
-  background: #000;
+  background: #213451;
   color: #fff;
 }
 
