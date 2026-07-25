@@ -620,8 +620,8 @@ button:disabled {
 .how-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  max-width: 1080px;
+  gap: 3.5rem;
+  max-width: 1160px;
   margin: 0 auto;
 }
 
