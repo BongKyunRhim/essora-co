@@ -57,10 +57,19 @@ a {
   justify-content: space-between;
   height: var(--nav-h);
   padding: 0 2rem;
-  background: #fff;
+  background: transparent;
   color: #000;
-  border-bottom: 1px solid #000;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
+  border-bottom: none;
+  box-shadow: none;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.app-header.scrolled {
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  color: #fff;
 }
 
 .app-header .brand {
@@ -92,11 +101,23 @@ a {
 .app-nav a,
 .app-header .linklike {
   color: #000;
+  transition: color 0.3s ease;
 }
 
 .app-nav a:hover,
 .app-header .linklike:hover {
   color: #555;
+}
+
+.app-header.scrolled .app-nav a,
+.app-header.scrolled .linklike,
+.app-header.scrolled .brand {
+  color: #fff;
+}
+
+.app-header.scrolled .app-nav a:hover,
+.app-header.scrolled .linklike:hover {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* Hamburger toggle — hidden on desktop, shown on phones */
