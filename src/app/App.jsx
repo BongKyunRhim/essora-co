@@ -103,6 +103,9 @@ export default function App() {
         </nav>
       </header>
 
+      {/* Tap outside the open mobile menu to close it */}
+      {menuOpen && <div className="nav-overlay" onClick={closeMenu} />}
+
       <main className="app-main">
         <Routes>
           <Route path="/" element={<Home />} />

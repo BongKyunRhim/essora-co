@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase, isSupabaseConfigured } from "../lib/supabase.js";
+import AuthCard from "../components/AuthCard.jsx";
 
 // Login page. Email + password, checked against Supabase.
 export default function Login() {
@@ -40,9 +41,7 @@ export default function Login() {
   }
 
   return (
-    <section className="page">
-      <h1>Log in</h1>
-
+    <AuthCard>
       {error && <p className="error">{error}</p>}
 
       <form className="form" onSubmit={handleSubmit}>
@@ -72,10 +71,6 @@ export default function Login() {
           {busy ? "Logging in…" : "Log in"}
         </button>
       </form>
-
-      <p className="switch">
-        Need an account? <Link to="/signup">Sign up</Link>
-      </p>
-    </section>
+    </AuthCard>
   );
 }

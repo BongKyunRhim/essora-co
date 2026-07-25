@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase, isSupabaseConfigured } from "../lib/supabase.js";
+import AuthCard from "../components/AuthCard.jsx";
 
 // Sign-up page. Creates a real account in Supabase and records the chosen
 // role (applicant or reviewer), which decides what the user sees afterward.
@@ -60,9 +61,7 @@ export default function SignUp() {
   }
 
   return (
-    <section className="page">
-      <h1>Sign up</h1>
-
+    <AuthCard>
       {error && <p className="error">{error}</p>}
       {notice && <p className="notice">{notice}</p>}
 
@@ -139,10 +138,6 @@ export default function SignUp() {
           {busy ? "Creating…" : "Create account"}
         </button>
       </form>
-
-      <p className="switch">
-        Already have an account? <Link to="/login">Log in</Link>
-      </p>
-    </section>
+    </AuthCard>
   );
 }
