@@ -621,7 +621,7 @@ button:disabled {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
-  max-width: 800px;
+  max-width: 1080px;
   margin: 0 auto;
 }
 
@@ -630,7 +630,7 @@ button:disabled {
   border-radius: var(--radius);
   padding: 2rem;
   background: #fff;
-  min-height: 320px;
+  min-height: 220px;
 }
 
 .how-head {
