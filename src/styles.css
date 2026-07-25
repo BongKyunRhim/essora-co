@@ -639,43 +639,29 @@ button:disabled {
   justify-content: center;
 }
 
-/* Stats divider between hero and How It Works */
-.stats-bar {
+/* Feature tags divider between hero and How It Works */
+.tags-bar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 3rem;
-  padding: 2.5rem 1.5rem;
+  gap: 0.75rem 1rem;
+  padding: 2rem 1.5rem;
   border-top: 1px solid #e5e5e5;
   border-bottom: 1px solid #e5e5e5;
 }
 
-.stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
+.tag {
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+  color: #333;
 }
 
-.stat-num {
-  font-family: var(--font-display);
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1;
-}
-
-.stat-label {
-  font-size: 0.85rem;
-  color: #666;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.stat-divider {
-  width: 1px;
-  height: 2.5rem;
-  background: #ddd;
+.tag-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #bbb;
   flex-shrink: 0;
 }
 
@@ -892,12 +878,8 @@ button:disabled {
     gap: 0.75rem;
   }
 
-  .stats-bar {
-    gap: 1.5rem;
-  }
-
-  .stat-num {
-    font-size: 1.6rem;
+  .tag-dot {
+    display: none;
   }
 
   /* How it works: single column */

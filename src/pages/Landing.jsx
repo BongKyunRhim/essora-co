@@ -67,22 +67,17 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Stats divider */}
-      <section className="stats-bar">
-        <div className="stat">
-          <span className="stat-num">500+</span>
-          <span className="stat-label">Essays Reviewed</span>
-        </div>
-        <div className="stat-divider" />
-        <div className="stat">
-          <span className="stat-num">100+</span>
-          <span className="stat-label">Verified Reviewers</span>
-        </div>
-        <div className="stat-divider" />
-        <div className="stat">
-          <span className="stat-num">4.9★</span>
-          <span className="stat-label">Average Rating</span>
-        </div>
+      {/* Feature tags divider */}
+      <section className="tags-bar">
+        <span className="tag">Verified Reviewers</span>
+        <span className="tag-dot" />
+        <span className="tag">Real Human Feedback</span>
+        <span className="tag-dot" />
+        <span className="tag">Affordable</span>
+        <span className="tag-dot" />
+        <span className="tag">Quick Turnaround</span>
+        <span className="tag-dot" />
+        <span className="tag">Personalized Insights</span>
       </section>
 
       {/* How it works */}
