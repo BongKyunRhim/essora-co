@@ -61,6 +61,19 @@ a {
   color: #fff;
   border-bottom: none;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Landing page: transparent until scrolled */
+.app-header.landing-nav {
+  background: transparent;
+  box-shadow: none;
+  color: #000;
+}
+
+.app-header.landing-nav.scrolled {
+  background: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .app-header .brand {
@@ -97,6 +110,17 @@ a {
 .app-nav a:hover,
 .app-header .linklike:hover {
   color: rgba(255, 255, 255, 0.7);
+}
+
+.app-header.landing-nav .app-nav a,
+.app-header.landing-nav .linklike,
+.app-header.landing-nav .brand {
+  color: #000;
+}
+
+.app-header.landing-nav .app-nav a:hover,
+.app-header.landing-nav .linklike:hover {
+  color: #555;
 }
 
 

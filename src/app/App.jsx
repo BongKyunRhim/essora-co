@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Routes, Route, Navigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { useAuth } from "./AuthContext.jsx";
 import BrandLogo from "../components/BrandLogo.jsx";
@@ -33,11 +33,20 @@ function Home() {
 export default function App() {
   const { user, profile, signOut } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+  const isLanding = location.pathname === "/";
   const closeMenu = () => setMenuOpen(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <div className="app">
-      <header className="app-header">
+      <header className={`app-header${isLanding ? " landing-nav" : ""}${isLanding && scrolled ? " scrolled" : ""}`}>
         <Link to="/" className="brand" onClick={closeMenu}>
           <BrandLogo />
           ESSORA
