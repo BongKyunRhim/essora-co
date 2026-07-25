@@ -626,14 +626,39 @@ button:disabled {
 .how-box {
   border: 1px solid #000;
   border-radius: var(--radius);
-  min-height: 240px;
   padding: 2rem;
   background: #fff;
 }
 
-.how-num {
-  font-weight: 700;
+.how-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.how-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-sm);
+}
+
+.how-title {
+  font-family: var(--font-display);
   font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.how-desc {
+  font-size: 1rem;
+  line-height: 1.55;
+  color: #333;
+  margin: 0;
 }
 
 /* Footer */

@@ -1,7 +1,44 @@
 import { Link } from "react-router-dom";
+import {
+  SearchIcon,
+  UploadIcon,
+  FeedbackIcon,
+  StarIcon,
+} from "../components/StepIcons.jsx";
+
+// The four "How ESSORA works" steps.
+const STEPS = [
+  {
+    title: "Find a Reviewer",
+    desc: "Filter and search a verified college student with recent admissions experience.",
+    icon: <SearchIcon />,
+    color: "#2563eb",
+    tint: "#e8efff",
+  },
+  {
+    title: "Upload Your Essay",
+    desc: "Paste or upload a draft and pick the essay type (Common App, supplemental, or scholarship).",
+    icon: <UploadIcon />,
+    color: "#16a34a",
+    tint: "#e6f6ec",
+  },
+  {
+    title: "Receive Feedback",
+    desc: "Receive detailed scores and personalized feedback from a reviewer.",
+    icon: <FeedbackIcon />,
+    color: "#7c3aed",
+    tint: "#f1e9ff",
+  },
+  {
+    title: "Improve & Rate",
+    desc: "Use the feedback to revise, and rate the reviewer to build trust in the community.",
+    icon: <StarIcon />,
+    color: "#f59e0b",
+    tint: "#fdf1dc",
+  },
+];
 
 // The public landing page (what visitors see before signing in).
-// Text is placeholder for now — replace the gibberish when copy is ready.
 export default function Landing() {
   return (
     <div className="landing">
@@ -43,9 +80,18 @@ export default function Landing() {
       <section className="how">
         <h2>HOW ESSORA WORKS</h2>
         <div className="how-grid">
-          {[1, 2, 3, 4].map((n) => (
-            <div className="how-box" key={n}>
-              <span className="how-num">{n}.</span>
+          {STEPS.map((step) => (
+            <div className="how-box" key={step.title}>
+              <div className="how-head">
+                <span
+                  className="how-icon"
+                  style={{ color: step.color, background: step.tint }}
+                >
+                  {step.icon}
+                </span>
+                <h3 className="how-title">{step.title}</h3>
+              </div>
+              <p className="how-desc">{step.desc}</p>
             </div>
           ))}
         </div>
