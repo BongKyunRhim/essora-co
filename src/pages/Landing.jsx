@@ -78,7 +78,7 @@ export default function Landing() {
 
       {/* How it works */}
       <section className="how">
-        <h2>HOW ESSORA WORKS</h2>
+        <h1>HOW ESSORA WORKS</h1>
         <div className="how-grid">
           {STEPS.map((step) => (
             <div className="how-box" key={step.title}>
