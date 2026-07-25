@@ -224,6 +224,16 @@ input[type="number"] {
   margin-top: 0.25rem;
 }
 
+/* "Applicant" / "Reviewer" labels under "I am a" */
+.radio span {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #000;
+  font-weight: 500;
+}
+
 button {
   padding: 0.65rem;
   border: 1px solid #000;
