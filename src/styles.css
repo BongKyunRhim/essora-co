@@ -541,17 +541,20 @@ button:disabled {
   min-height: calc(100vh - var(--nav-h));
   padding: 2rem 1.5rem;
   position: relative;
-  background-image: url("https://images.unsplash.com/photo-1712145176570-6cb1d98a126a?q=80&w=2532&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
-  background-size: cover;
-  background-position: center;
 }
 
-/* Dark overlay so text remains readable over the bg image */
+/* Full-bleed background image that breaks out of the max-width container */
 .hero::before {
   content: "";
   position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 100%;
+  background-image: url("https://images.unsplash.com/photo-1712145176570-6cb1d98a126a?q=80&w=2532&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+  background-size: cover;
+  background-position: center;
   z-index: 0;
 }
 
@@ -559,7 +562,6 @@ button:disabled {
   max-width: 1120px;
   position: relative;
   z-index: 1;
-  color: #fff;
 }
 
 .hero-text h1 {
@@ -581,7 +583,7 @@ button:disabled {
   font-size: 1.1rem;
   max-width: 620px;
   margin: 0 auto 2.5rem;
-  color: rgba(255, 255, 255, 0.85);
+  color: #333;
 }
 
 .hero-buttons {
