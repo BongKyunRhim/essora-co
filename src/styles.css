@@ -610,10 +610,17 @@ button:disabled {
   padding: 5rem 0;
 }
 
-.how h2 {
+.how h1 {
   text-align: center;
-  letter-spacing: 0.15em;
-  font-size: 1.75rem;
+  letter-spacing: 0.08em;
+  font-size: 2.75rem;
+  margin-bottom: 1rem;
+}
+
+.how-sub {
+  text-align: center;
+  font-size: 1.35rem;
+  color: #555;
   margin-bottom: 3.5rem;
 }
 
@@ -626,11 +633,23 @@ button:disabled {
 }
 
 .how-box {
-  border: 1px solid #000;
-  border-radius: var(--radius);
+  position: relative;
+  border: 1px solid #e4e4e4;
+  border-radius: 16px;
   padding: 2.5rem;
   background: #fff;
-  min-height: 240px;
+  min-height: 250px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
+}
+
+/* Faded step number in the top-right corner */
+.how-num {
+  position: absolute;
+  top: 1.5rem;
+  right: 2rem;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #d3d7de;
 }
 
 .how-head {
@@ -645,9 +664,10 @@ button:disabled {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 68px;
-  height: 68px;
-  border-radius: var(--radius);
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  color: #fff; /* white icon on the gradient tile */
 }
 
 .how-icon svg {
@@ -816,8 +836,11 @@ button:disabled {
   .how {
     padding: 3rem 0;
   }
-  .how h2 {
-    font-size: 1.4rem;
+  .how h1 {
+    font-size: 1.8rem;
+  }
+  .how-sub {
+    font-size: 1.05rem;
     margin-bottom: 2rem;
   }
   .how-grid {
