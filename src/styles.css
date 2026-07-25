@@ -175,6 +175,12 @@ a {
   padding: 3rem 1.5rem;
 }
 
+/* Landing page starts at the very top so the hero image fills behind the transparent nav */
+.app-main:has(.landing) {
+  margin-top: 0;
+  padding: 0;
+}
+
 /* The landing page reaches to the screen edges with no extra top padding */
 .app-main:has(.landing) {
   padding: 0 1rem;
@@ -550,9 +556,8 @@ button:disabled {
   align-items: center;
   justify-content: center;
   text-align: center;
-  /* Fill the screen below the fixed nav bar, with the text centered in it */
-  min-height: calc(100vh - var(--nav-h));
-  padding: 2rem 1.5rem;
+  min-height: 100vh;
+  padding: calc(var(--nav-h) + 2rem) 1.5rem 2rem;
   position: relative;
 }
 
