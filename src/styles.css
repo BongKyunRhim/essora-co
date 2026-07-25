@@ -620,7 +620,9 @@ button:disabled {
 .how-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2.5rem;
+  gap: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .how-box {
@@ -628,6 +630,7 @@ button:disabled {
   border-radius: var(--radius);
   padding: 2rem;
   background: #fff;
+  min-height: 320px;
 }
 
 .how-head {
@@ -817,7 +820,7 @@ button:disabled {
     gap: 1.25rem;
   }
   .how-box {
-    min-height: 160px;
+    min-height: 220px;
     padding: 1.5rem;
   }
 
