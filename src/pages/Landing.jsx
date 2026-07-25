@@ -70,7 +70,7 @@ export default function Landing() {
       {/* Feature checklist */}
       <section className="features">
         <div className="feature">
-          <span className="check check--blue">
+          <span className="check">
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="2,7 5.5,10.5 11,3" />
             </svg>
@@ -78,7 +78,7 @@ export default function Landing() {
           Verified Reviewers
         </div>
         <div className="feature">
-          <span className="check check--green">
+          <span className="check">
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="2,7 5.5,10.5 11,3" />
             </svg>
@@ -86,7 +86,7 @@ export default function Landing() {
           Affordable Feedback
         </div>
         <div className="feature">
-          <span className="check check--purple">
+          <span className="check">
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="2,7 5.5,10.5 11,3" />
             </svg>
