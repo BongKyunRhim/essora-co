@@ -613,15 +613,15 @@ button:disabled {
 .how h1 {
   text-align: center;
   letter-spacing: 0.08em;
-  font-size: 2.75rem;
-  margin-bottom: 3.5rem;
+  font-size: 1.9rem;
+  margin-bottom: 2.5rem;
 }
 
 .how-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 5rem;
-  max-width: 1320px;
+  gap: 3rem;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -629,19 +629,19 @@ button:disabled {
   position: relative;
   border: 1px solid #e4e4e4;
   border-radius: 16px;
-  padding: 2.5rem;
+  padding: 1.75rem 2rem;
   background: #fff;
-  min-height: 250px;
+  min-height: 180px;
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
 }
 
 /* Faded step number in the top-right corner */
 .how-num {
   position: absolute;
-  top: 1.5rem;
-  right: 2rem;
+  top: 1.25rem;
+  right: 1.5rem;
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   color: #d3d7de;
 }
 
@@ -657,26 +657,26 @@ button:disabled {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 72px;
-  height: 72px;
-  border-radius: 18px;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
 }
 
 .how-icon svg {
-  width: 34px;
-  height: 34px;
+  width: 26px;
+  height: 26px;
 }
 
 .how-title {
   font-family: var(--font-display);
-  font-size: 2rem;
+  font-size: 1.4rem;
   font-weight: 600;
   margin: 0;
 }
 
 .how-desc {
-  font-size: 1.25rem;
-  line-height: 1.6;
+  font-size: 1.02rem;
+  line-height: 1.55;
   color: #333;
   margin: 0;
 }
@@ -829,16 +829,35 @@ button:disabled {
     padding: 3rem 0;
   }
   .how h1 {
-    font-size: 1.8rem;
-    margin-bottom: 2rem;
+    font-size: 1.4rem;
+    margin-bottom: 1.75rem;
   }
   .how-grid {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
+    gap: 1rem;
   }
   .how-box {
-    min-height: 220px;
-    padding: 1.5rem;
+    min-height: 0;
+    padding: 1.25rem;
+  }
+  .how-icon {
+    width: 44px;
+    height: 44px;
+  }
+  .how-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+  .how-title {
+    font-size: 1.2rem;
+  }
+  .how-desc {
+    font-size: 0.95rem;
+  }
+  .how-num {
+    font-size: 0.95rem;
+    top: 1rem;
+    right: 1.1rem;
   }
 
   /* Inner pages: reviewer detail + notifications adapt */
