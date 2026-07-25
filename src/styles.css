@@ -606,8 +606,8 @@ button:disabled {
 .features {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: space-between;
+  gap: 3rem;
+  justify-content: center;
   padding: 3rem 0;
   position: relative;
 }
