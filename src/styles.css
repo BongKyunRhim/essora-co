@@ -57,10 +57,10 @@ a {
   justify-content: space-between;
   height: var(--nav-h);
   padding: 0 2rem;
-  background: #000;
-  color: #fff;
+  background: #fff;
+  color: #000;
   border-bottom: none;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -68,12 +68,11 @@ a {
 .app-header.landing-nav {
   background: transparent;
   box-shadow: none;
-  color: #000;
 }
 
 .app-header.landing-nav.scrolled {
   background: #fff;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
 .app-header .brand {
@@ -84,7 +83,7 @@ a {
   font-weight: 600;
   letter-spacing: 0.14em;
   text-decoration: none;
-  color: #fff;
+  color: #000;
   font-size: 1.4rem;
 }
 
@@ -104,22 +103,11 @@ a {
 /* Header links + the Log out button */
 .app-nav a,
 .app-header .linklike {
-  color: #fff;
+  color: #000;
 }
 
 .app-nav a:hover,
 .app-header .linklike:hover {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.app-header.landing-nav .app-nav a,
-.app-header.landing-nav .linklike,
-.app-header.landing-nav .brand {
-  color: #000;
-}
-
-.app-header.landing-nav .app-nav a:hover,
-.app-header.landing-nav .linklike:hover {
   color: #555;
 }
 
