@@ -639,53 +639,44 @@ button:disabled {
   justify-content: center;
 }
 
-/* Feature checklist */
-.features {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5rem;
-  justify-content: center;
-  padding: 3rem 0;
-  position: relative;
-}
-
-/* Full-screen-width divider lines between the landing sections */
-.hero::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100vw;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  z-index: 1;
-}
-.features::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100vw;
-  border-bottom: 1px solid #000;
-}
-
-.feature {
+/* Stats divider between hero and How It Works */
+.stats-bar {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  font-size: 1.2rem;
+  justify-content: center;
+  gap: 3rem;
+  padding: 2.5rem 1.5rem;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
 }
 
-.check {
-  display: inline-flex;
+.stat {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  flex: 0 0 auto;
-  background: #16a34a;
+  gap: 0.25rem;
+}
+
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #666;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 2.5rem;
+  background: #ddd;
+  flex-shrink: 0;
 }
 
 /* How it works */
@@ -816,8 +807,7 @@ button:disabled {
     padding: 4rem 0;
   }
 
-  .how-grid,
-  .features {
+  .how-grid {
     gap: 1.5rem;
   }
 
@@ -902,15 +892,12 @@ button:disabled {
     gap: 0.75rem;
   }
 
-  /* Features stack and center */
-  .features {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 1rem;
+  .stats-bar {
+    gap: 1.5rem;
   }
-  .feature {
-    font-size: 1.05rem;
+
+  .stat-num {
+    font-size: 1.6rem;
   }
 
   /* How it works: single column */

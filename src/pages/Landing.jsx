@@ -67,31 +67,21 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Feature checklist */}
-      <section className="features">
-        <div className="feature">
-          <span className="check">
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="2,7 5.5,10.5 11,3" />
-            </svg>
-          </span>
-          Verified Reviewers
+      {/* Stats divider */}
+      <section className="stats-bar">
+        <div className="stat">
+          <span className="stat-num">500+</span>
+          <span className="stat-label">Essays Reviewed</span>
         </div>
-        <div className="feature">
-          <span className="check">
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="2,7 5.5,10.5 11,3" />
-            </svg>
-          </span>
-          Affordable Feedback
+        <div className="stat-divider" />
+        <div className="stat">
+          <span className="stat-num">100+</span>
+          <span className="stat-label">Verified Reviewers</span>
         </div>
-        <div className="feature">
-          <span className="check">
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="2,7 5.5,10.5 11,3" />
-            </svg>
-          </span>
-          Personalized Insights
+        <div className="stat-divider" />
+        <div className="stat">
+          <span className="stat-num">4.9★</span>
+          <span className="stat-label">Average Rating</span>
         </div>
       </section>
 
