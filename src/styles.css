@@ -65,11 +65,10 @@ a {
 }
 
 .app-header.scrolled {
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
 
 .app-header .brand {
@@ -109,16 +108,6 @@ a {
   color: #555;
 }
 
-.app-header.scrolled .app-nav a,
-.app-header.scrolled .linklike,
-.app-header.scrolled .brand {
-  color: #fff;
-}
-
-.app-header.scrolled .app-nav a:hover,
-.app-header.scrolled .linklike:hover {
-  color: rgba(255, 255, 255, 0.7);
-}
 
 /* Hamburger toggle — hidden on desktop, shown on phones */
 .nav-toggle {
