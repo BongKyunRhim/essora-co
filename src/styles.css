@@ -9,6 +9,8 @@
 :root {
   --font-body: "Inter", Arial, Helvetica, sans-serif;
   --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --radius: 12px;
+  --radius-sm: 8px;
 }
 
 body {
@@ -190,14 +192,20 @@ a {
 
 .field > span,
 .field legend {
-  font-size: 0.85rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #444;
 }
 
 input[type="text"],
 input[type="email"],
-input[type="password"] {
-  padding: 0.5rem;
+input[type="password"],
+input[type="number"] {
+  padding: 0.6rem 0.7rem;
   border: 1px solid #000;
+  border-radius: var(--radius-sm);
   background: #fff;
   color: #000;
   font-size: 1rem;
@@ -211,8 +219,9 @@ input[type="password"] {
 }
 
 button {
-  padding: 0.6rem;
+  padding: 0.65rem;
   border: 1px solid #000;
+  border-radius: var(--radius-sm);
   background: #000;
   color: #fff;
   font-size: 1rem;
@@ -234,7 +243,9 @@ button:hover {
   width: 100%;
   max-width: 420px;
   border: 1px solid #000;
+  border-radius: var(--radius);
   background: #fff;
+  overflow: hidden; /* clip the tab backgrounds to the rounded corners */
 }
 
 .auth-tabs {
@@ -244,9 +255,11 @@ button:hover {
 .auth-tab {
   flex: 1;
   text-align: center;
-  padding: 0.9rem 1rem;
+  padding: 1rem;
   text-decoration: none;
   color: #000;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
   font-weight: 600;
   border-bottom: 1px solid #000;
 }
@@ -283,6 +296,7 @@ button:hover {
 .card {
   flex: 1 1 240px;
   border: 1px solid #000;
+  border-radius: var(--radius);
   padding: 1rem;
   background: #fff;
 }
@@ -305,7 +319,8 @@ button:hover {
 /* Auth / status messages */
 .error {
   border: 1px solid #000;
-  padding: 0.5rem;
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.7rem;
   margin-bottom: 1rem;
   font-size: 0.85rem;
 }
@@ -331,8 +346,9 @@ button:hover {
 }
 
 textarea {
-  padding: 0.5rem;
+  padding: 0.6rem 0.7rem;
   border: 1px solid #000;
+  border-radius: var(--radius-sm);
   background: #fff;
   color: #000;
   font-size: 1rem;
@@ -348,6 +364,7 @@ button:disabled {
 /* Profile photos */
 .avatar {
   border: 1px solid #000;
+  border-radius: 50%;
   object-fit: cover;
   display: block;
 }
@@ -358,6 +375,7 @@ button:disabled {
   justify-content: center;
   font-weight: 700;
   background: #fff;
+  border-radius: 50%;
 }
 
 .avatar-upload {
@@ -428,6 +446,7 @@ button:disabled {
   align-items: flex-start;
   gap: 1rem;
   border: 1px solid #000;
+  border-radius: var(--radius);
   padding: 1rem;
   background: #fff;
 }
@@ -502,6 +521,7 @@ button:disabled {
 .btn {
   display: inline-block;
   border: 1px solid #000;
+  border-radius: var(--radius-sm);
   padding: 0.9rem 1.6rem;
   font-size: 1.05rem;
   background: #fff;
@@ -581,6 +601,7 @@ button:disabled {
 
 .how-box {
   border: 1px solid #000;
+  border-radius: var(--radius);
   min-height: 240px;
   padding: 2rem;
   background: #fff;
