@@ -272,7 +272,7 @@ button {
 }
 
 button:hover {
-  background: #213451;
+  background: #000;
   color: #fff;
 }
 
@@ -592,7 +592,7 @@ button:disabled {
 }
 
 .btn:hover {
-  background: #213451;
+  background: #000;
   color: #fff;
 }
 
