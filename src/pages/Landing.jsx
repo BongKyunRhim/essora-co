@@ -29,13 +29,13 @@ export default function Landing() {
       {/* Feature checklist */}
       <section className="features">
         <div className="feature">
-          <span className="check">✓</span> Verified reviewers
+          <span className="check">✓</span> Verified Reviewers
         </div>
         <div className="feature">
-          <span className="check">✓</span> Affordable feedback
+          <span className="check">✓</span> Affordable Feedback
         </div>
         <div className="feature">
-          <span className="check">✓</span> Personalized insights
+          <span className="check">✓</span> Personalized Insights
         </div>
       </section>
 
