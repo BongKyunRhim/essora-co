@@ -90,27 +90,29 @@ export default function SignUp() {
           />
         </label>
 
-        <label className="field">
-          <span>Password</span>
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-        </label>
+        <div className="field-row">
+          <label className="field">
+            <span>Password</span>
+            <input
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+          </label>
 
-        <label className="field">
-          <span>Confirm password</span>
-          <input
-            type="password"
-            name="confirmPassword"
-            value={form.confirmPassword}
-            onChange={handleChange}
-            required
-          />
-        </label>
+          <label className="field">
+            <span>Confirm password</span>
+            <input
+              type="password"
+              name="confirmPassword"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              required
+            />
+          </label>
+        </div>
 
         <fieldset className="field">
           <legend>I am a</legend>
