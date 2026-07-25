@@ -635,13 +635,15 @@ button:disabled {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
-  border: 1px solid #000;
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
-  font-size: 0.85rem;
   flex: 0 0 auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
+.check--blue  { background: #2563eb; }
+.check--green { background: #16a34a; }
+.check--purple { background: #7c3aed; }
 
 /* How it works */
 .how {
