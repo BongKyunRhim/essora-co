@@ -42,6 +42,8 @@ export default function Login() {
 
   return (
     <AuthCard>
+      <p className="auth-intro">Welcome back.</p>
+
       {error && <p className="error">{error}</p>}
 
       <form className="form" onSubmit={handleSubmit}>

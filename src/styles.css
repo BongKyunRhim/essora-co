@@ -166,6 +166,12 @@ a {
   padding: 0 1rem;
 }
 
+/* Center the login / sign-up card in the screen so it feels framed */
+.app-main:has(.auth-card) {
+  align-items: center;
+  min-height: calc(100vh - var(--nav-h));
+}
+
 .page {
   width: 100%;
   max-width: 360px;
@@ -203,7 +209,7 @@ input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="number"] {
-  padding: 0.6rem 0.7rem;
+  padding: 0.8rem 0.85rem;
   border: 1px solid #000;
   border-radius: var(--radius-sm);
   background: #fff;
@@ -241,11 +247,12 @@ button:hover {
 /* ---- Login / Sign up card with tabs ---- */
 .auth-card {
   width: 100%;
-  max-width: 420px;
+  max-width: 480px;
   border: 1px solid #000;
   border-radius: var(--radius);
   background: #fff;
   overflow: hidden; /* clip the tab backgrounds to the rounded corners */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
 }
 
 .auth-tabs {
@@ -274,7 +281,14 @@ button:hover {
 }
 
 .auth-body {
-  padding: 1.5rem;
+  padding: 2.25rem 2rem;
+}
+
+.auth-intro {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
 }
 
 /* Dashboard */
