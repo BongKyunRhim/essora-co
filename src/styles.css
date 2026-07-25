@@ -16,7 +16,7 @@
 body {
   font-family: var(--font-body);
   color: #000;
-  background: #fff;
+  background: #f5f2ed;
   line-height: 1.5;
   overflow-x: hidden; /* allow full-bleed dividers without a sideways scrollbar */
 }
@@ -57,7 +57,7 @@ a {
   justify-content: space-between;
   height: var(--nav-h);
   padding: 0 2rem;
-  background: #fff;
+  background: #f5f2ed;
   color: #000;
   border-bottom: none;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
@@ -71,7 +71,7 @@ a {
 }
 
 .app-header.landing-nav.scrolled {
-  background: #fff;
+  background: #f5f2ed;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
