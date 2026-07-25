@@ -13,28 +13,32 @@ const STEPS = [
     title: "Find a Reviewer",
     desc: "Filter and search a verified college student with recent admissions experience.",
     icon: <SearchIcon />,
-    grad: "linear-gradient(135deg, #4f83e3, #6ec6a8)",
+    color: "#2563eb",
+    tint: "#e8efff",
   },
   {
     num: "02",
     title: "Upload Your Essay",
     desc: "Paste or upload a draft and pick the essay type (Common App, supplemental, or scholarship).",
     icon: <UploadIcon />,
-    grad: "linear-gradient(135deg, #38a56f, #7cc9e8)",
+    color: "#16a34a",
+    tint: "#e6f6ec",
   },
   {
     num: "03",
     title: "Receive Feedback",
     desc: "Receive detailed scores and personalized feedback from a reviewer.",
     icon: <FeedbackIcon />,
-    grad: "linear-gradient(135deg, #8b6ce3, #64b5e8)",
+    color: "#7c3aed",
+    tint: "#f1e9ff",
   },
   {
     num: "04",
     title: "Improve & Rate",
     desc: "Use the feedback to revise, and rate the reviewer to build trust in the community.",
     icon: <StarIcon />,
-    grad: "linear-gradient(135deg, #e8a23c, #e87a6c)",
+    color: "#f59e0b",
+    tint: "#fdf1dc",
   },
 ];
 
@@ -79,16 +83,15 @@ export default function Landing() {
       {/* How it works */}
       <section className="how">
         <h1>HOW ESSORA WORKS</h1>
-        <p className="how-sub">
-          A simple, transparent path from rough draft to a polished, authentic
-          essay.
-        </p>
         <div className="how-grid">
           {STEPS.map((step) => (
             <div className="how-box" key={step.title}>
               <span className="how-num">{step.num}</span>
               <div className="how-head">
-                <span className="how-icon" style={{ background: step.grad }}>
+                <span
+                  className="how-icon"
+                  style={{ color: step.color, background: step.tint }}
+                >
                   {step.icon}
                 </span>
                 <h3 className="how-title">{step.title}</h3>

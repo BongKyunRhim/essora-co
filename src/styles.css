@@ -614,13 +614,6 @@ button:disabled {
   text-align: center;
   letter-spacing: 0.08em;
   font-size: 2.75rem;
-  margin-bottom: 1rem;
-}
-
-.how-sub {
-  text-align: center;
-  font-size: 1.35rem;
-  color: #555;
   margin-bottom: 3.5rem;
 }
 
@@ -667,7 +660,6 @@ button:disabled {
   width: 72px;
   height: 72px;
   border-radius: 18px;
-  color: #fff; /* white icon on the gradient tile */
 }
 
 .how-icon svg {
@@ -838,9 +830,6 @@ button:disabled {
   }
   .how h1 {
     font-size: 1.8rem;
-  }
-  .how-sub {
-    font-size: 1.05rem;
     margin-bottom: 2rem;
   }
   .how-grid {
