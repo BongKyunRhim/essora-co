@@ -57,18 +57,10 @@ a {
   justify-content: space-between;
   height: var(--nav-h);
   padding: 0 2rem;
-  background: transparent;
-  color: #000;
+  background: #000;
+  color: #fff;
   border-bottom: none;
-  box-shadow: none;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-}
-
-.app-header.scrolled {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
 }
 
 .app-header .brand {
@@ -79,7 +71,7 @@ a {
   font-weight: 600;
   letter-spacing: 0.14em;
   text-decoration: none;
-  color: #000;
+  color: #fff;
   font-size: 1.4rem;
 }
 
@@ -99,13 +91,12 @@ a {
 /* Header links + the Log out button */
 .app-nav a,
 .app-header .linklike {
-  color: #000;
-  transition: color 0.3s ease;
+  color: #fff;
 }
 
 .app-nav a:hover,
 .app-header .linklike:hover {
-  color: #555;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 
