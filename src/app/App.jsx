@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Routes, Route, Navigate, Link } from "react-router-dom";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { useAuth } from "./AuthContext.jsx";
@@ -31,37 +32,72 @@ function Home() {
 // App is the shell that holds the whole site together.
 export default function App() {
   const { user, profile, signOut } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <div className="app">
       <header className="app-header">
-        <Link to="/" className="brand">
+        <Link to="/" className="brand" onClick={closeMenu}>
           <BrandLogo />
           ESSORA
         </Link>
-        <nav className="app-nav">
+
+        {/* Hamburger toggle — only shown on small screens via CSS */}
+        <button
+          type="button"
+          className={`nav-toggle ${menuOpen ? "open" : ""}`}
+          aria-label="Toggle menu"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((o) => !o)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+
+        <nav className={`app-nav ${menuOpen ? "open" : ""}`}>
           {user ? (
             <>
               {profile?.role === "applicant" && (
                 <>
-                  <Link to="/applicant">Find reviewers</Link>
-                  <Link to="/account">My account</Link>
+                  <Link to="/applicant" onClick={closeMenu}>
+                    Find reviewers
+                  </Link>
+                  <Link to="/account" onClick={closeMenu}>
+                    My account
+                  </Link>
                 </>
               )}
               {profile?.role === "reviewer" && (
                 <>
-                  <Link to="/reviewer">My profile</Link>
-                  <Link to="/notifications">Notifications</Link>
+                  <Link to="/reviewer" onClick={closeMenu}>
+                    My profile
+                  </Link>
+                  <Link to="/notifications" onClick={closeMenu}>
+                    Notifications
+                  </Link>
                 </>
               )}
-              <button type="button" className="linklike" onClick={signOut}>
+              <button
+                type="button"
+                className="linklike"
+                onClick={() => {
+                  closeMenu();
+                  signOut();
+                }}
+              >
                 Log out
               </button>
             </>
           ) : (
             <>
-              <Link to="/login">Log in</Link>
-              <Link to="/signup">Sign up</Link>
+              <Link to="/login" onClick={closeMenu}>
+                Log in
+              </Link>
+              <Link to="/signup" onClick={closeMenu}>
+                Sign up
+              </Link>
             </>
           )}
         </nav>
