@@ -12,7 +12,7 @@ export default function SignUp() {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "applicant",
+    role: "",
   });
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -32,6 +32,10 @@ export default function SignUp() {
       setError(
         "Storage isn't connected yet. Add your Supabase keys in src/lib/config.js."
       );
+      return;
+    }
+    if (!form.role) {
+      setError("Please select a role.");
       return;
     }
     if (form.password !== form.confirmPassword) {
