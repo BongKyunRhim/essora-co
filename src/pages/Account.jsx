@@ -14,7 +14,6 @@ export default function Account() {
     high_school: profile?.high_school ?? "",
     grad_year: profile?.grad_year ?? "",
     bio: profile?.bio ?? "",
-    interests: profile?.interests ?? "",
     intended_major: profile?.intended_major ?? "",
     dream_schools: profile?.dream_schools ?? "",
     gpa: profile?.gpa ?? "",
@@ -45,7 +44,6 @@ export default function Account() {
         high_school: form.high_school,
         grad_year: form.grad_year === "" ? null : Number(form.grad_year),
         bio: form.bio,
-        interests: form.interests,
         intended_major: form.intended_major,
         dream_schools: form.dream_schools,
         gpa: form.gpa === "" ? null : Number(form.gpa),
@@ -74,7 +72,12 @@ export default function Account() {
       .from("avatars")
       .upload(path, file, { upsert: true });
     if (err) {
-      setPhotoError(err.message);
+      const isBucketMissing = err.message?.toLowerCase().includes("bucket");
+      setPhotoError(
+        isBucketMissing
+          ? "Photo uploads aren't set up yet — ask the site admin to create the storage bucket."
+          : "Couldn't upload photo. Please try a different image or try again."
+      );
       setUploading(false);
       return;
     }
@@ -130,11 +133,14 @@ export default function Account() {
                   {uploading ? "Uploading…" : "Upload new picture"}
                   <input type="file" accept="image/*" onChange={handleUpload} hidden />
                 </label>
-                {avatarUrl && (
-                  <button type="button" className="avatar-delete-btn" onClick={handleDeletePhoto}>
-                    Delete
-                  </button>
-                )}
+                <button
+                  type="button"
+                  className="avatar-delete-btn"
+                  onClick={handleDeletePhoto}
+                  disabled={!avatarUrl}
+                >
+                  Delete photo
+                </button>
               </div>
             </div>
 
@@ -170,17 +176,6 @@ export default function Account() {
                   value={form.bio}
                   onChange={handleChange}
                   placeholder="Tell reviewers a little about yourself — your goals or what kind of feedback you're looking for…"
-                />
-              </label>
-
-              <label className="field">
-                <span>Interests</span>
-                <textarea
-                  name="interests"
-                  rows={2}
-                  value={form.interests}
-                  onChange={handleChange}
-                  placeholder="e.g. Photography, Music, Robotics, Environmental science…"
                 />
               </label>
 
