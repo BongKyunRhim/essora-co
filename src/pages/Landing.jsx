@@ -35,7 +35,7 @@ const STEPS = [
   {
     num: "04",
     title: "Improve & Rate",
-    desc: "Use the feedback to revise, and rate the reviewer to build trust in the community.",
+    desc: "Use the feedback to revise and rate the reviewer to build trust in the community.",
     icon: <StarIcon />,
     color: "#f59e0b",
     tint: "#fdf1dc",
