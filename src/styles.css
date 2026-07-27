@@ -189,7 +189,10 @@ a {
 /* Center the login / sign-up card in the screen so it feels framed */
 .app-main:has(.auth-card) {
   align-items: center;
+  justify-content: center;
   min-height: calc(100vh - var(--nav-h));
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .page {
