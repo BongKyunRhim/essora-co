@@ -351,6 +351,18 @@ button:hover {
   margin-top: 0.1rem;
 }
 
+.field--error input,
+.field--error textarea,
+.field--error select {
+  border-color: #e02424;
+}
+
+.field-error-msg {
+  font-size: 0.78rem;
+  color: #e02424;
+  margin-top: 0.1rem;
+}
+
 /* Two fields side by side (e.g. password + confirm) to keep the card short */
 .field-row {
   display: flex;

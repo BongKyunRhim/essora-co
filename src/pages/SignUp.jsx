@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { supabase, isSupabaseConfigured } from "../lib/supabase.js";
 import AuthCard from "../components/AuthCard.jsx";
 
-// Sign-up page. Creates a real account in Supabase and records the chosen
-// role (applicant or reviewer), which decides what the user sees afterward.
 export default function SignUp() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -15,6 +13,7 @@ export default function SignUp() {
     role: "",
     schoolEmail: "",
   });
+  const [fieldErrors, setFieldErrors] = useState({});
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
@@ -22,6 +21,9 @@ export default function SignUp() {
   function handleChange(event) {
     const { name, value } = event.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+    if (fieldErrors[name]) {
+      setFieldErrors((prev) => ({ ...prev, [name]: "" }));
+    }
   }
 
   async function handleSubmit(event) {
@@ -29,30 +31,34 @@ export default function SignUp() {
     setError("");
     setNotice("");
 
+    const errs = {};
+    if (!form.name) errs.name = "Full name is required.";
+    if (!form.email) errs.email = "Email is required.";
+    if (!form.password) errs.password = "Password is required.";
+    if (!form.confirmPassword) errs.confirmPassword = "Please confirm your password.";
+    if (!form.role) errs.role = "Please select a role.";
+    if (form.role === "reviewer" && !form.schoolEmail) {
+      errs.schoolEmail = "School email is required for reviewers.";
+    }
+    if (Object.keys(errs).length) {
+      setFieldErrors(errs);
+      return;
+    }
+
     if (!isSupabaseConfigured) {
-      setError(
-        "Storage isn't connected yet. Add your Supabase keys in src/lib/config.js."
-      );
+      setError("Storage isn't connected yet. Add your Supabase keys in src/lib/config.js.");
       return;
     }
-    if (!form.role) {
-      setError("Please select a role.");
+    if (form.role === "reviewer" && !form.schoolEmail.toLowerCase().endsWith(".edu")) {
+      setFieldErrors({ schoolEmail: "Must be a valid .edu address." });
       return;
-    }
-    if (form.role === "reviewer") {
-      if (!form.schoolEmail.toLowerCase().endsWith(".edu")) {
-        setError("Reviewers must sign up with a valid school email (.edu).");
-        return;
-      }
     }
     if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match.");
+      setFieldErrors({ confirmPassword: "Passwords do not match." });
       return;
     }
 
     setBusy(true);
-    // The name and role are passed as metadata; a database trigger copies
-    // them into the user's profile row.
     const { data, error: signUpError } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
@@ -78,54 +84,54 @@ export default function SignUp() {
       {error && <p className="error">{error}</p>}
       {notice && <p className="notice">{notice}</p>}
 
-      <form className="form" onSubmit={handleSubmit}>
-        <label className="field">
+      <form className="form" onSubmit={handleSubmit} noValidate>
+        <label className={`field${fieldErrors.name ? " field--error" : ""}`}>
           <span>Full name</span>
           <input
             type="text"
             name="name"
             value={form.name}
             onChange={handleChange}
-            required
           />
+          {fieldErrors.name && <span className="field-error-msg">{fieldErrors.name}</span>}
         </label>
 
-        <label className="field">
+        <label className={`field${fieldErrors.email ? " field--error" : ""}`}>
           <span>Email</span>
           <input
             type="email"
             name="email"
             value={form.email}
             onChange={handleChange}
-            required
           />
+          {fieldErrors.email && <span className="field-error-msg">{fieldErrors.email}</span>}
         </label>
 
         <div className="field-row">
-          <label className="field">
+          <label className={`field${fieldErrors.password ? " field--error" : ""}`}>
             <span>Password</span>
             <input
               type="password"
               name="password"
               value={form.password}
               onChange={handleChange}
-              required
             />
+            {fieldErrors.password && <span className="field-error-msg">{fieldErrors.password}</span>}
           </label>
 
-          <label className="field">
+          <label className={`field${fieldErrors.confirmPassword ? " field--error" : ""}`}>
             <span>Confirm password</span>
             <input
               type="password"
               name="confirmPassword"
               value={form.confirmPassword}
               onChange={handleChange}
-              required
             />
+            {fieldErrors.confirmPassword && <span className="field-error-msg">{fieldErrors.confirmPassword}</span>}
           </label>
         </div>
 
-        <fieldset className="field">
+        <fieldset className={`field${fieldErrors.role ? " field--error" : ""}`}>
           <legend>I am a</legend>
           <label className="radio">
             <input
@@ -147,10 +153,11 @@ export default function SignUp() {
             />
             <span>Reviewer</span>
           </label>
+          {fieldErrors.role && <span className="field-error-msg">{fieldErrors.role}</span>}
         </fieldset>
 
         {form.role === "reviewer" && (
-          <label className="field">
+          <label className={`field${fieldErrors.schoolEmail ? " field--error" : ""}`}>
             <span>School email</span>
             <input
               type="email"
@@ -158,9 +165,9 @@ export default function SignUp() {
               value={form.schoolEmail}
               onChange={handleChange}
               placeholder="you@university.edu"
-              required
             />
             <span className="field-hint">Must be a valid .edu address to verify you're a current student.</span>
+            {fieldErrors.schoolEmail && <span className="field-error-msg">{fieldErrors.schoolEmail}</span>}
           </label>
         )}
 
