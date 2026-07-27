@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { useAuth } from "./AuthContext.jsx";
 import BrandLogo from "../components/BrandLogo.jsx";
+import Avatar from "../components/Avatar.jsx";
 import SignUp from "../pages/SignUp.jsx";
 import Login from "../pages/Login.jsx";
 import Dashboard from "../pages/Dashboard.jsx";
@@ -13,7 +14,6 @@ import ReviewerDetail from "../pages/ReviewerDetail.jsx";
 import ReviewerNotifications from "../pages/ReviewerNotifications.jsx";
 import Landing from "../pages/Landing.jsx";
 
-// Only lets logged-in users through; otherwise sends them to the login page.
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <p className="page">Loading…</p>;
@@ -21,11 +21,19 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
+function BellIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    </svg>
+  );
+}
+
 function Home() {
   return <Landing />;
 }
 
-// App is the shell that holds the whole site together.
 export default function App() {
   const { user, profile, signOut } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -40,6 +48,8 @@ export default function App() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const profileHref = profile?.role === "reviewer" ? "/reviewer" : "/account";
+
   return (
     <div className="app">
       <header className={`app-header${isLanding ? " landing-nav" : ""}${isLanding && scrolled ? " scrolled" : ""}`}>
@@ -48,7 +58,6 @@ export default function App() {
           ESSORA
         </Link>
 
-        {/* Hamburger toggle — only shown on small screens via CSS */}
         <button
           type="button"
           className={`nav-toggle ${menuOpen ? "open" : ""}`}
@@ -64,51 +73,42 @@ export default function App() {
         <nav className={`app-nav ${menuOpen ? "open" : ""}`}>
           {user ? (
             <>
+              {/* Find reviewers — shown for applicants */}
               {profile?.role === "applicant" && (
-                <>
-                  <Link to="/applicant" onClick={closeMenu}>
-                    Find reviewers
-                  </Link>
-                  <Link to="/account" onClick={closeMenu}>
-                    My account
-                  </Link>
-                </>
+                <Link to="/applicant" onClick={closeMenu}>
+                  Find reviewers
+                </Link>
               )}
+
+              {/* Notification bell — shown for reviewers */}
               {profile?.role === "reviewer" && (
-                <>
-                  <Link to="/reviewer" onClick={closeMenu}>
-                    My profile
-                  </Link>
-                  <Link to="/notifications" onClick={closeMenu}>
-                    Notifications
-                  </Link>
-                </>
+                <Link to="/notifications" className="nav-icon-btn" onClick={closeMenu} aria-label="Notifications">
+                  <BellIcon />
+                </Link>
               )}
+
+              {/* Profile avatar — links to settings */}
+              <Link to={profileHref} className="nav-avatar-btn" onClick={closeMenu} aria-label="Profile settings">
+                <Avatar url={profile?.avatar_url} name={profile?.full_name} size={34} />
+              </Link>
+
               <button
                 type="button"
                 className="linklike"
-                onClick={() => {
-                  closeMenu();
-                  signOut();
-                }}
+                onClick={() => { closeMenu(); signOut(); }}
               >
                 Log out
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" onClick={closeMenu}>
-                Log in
-              </Link>
-              <Link to="/signup" onClick={closeMenu}>
-                Sign up
-              </Link>
+              <Link to="/login" onClick={closeMenu}>Log in</Link>
+              <Link to="/signup" onClick={closeMenu}>Sign up</Link>
             </>
           )}
         </nav>
       </header>
 
-      {/* Tap outside the open mobile menu to close it */}
       {menuOpen && <div className="nav-overlay" onClick={closeMenu} />}
 
       <main className="app-main">
@@ -116,59 +116,16 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/reviewer"
-            element={
-              <ProtectedRoute>
-                <ReviewerHome />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/applicant"
-            element={
-              <ProtectedRoute>
-                <ApplicantHome />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/account"
-            element={
-              <ProtectedRoute>
-                <Account />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/reviewers/:id"
-            element={
-              <ProtectedRoute>
-                <ReviewerDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/notifications"
-            element={
-              <ProtectedRoute>
-                <ReviewerNotifications />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/reviewer" element={<ProtectedRoute><ReviewerHome /></ProtectedRoute>} />
+          <Route path="/applicant" element={<ProtectedRoute><ApplicantHome /></ProtectedRoute>} />
+          <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
+          <Route path="/reviewers/:id" element={<ProtectedRoute><ReviewerDetail /></ProtectedRoute>} />
+          <Route path="/notifications" element={<ProtectedRoute><ReviewerNotifications /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </main>
 
-      {/* Vercel performance analytics (collects data once deployed on Vercel) */}
       <SpeedInsights />
     </div>
   );
