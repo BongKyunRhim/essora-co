@@ -218,7 +218,7 @@ a {
   border: none;
 }
 
-.field > span,
+.field > span:not(.field-error-msg):not(.field-hint),
 .field legend {
   font-size: 0.72rem;
   letter-spacing: 0.08em;
