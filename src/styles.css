@@ -335,7 +335,8 @@ a {
 input[type="text"],
 input[type="email"],
 input[type="password"],
-input[type="number"] {
+input[type="number"],
+select {
   width: 100%;
   box-sizing: border-box;
   padding: 0.65rem 0.75rem;
@@ -344,6 +345,15 @@ input[type="number"] {
   background: #fff;
   color: #000;
   font-size: 1rem;
+}
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23000' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.25rem;
+  cursor: pointer;
 }
 
 .role-picker {

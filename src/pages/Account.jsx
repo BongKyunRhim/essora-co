@@ -3,7 +3,7 @@ import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import AvatarUpload from "../components/AvatarUpload.jsx";
 
-const SECTIONS = ["My Profile", "Academic Info", "Account & Privacy"];
+const SECTIONS = ["My Profile", "Activity", "Account & Privacy"];
 
 export default function Account() {
   const { profile, refreshProfile } = useAuth();
@@ -124,23 +124,23 @@ export default function Account() {
                   />
                 </label>
                 <label className="field">
-                  <span>Age</span>
-                  <input
-                    type="number"
-                    name="age"
-                    min="0"
-                    value={form.age}
-                    onChange={handleChange}
-                    placeholder="e.g. 17"
-                  />
+                  <span>Grade</span>
+                  <select name="age" value={form.age} onChange={handleChange}>
+                    <option value="">Select grade</option>
+                    <option value="9">9th grade</option>
+                    <option value="10">10th grade</option>
+                    <option value="11">11th grade</option>
+                    <option value="12">12th grade</option>
+                    <option value="13">Graduated</option>
+                  </select>
                 </label>
               </div>
 
               <label className="field">
-                <span>About me <span className="field-hint-inline">(shown to reviewers)</span></span>
+                <span>Profile description <span className="field-hint-inline">(shown to reviewers)</span></span>
                 <textarea
                   name="bio"
-                  rows={3}
+                  rows={4}
                   value={form.bio}
                   onChange={handleChange}
                   placeholder="Tell reviewers a little about yourself — your interests, goals, or what kind of feedback you're looking for…"
@@ -157,11 +157,11 @@ export default function Account() {
           </>
         )}
 
-        {activeSection === "Academic Info" && (
+        {activeSection === "Activity" && (
           <>
             <div className="settings-section-header">
-              <h2 className="settings-section-title">Academic Info</h2>
-              <p className="settings-section-desc">Helps reviewers give you more relevant feedback.</p>
+              <h2 className="settings-section-title">Activity</h2>
+              <p className="settings-section-desc">Academic info and activities that help reviewers give better feedback.</p>
             </div>
 
             <form className="form settings-form" onSubmit={handleSave}>
@@ -258,7 +258,7 @@ export default function Account() {
                 <span>Extracurriculars & activities <span className="field-hint-inline">(optional)</span></span>
                 <textarea
                   name="activities"
-                  rows={3}
+                  rows={4}
                   value={form.activities}
                   onChange={handleChange}
                   placeholder="e.g. Varsity soccer, debate team, robotics club, volunteer work…"

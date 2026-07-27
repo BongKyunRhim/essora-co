@@ -4,7 +4,7 @@ import Avatar from "./Avatar.jsx";
 
 // Lets a user pick an image; uploads it to Supabase Storage and hands the
 // public URL back via onUploaded so the page can save it on the profile.
-export default function AvatarUpload({ userId, url, name, onUploaded }) {
+export default function AvatarUpload({ userId, url, name, onUploaded, size = 96 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -37,7 +37,7 @@ export default function AvatarUpload({ userId, url, name, onUploaded }) {
 
   return (
     <div className="avatar-upload">
-      <Avatar url={url} name={name} size={80} />
+      <Avatar url={url} name={name} size={size} />
       <label className="linklike file-label">
         {busy ? "Uploading…" : "Change photo"}
         <input type="file" accept="image/*" onChange={handleFile} hidden />
