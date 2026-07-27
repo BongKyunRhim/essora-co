@@ -186,10 +186,10 @@ a {
   padding: 0 1rem;
 }
 
-/* Settings page: a bit more breathing room */
+/* Settings page: full-width, no centering constraint */
 .app-main:has(.settings-layout) {
   align-items: start;
-  padding: 2.5rem 2rem;
+  padding: 2rem 1.5rem;
 }
 
 /* Center the login / sign-up card in the screen so it feels framed */
@@ -807,7 +807,6 @@ button:disabled {
   grid-template-columns: 210px 1fr;
   gap: 0;
   width: 100%;
-  max-width: 920px;
   align-items: start;
   border: 1px solid #e8e8e8;
   border-radius: var(--radius);

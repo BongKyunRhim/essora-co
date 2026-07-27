@@ -3,7 +3,7 @@ import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import AvatarUpload from "../components/AvatarUpload.jsx";
 
-const SECTIONS = ["My Profile", "Account & Privacy"];
+const SECTIONS = ["My Profile", "Academic Info", "Account & Privacy"];
 
 export default function Account() {
   const { profile, refreshProfile } = useAuth();
@@ -13,6 +13,13 @@ export default function Account() {
     age: profile?.age ?? "",
     high_school: profile?.high_school ?? "",
     grad_year: profile?.grad_year ?? "",
+    bio: profile?.bio ?? "",
+    intended_major: profile?.intended_major ?? "",
+    dream_schools: profile?.dream_schools ?? "",
+    gpa: profile?.gpa ?? "",
+    sat_score: profile?.sat_score ?? "",
+    act_score: profile?.act_score ?? "",
+    activities: profile?.activities ?? "",
   });
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url ?? "");
   const [status, setStatus] = useState("");
@@ -34,6 +41,13 @@ export default function Account() {
         age: form.age === "" ? null : Number(form.age),
         high_school: form.high_school,
         grad_year: form.grad_year === "" ? null : Number(form.grad_year),
+        bio: form.bio,
+        intended_major: form.intended_major,
+        dream_schools: form.dream_schools,
+        gpa: form.gpa === "" ? null : Number(form.gpa),
+        sat_score: form.sat_score === "" ? null : Number(form.sat_score),
+        act_score: form.act_score === "" ? null : Number(form.act_score),
+        activities: form.activities,
       })
       .eq("id", profile.id);
 
@@ -59,7 +73,6 @@ export default function Account() {
 
   return (
     <div className="settings-layout">
-      {/* Sidebar */}
       <aside className="settings-sidebar">
         <p className="settings-sidebar-title">Account Settings</p>
         <nav className="settings-nav">
@@ -76,7 +89,6 @@ export default function Account() {
         </nav>
       </aside>
 
-      {/* Main content */}
       <main className="settings-main">
         {activeSection === "My Profile" && (
           <>
@@ -124,6 +136,35 @@ export default function Account() {
                 </label>
               </div>
 
+              <label className="field">
+                <span>About me <span className="field-hint-inline">(shown to reviewers)</span></span>
+                <textarea
+                  name="bio"
+                  rows={3}
+                  value={form.bio}
+                  onChange={handleChange}
+                  placeholder="Tell reviewers a little about yourself — your interests, goals, or what kind of feedback you're looking for…"
+                />
+              </label>
+
+              <div className="settings-footer">
+                <button type="submit">Save profile</button>
+                {status && (
+                  <p className={`notice${status.startsWith("Error") ? " error" : ""}`}>{status}</p>
+                )}
+              </div>
+            </form>
+          </>
+        )}
+
+        {activeSection === "Academic Info" && (
+          <>
+            <div className="settings-section-header">
+              <h2 className="settings-section-title">Academic Info</h2>
+              <p className="settings-section-desc">Helps reviewers give you more relevant feedback.</p>
+            </div>
+
+            <form className="form settings-form" onSubmit={handleSave}>
               <div className="settings-grid">
                 <label className="field">
                   <span>High school <span className="field-hint-inline">(optional)</span></span>
@@ -136,7 +177,7 @@ export default function Account() {
                   />
                 </label>
                 <label className="field">
-                  <span>Expected graduation year <span className="field-hint-inline">(optional)</span></span>
+                  <span>Expected graduation year</span>
                   <input
                     type="number"
                     name="grad_year"
@@ -149,12 +190,85 @@ export default function Account() {
                 </label>
               </div>
 
+              <div className="settings-grid">
+                <label className="field">
+                  <span>Intended major <span className="field-hint-inline">(optional)</span></span>
+                  <input
+                    type="text"
+                    name="intended_major"
+                    value={form.intended_major}
+                    onChange={handleChange}
+                    placeholder="e.g. Computer Science, Undecided"
+                  />
+                </label>
+                <label className="field">
+                  <span>GPA <span className="field-hint-inline">(optional)</span></span>
+                  <input
+                    type="number"
+                    name="gpa"
+                    min="0"
+                    max="4.0"
+                    step="0.01"
+                    value={form.gpa}
+                    onChange={handleChange}
+                    placeholder="e.g. 3.8"
+                  />
+                </label>
+              </div>
+
+              <div className="settings-grid">
+                <label className="field">
+                  <span>SAT score <span className="field-hint-inline">(optional)</span></span>
+                  <input
+                    type="number"
+                    name="sat_score"
+                    min="400"
+                    max="1600"
+                    value={form.sat_score}
+                    onChange={handleChange}
+                    placeholder="e.g. 1450"
+                  />
+                </label>
+                <label className="field">
+                  <span>ACT score <span className="field-hint-inline">(optional)</span></span>
+                  <input
+                    type="number"
+                    name="act_score"
+                    min="1"
+                    max="36"
+                    value={form.act_score}
+                    onChange={handleChange}
+                    placeholder="e.g. 32"
+                  />
+                </label>
+              </div>
+
+              <label className="field">
+                <span>Dream schools <span className="field-hint-inline">(optional)</span></span>
+                <input
+                  type="text"
+                  name="dream_schools"
+                  value={form.dream_schools}
+                  onChange={handleChange}
+                  placeholder="e.g. MIT, Stanford, Harvard"
+                />
+              </label>
+
+              <label className="field">
+                <span>Extracurriculars & activities <span className="field-hint-inline">(optional)</span></span>
+                <textarea
+                  name="activities"
+                  rows={3}
+                  value={form.activities}
+                  onChange={handleChange}
+                  placeholder="e.g. Varsity soccer, debate team, robotics club, volunteer work…"
+                />
+              </label>
+
               <div className="settings-footer">
-                <button type="submit">Save profile</button>
+                <button type="submit">Save</button>
                 {status && (
-                  <p className={`notice${status.startsWith("Error") ? " error" : ""}`}>
-                    {status}
-                  </p>
+                  <p className={`notice${status.startsWith("Error") ? " error" : ""}`}>{status}</p>
                 )}
               </div>
             </form>
@@ -165,7 +279,7 @@ export default function Account() {
           <>
             <div className="settings-section-header">
               <h2 className="settings-section-title">Account & Privacy</h2>
-              <p className="settings-section-desc">Manage your account and privacy preferences.</p>
+              <p className="settings-section-desc">Manage your login and privacy preferences.</p>
             </div>
             <p className="muted">Account settings coming soon.</p>
           </>
