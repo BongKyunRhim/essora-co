@@ -13,6 +13,7 @@ export default function SignUp() {
     password: "",
     confirmPassword: "",
     role: "",
+    schoolEmail: "",
   });
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -38,6 +39,12 @@ export default function SignUp() {
       setError("Please select a role.");
       return;
     }
+    if (form.role === "reviewer") {
+      if (!form.schoolEmail.toLowerCase().endsWith(".edu")) {
+        setError("Reviewers must sign up with a valid school email (.edu).");
+        return;
+      }
+    }
     if (form.password !== form.confirmPassword) {
       setError("Passwords do not match.");
       return;
@@ -49,7 +56,7 @@ export default function SignUp() {
     const { data, error: signUpError } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
-      options: { data: { full_name: form.name, role: form.role } },
+      options: { data: { full_name: form.name, role: form.role, school_email: form.schoolEmail || null } },
     });
     setBusy(false);
 
@@ -141,6 +148,21 @@ export default function SignUp() {
             <span>Reviewer</span>
           </label>
         </fieldset>
+
+        {form.role === "reviewer" && (
+          <label className="field">
+            <span>School email</span>
+            <input
+              type="email"
+              name="schoolEmail"
+              value={form.schoolEmail}
+              onChange={handleChange}
+              placeholder="you@university.edu"
+              required
+            />
+            <span className="field-hint">Must be a valid .edu address to verify you're a current student.</span>
+          </label>
+        )}
 
         <button type="submit" disabled={busy}>
           {busy ? "Creating…" : "Create account"}
