@@ -43,7 +43,7 @@ export default function Login() {
     setBusy(false);
 
     if (signInError) {
-      setError(signInError.message);
+      setError("Incorrect email or password.");
       return;
     }
     navigate("/dashboard");
