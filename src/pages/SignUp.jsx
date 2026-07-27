@@ -133,26 +133,23 @@ export default function SignUp() {
 
         <fieldset className={`field${fieldErrors.role ? " field--error" : ""}`}>
           <legend>I am a</legend>
-          <label className="radio">
-            <input
-              type="radio"
-              name="role"
-              value="applicant"
-              checked={form.role === "applicant"}
-              onChange={handleChange}
-            />
-            <span>Applicant</span>
-          </label>
-          <label className="radio">
-            <input
-              type="radio"
-              name="role"
-              value="reviewer"
-              checked={form.role === "reviewer"}
-              onChange={handleChange}
-            />
-            <span>Reviewer</span>
-          </label>
+          <div className="role-picker">
+            {["applicant", "reviewer"].map((r) => (
+              <button
+                key={r}
+                type="button"
+                className={`role-btn${form.role === r ? " selected" : ""}`}
+                onClick={() => {
+                  if (form.role !== r) {
+                    setForm((prev) => ({ ...prev, role: r }));
+                    if (fieldErrors.role) setFieldErrors((prev) => ({ ...prev, role: "" }));
+                  }
+                }}
+              >
+                {r.charAt(0).toUpperCase() + r.slice(1)}
+              </button>
+            ))}
+          </div>
           {fieldErrors.role && <span className="field-error-msg">{fieldErrors.role}</span>}
         </fieldset>
 
