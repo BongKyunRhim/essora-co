@@ -37,10 +37,12 @@ function Home() {
 export default function App() {
   const { user, profile, signOut } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const isLanding = location.pathname === "/";
   const closeMenu = () => setMenuOpen(false);
+  const closeProfile = () => setProfileOpen(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -87,18 +89,36 @@ export default function App() {
                 </Link>
               )}
 
-              {/* Profile avatar — links to settings */}
-              <Link to={profileHref} className="nav-avatar-btn" onClick={closeMenu} aria-label="Profile settings">
-                <Avatar url={profile?.avatar_url} name={profile?.full_name} size={34} />
-              </Link>
+              {/* Profile avatar dropdown */}
+              <div className="nav-profile-wrap">
+                <button
+                  type="button"
+                  className="nav-avatar-btn"
+                  aria-label="Profile menu"
+                  onClick={() => setProfileOpen((o) => !o)}
+                >
+                  <Avatar url={profile?.avatar_url} name={profile?.full_name} size={34} />
+                </button>
 
-              <button
-                type="button"
-                className="linklike"
-                onClick={() => { closeMenu(); signOut(); }}
-              >
-                Log out
-              </button>
+                {profileOpen && (
+                  <>
+                    <div className="nav-profile-dropdown">
+                      <p className="nav-profile-name">{profile?.full_name || "My account"}</p>
+                      <Link to={profileHref} className="nav-profile-item" onClick={() => { closeMenu(); closeProfile(); }}>
+                        Profile settings
+                      </Link>
+                      <button
+                        type="button"
+                        className="nav-profile-item nav-profile-signout"
+                        onClick={() => { closeMenu(); closeProfile(); signOut(); }}
+                      >
+                        Log out
+                      </button>
+                    </div>
+                    <div className="nav-profile-overlay" onClick={closeProfile} />
+                  </>
+                )}
+              </div>
             </>
           ) : (
             <>
