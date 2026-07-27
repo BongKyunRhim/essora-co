@@ -3,9 +3,11 @@ import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import AvatarUpload from "../components/AvatarUpload.jsx";
 
-// What an APPLICANT sees under "My account": edit their personal info.
+const SECTIONS = ["My Profile", "Account & Privacy"];
+
 export default function Account() {
   const { profile, refreshProfile } = useAuth();
+  const [activeSection, setActiveSection] = useState("My Profile");
   const [form, setForm] = useState({
     full_name: profile?.full_name ?? "",
     age: profile?.age ?? "",
@@ -43,71 +45,132 @@ export default function Account() {
     setStatus("Saved.");
   }
 
-  // Photo is saved on its own as soon as it's uploaded.
   async function handleAvatar(url) {
     setAvatarUrl(url);
     await supabase.from("profiles").update({ avatar_url: url }).eq("id", profile.id);
     await refreshProfile();
   }
 
+  async function handleRemoveAvatar() {
+    setAvatarUrl("");
+    await supabase.from("profiles").update({ avatar_url: null }).eq("id", profile.id);
+    await refreshProfile();
+  }
+
   return (
-    <section className="page">
-      <h1>My account</h1>
+    <div className="settings-layout">
+      {/* Sidebar */}
+      <aside className="settings-sidebar">
+        <p className="settings-sidebar-title">Account Settings</p>
+        <nav className="settings-nav">
+          {SECTIONS.map((s) => (
+            <button
+              key={s}
+              type="button"
+              className={`settings-nav-item${activeSection === s ? " active" : ""}`}
+              onClick={() => setActiveSection(s)}
+            >
+              {s}
+            </button>
+          ))}
+        </nav>
+      </aside>
 
-      <AvatarUpload
-        userId={profile.id}
-        url={avatarUrl}
-        name={form.full_name}
-        onUploaded={handleAvatar}
-      />
+      {/* Main content */}
+      <main className="settings-main">
+        {activeSection === "My Profile" && (
+          <>
+            <div className="settings-section-header">
+              <h2 className="settings-section-title">My Profile</h2>
+              <p className="settings-section-desc">Your personal info shown to reviewers.</p>
+            </div>
 
-      <form className="form" onSubmit={handleSave}>
-        <label className="field">
-          <span>Full name</span>
-          <input
-            type="text"
-            name="full_name"
-            value={form.full_name}
-            onChange={handleChange}
-          />
-        </label>
+            <div className="settings-avatar-row">
+              <AvatarUpload
+                userId={profile.id}
+                url={avatarUrl}
+                name={form.full_name}
+                onUploaded={handleAvatar}
+              />
+              {avatarUrl && (
+                <button type="button" className="settings-remove-photo" onClick={handleRemoveAvatar}>
+                  Remove photo
+                </button>
+              )}
+            </div>
 
-        <label className="field">
-          <span>Age</span>
-          <input
-            type="number"
-            name="age"
-            min="0"
-            value={form.age}
-            onChange={handleChange}
-          />
-        </label>
+            <form className="form settings-form" onSubmit={handleSave}>
+              <div className="settings-grid">
+                <label className="field">
+                  <span>Full name</span>
+                  <input
+                    type="text"
+                    name="full_name"
+                    value={form.full_name}
+                    onChange={handleChange}
+                    placeholder="First & last name"
+                  />
+                </label>
+                <label className="field">
+                  <span>Age</span>
+                  <input
+                    type="number"
+                    name="age"
+                    min="0"
+                    value={form.age}
+                    onChange={handleChange}
+                    placeholder="e.g. 17"
+                  />
+                </label>
+              </div>
 
-        <label className="field">
-          <span>High school (optional)</span>
-          <input
-            type="text"
-            name="high_school"
-            value={form.high_school}
-            onChange={handleChange}
-          />
-        </label>
+              <div className="settings-grid">
+                <label className="field">
+                  <span>High school <span className="field-hint-inline">(optional)</span></span>
+                  <input
+                    type="text"
+                    name="high_school"
+                    value={form.high_school}
+                    onChange={handleChange}
+                    placeholder="e.g. Lincoln High School"
+                  />
+                </label>
+                <label className="field">
+                  <span>Expected graduation year <span className="field-hint-inline">(optional)</span></span>
+                  <input
+                    type="number"
+                    name="grad_year"
+                    min="2020"
+                    max="2035"
+                    value={form.grad_year}
+                    onChange={handleChange}
+                    placeholder="e.g. 2026"
+                  />
+                </label>
+              </div>
 
-        <label className="field">
-          <span>Expected graduation year (optional)</span>
-          <input
-            type="number"
-            name="grad_year"
-            min="2020"
-            value={form.grad_year}
-            onChange={handleChange}
-          />
-        </label>
+              <div className="settings-footer">
+                <button type="submit">Save profile</button>
+                {status && (
+                  <p className={`notice${status.startsWith("Error") ? " error" : ""}`}>
+                    {status}
+                  </p>
+                )}
+              </div>
+            </form>
+          </>
+        )}
 
-        <button type="submit">Save</button>
-      </form>
-
-      {status && <p className="notice">{status}</p>}
-    </section>
+        {activeSection === "Account & Privacy" && (
+          <>
+            <div className="settings-section-header">
+              <h2 className="settings-section-title">Account & Privacy</h2>
+              <p className="settings-section-desc">Manage your account and privacy preferences.</p>
+            </div>
+            <p className="muted">Account settings coming soon.</p>
+          </>
+        )}
+      </main>
+    </div>
   );
 }
