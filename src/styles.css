@@ -57,7 +57,7 @@ a {
   justify-content: space-between;
   height: var(--nav-h);
   padding: 0 2rem;
-  background: #fff;
+  background: #c5c2be;
   color: #000;
   border-bottom: none;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
@@ -71,7 +71,7 @@ a {
 }
 
 .app-header.landing-nav.scrolled {
-  background: #fff;
+  background: #c5c2be;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
@@ -795,6 +795,117 @@ button:disabled {
   transform-origin: center;
 }
 
+/* ---- Settings layout (Reviewer profile page) ---- */
+.settings-layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 860px;
+  align-items: start;
+}
+
+.settings-sidebar {
+  position: sticky;
+  top: calc(var(--nav-h) + 1.5rem);
+}
+
+.settings-sidebar-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #000;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.settings-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.settings-nav-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.55rem 0.75rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: #555;
+  font-size: 0.9rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  box-shadow: none;
+}
+
+.settings-nav-item:hover {
+  background: #f5f5f5;
+  color: #000;
+}
+
+.settings-nav-item.active {
+  background: #000;
+  color: #fff;
+}
+
+.settings-main {
+  min-width: 0;
+}
+
+.settings-section-title {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.settings-footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  padding-top: 0.25rem;
+}
+
+.settings-footer button {
+  min-width: 130px;
+  flex-shrink: 0;
+}
+
+.settings-footer .notice {
+  margin-top: 0;
+  font-size: 0.85rem;
+}
+
+.settings-footer .notice.error {
+  color: #e02424;
+}
+
+.settings-listing {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.field-hint-inline {
+  font-size: 0.78rem;
+  color: #888;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
 /* ---- Responsive: tablet ---- */
 @media (max-width: 900px) {
   .app-main {
@@ -845,7 +956,7 @@ button:disabled {
     flex-direction: column;
     align-items: stretch;
     gap: 0;
-    background: #fff;
+    background: #c5c2be;
     border-bottom: 1px solid #000;
     display: none;
   }
@@ -941,6 +1052,46 @@ button:disabled {
     font-size: 0.95rem;
     top: 1rem;
     right: 1.1rem;
+  }
+
+  /* Settings layout collapses to single column on mobile */
+  .settings-layout {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .settings-sidebar {
+    position: static;
+  }
+
+  .settings-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .settings-nav-item {
+    width: auto;
+    flex: none;
+    padding: 0.4rem 0.75rem;
+    border: 1px solid #d0d0d0;
+    font-size: 0.85rem;
+  }
+
+  .settings-nav-item.active {
+    border-color: #000;
+  }
+
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-footer {
+    flex-wrap: wrap;
+  }
+
+  .settings-footer button {
+    width: 100%;
   }
 
   /* Inner pages: reviewer detail + notifications adapt */
