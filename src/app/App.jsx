@@ -21,12 +21,8 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
-// The home route: show the public landing page to visitors, and send
-// logged-in users straight to their dashboard.
 function Home() {
-  const { user, loading } = useAuth();
-  if (loading) return null;
-  return user ? <Navigate to="/dashboard" replace /> : <Landing />;
+  return <Landing />;
 }
 
 // App is the shell that holds the whole site together.
