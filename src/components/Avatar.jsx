@@ -1,7 +1,4 @@
-// Shows a profile photo, or a plain box with the person's first initial
-// when there's no photo.
 export default function Avatar({ url, name, size = 48 }) {
-  const initial = (name || "?").trim().charAt(0).toUpperCase() || "?";
   const style = { width: size, height: size };
 
   if (url) {
@@ -14,9 +11,19 @@ export default function Avatar({ url, name, size = 48 }) {
       />
     );
   }
+
   return (
-    <div className="avatar avatar-placeholder" style={style}>
-      {initial}
-    </div>
+    <svg
+      className="avatar avatar-placeholder"
+      width={size}
+      height={size}
+      viewBox="0 0 100 100"
+      style={style}
+      aria-label="No profile photo"
+    >
+      <rect width="100" height="100" fill="#d9d9d9" />
+      <circle cx="50" cy="37" r="18" fill="#b3b3b3" />
+      <circle cx="50" cy="84" r="33" fill="#b3b3b3" />
+    </svg>
   );
 }

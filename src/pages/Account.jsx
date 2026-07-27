@@ -131,7 +131,6 @@ export default function Account() {
                     <option value="10">10th grade</option>
                     <option value="11">11th grade</option>
                     <option value="12">12th grade</option>
-                    <option value="13">Graduated</option>
                   </select>
                 </label>
               </div>
