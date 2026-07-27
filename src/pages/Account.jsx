@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
-import AvatarUpload from "../components/AvatarUpload.jsx";
+import Avatar from "../components/Avatar.jsx";
 
 const SECTIONS = ["My Profile", "Activity", "Account & Privacy"];
 
@@ -14,6 +14,7 @@ export default function Account() {
     high_school: profile?.high_school ?? "",
     grad_year: profile?.grad_year ?? "",
     bio: profile?.bio ?? "",
+    interests: profile?.interests ?? "",
     intended_major: profile?.intended_major ?? "",
     dream_schools: profile?.dream_schools ?? "",
     gpa: profile?.gpa ?? "",
@@ -22,6 +23,8 @@ export default function Account() {
     activities: profile?.activities ?? "",
   });
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url ?? "");
+  const [uploading, setUploading] = useState(false);
+  const [photoError, setPhotoError] = useState("");
   const [status, setStatus] = useState("");
 
   if (!profile) return <p className="page">Loading…</p>;
@@ -42,6 +45,7 @@ export default function Account() {
         high_school: form.high_school,
         grad_year: form.grad_year === "" ? null : Number(form.grad_year),
         bio: form.bio,
+        interests: form.interests,
         intended_major: form.intended_major,
         dream_schools: form.dream_schools,
         gpa: form.gpa === "" ? null : Number(form.gpa),
@@ -59,13 +63,30 @@ export default function Account() {
     setStatus("Saved.");
   }
 
-  async function handleAvatar(url) {
+  async function handleUpload(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setPhotoError("");
+    const ext = file.name.split(".").pop();
+    const path = `${profile.id}/avatar.${ext}`;
+    const { error: err } = await supabase.storage
+      .from("avatars")
+      .upload(path, file, { upsert: true });
+    if (err) {
+      setPhotoError(err.message);
+      setUploading(false);
+      return;
+    }
+    const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+    const url = `${data.publicUrl}?updated=${Date.now()}`;
     setAvatarUrl(url);
     await supabase.from("profiles").update({ avatar_url: url }).eq("id", profile.id);
     await refreshProfile();
+    setUploading(false);
   }
 
-  async function handleRemoveAvatar() {
+  async function handleDeletePhoto() {
     setAvatarUrl("");
     await supabase.from("profiles").update({ avatar_url: null }).eq("id", profile.id);
     await refreshProfile();
@@ -97,18 +118,24 @@ export default function Account() {
               <p className="settings-section-desc">Your personal info shown to reviewers.</p>
             </div>
 
-            <div className="settings-avatar-row">
-              <AvatarUpload
-                userId={profile.id}
-                url={avatarUrl}
-                name={form.full_name}
-                onUploaded={handleAvatar}
-              />
-              {avatarUrl && (
-                <button type="button" className="settings-remove-photo" onClick={handleRemoveAvatar}>
-                  Remove photo
-                </button>
-              )}
+            <div className="settings-photo-row">
+              <Avatar url={avatarUrl} name={form.full_name} size={68} />
+              <div className="settings-photo-info">
+                <p className="settings-photo-title">Profile picture</p>
+                <p className="settings-photo-hint">PNG, JPEG · under 15 MB</p>
+                {photoError && <p className="error" style={{ marginTop: "0.2rem", fontSize: "0.8rem" }}>{photoError}</p>}
+              </div>
+              <div className="settings-photo-actions">
+                <label className="avatar-upload-btn">
+                  {uploading ? "Uploading…" : "Upload new picture"}
+                  <input type="file" accept="image/*" onChange={handleUpload} hidden />
+                </label>
+                {avatarUrl && (
+                  <button type="button" className="avatar-delete-btn" onClick={handleDeletePhoto}>
+                    Delete
+                  </button>
+                )}
+              </div>
             </div>
 
             <form className="form settings-form" onSubmit={handleSave}>
@@ -136,13 +163,24 @@ export default function Account() {
               </div>
 
               <label className="field">
-                <span>Profile description <span className="field-hint-inline">(shown to reviewers)</span></span>
+                <span>About me <span className="field-hint-inline">(shown to reviewers)</span></span>
                 <textarea
                   name="bio"
-                  rows={4}
+                  rows={3}
                   value={form.bio}
                   onChange={handleChange}
-                  placeholder="Tell reviewers a little about yourself — your interests, goals, or what kind of feedback you're looking for…"
+                  placeholder="Tell reviewers a little about yourself — your goals or what kind of feedback you're looking for…"
+                />
+              </label>
+
+              <label className="field">
+                <span>Interests</span>
+                <textarea
+                  name="interests"
+                  rows={2}
+                  value={form.interests}
+                  onChange={handleChange}
+                  placeholder="e.g. Photography, Music, Robotics, Environmental science…"
                 />
               </label>
 
@@ -160,7 +198,7 @@ export default function Account() {
           <>
             <div className="settings-section-header">
               <h2 className="settings-section-title">Activity</h2>
-              <p className="settings-section-desc">Academic info and activities that help reviewers give better feedback.</p>
+              <p className="settings-section-desc">Academic background and activities that help reviewers give more relevant feedback.</p>
             </div>
 
             <form className="form settings-form" onSubmit={handleSave}>
@@ -189,17 +227,18 @@ export default function Account() {
                 </label>
               </div>
 
+              <label className="field">
+                <span>Intended major / area of interest <span className="field-hint-inline">(optional)</span></span>
+                <input
+                  type="text"
+                  name="intended_major"
+                  value={form.intended_major}
+                  onChange={handleChange}
+                  placeholder="e.g. Computer Science, Undecided, Engineering"
+                />
+              </label>
+
               <div className="settings-grid">
-                <label className="field">
-                  <span>Intended major <span className="field-hint-inline">(optional)</span></span>
-                  <input
-                    type="text"
-                    name="intended_major"
-                    value={form.intended_major}
-                    onChange={handleChange}
-                    placeholder="e.g. Computer Science, Undecided"
-                  />
-                </label>
                 <label className="field">
                   <span>GPA <span className="field-hint-inline">(optional)</span></span>
                   <input
@@ -213,9 +252,6 @@ export default function Account() {
                     placeholder="e.g. 3.8"
                   />
                 </label>
-              </div>
-
-              <div className="settings-grid">
                 <label className="field">
                   <span>SAT score <span className="field-hint-inline">(optional)</span></span>
                   <input
@@ -228,28 +264,30 @@ export default function Account() {
                     placeholder="e.g. 1450"
                   />
                 </label>
-                <label className="field">
-                  <span>ACT score <span className="field-hint-inline">(optional)</span></span>
-                  <input
-                    type="number"
-                    name="act_score"
-                    min="1"
-                    max="36"
-                    value={form.act_score}
-                    onChange={handleChange}
-                    placeholder="e.g. 32"
-                  />
-                </label>
               </div>
 
               <label className="field">
-                <span>Dream schools <span className="field-hint-inline">(optional)</span></span>
+                <span>ACT score <span className="field-hint-inline">(optional)</span></span>
                 <input
-                  type="text"
+                  type="number"
+                  name="act_score"
+                  min="1"
+                  max="36"
+                  value={form.act_score}
+                  onChange={handleChange}
+                  placeholder="e.g. 32"
+                  style={{ maxWidth: "240px" }}
+                />
+              </label>
+
+              <label className="field">
+                <span>College list <span className="field-hint-inline">(optional)</span></span>
+                <textarea
                   name="dream_schools"
+                  rows={3}
                   value={form.dream_schools}
                   onChange={handleChange}
-                  placeholder="e.g. MIT, Stanford, Harvard"
+                  placeholder="List the colleges you're applying to or interested in — e.g. MIT, Stanford, UMich, UCLA…"
                 />
               </label>
 
@@ -257,7 +295,7 @@ export default function Account() {
                 <span>Extracurriculars & activities <span className="field-hint-inline">(optional)</span></span>
                 <textarea
                   name="activities"
-                  rows={4}
+                  rows={3}
                   value={form.activities}
                   onChange={handleChange}
                   placeholder="e.g. Varsity soccer, debate team, robotics club, volunteer work…"

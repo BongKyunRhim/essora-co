@@ -1013,25 +1013,54 @@ button:disabled {
   color: #666;
 }
 
-.settings-avatar-row {
+.settings-photo-row {
   display: flex;
   align-items: center;
   gap: 1.25rem;
+  padding-bottom: 1.75rem;
   margin-bottom: 1.75rem;
+  border-bottom: 1px solid #e8e8e8;
 }
 
-.settings-remove-photo {
-  border: 1px solid #d0d0d0;
+.settings-photo-info {
+  flex: 1;
+}
+
+.settings-photo-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 0.2rem;
+}
+
+.settings-photo-hint {
+  font-size: 0.8rem;
+  color: #999;
+}
+
+.settings-photo-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+.avatar-delete-btn {
+  padding: 0.5rem 1rem;
+  border: 1.5px solid #d0d0d0;
+  border-radius: var(--radius-sm);
   background: #fff;
   color: #555;
-  font-size: 0.85rem;
-  padding: 0.4rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
 }
 
-.settings-remove-photo:hover {
+.avatar-delete-btn:hover {
   border-color: #e02424;
   color: #e02424;
-  background: #fff;
 }
 
 .settings-grid {
