@@ -191,8 +191,7 @@ a {
   align-items: center;
   justify-content: center;
   min-height: calc(100vh - var(--nav-h));
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding: 2rem 1rem;
 }
 
 .page {
@@ -232,6 +231,8 @@ input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="number"] {
+  width: 100%;
+  box-sizing: border-box;
   padding: 0.65rem 0.75rem;
   border: 1px solid #000;
   border-radius: var(--radius-sm);
@@ -862,7 +863,20 @@ button:disabled {
   }
 
   .app-main {
-    padding: 2rem 1rem;
+    padding: 1.5rem 0.75rem;
+  }
+
+  .app-main:has(.auth-card) {
+    padding: 1rem 0.75rem;
+  }
+
+  .auth-body {
+    padding: 1.25rem 1.25rem 1.5rem;
+  }
+
+  .auth-tab {
+    font-size: 1rem;
+    padding: 0.75rem;
   }
 
   /* Stack paired fields back on top of each other on phones */

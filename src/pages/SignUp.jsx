@@ -107,29 +107,27 @@ export default function SignUp() {
           {fieldErrors.email && <span className="field-error-msg">{fieldErrors.email}</span>}
         </label>
 
-        <div className="field-row">
-          <label className={`field${fieldErrors.password ? " field--error" : ""}`}>
-            <span>Password</span>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-            />
-            {fieldErrors.password && <span className="field-error-msg">{fieldErrors.password}</span>}
-          </label>
+        <label className={`field${fieldErrors.password ? " field--error" : ""}`}>
+          <span>Password</span>
+          <input
+            type="password"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+          />
+          {fieldErrors.password && <span className="field-error-msg">{fieldErrors.password}</span>}
+        </label>
 
-          <label className={`field${fieldErrors.confirmPassword ? " field--error" : ""}`}>
-            <span>Confirm password</span>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={form.confirmPassword}
-              onChange={handleChange}
-            />
-            {fieldErrors.confirmPassword && <span className="field-error-msg">{fieldErrors.confirmPassword}</span>}
-          </label>
-        </div>
+        <label className={`field${fieldErrors.confirmPassword ? " field--error" : ""}`}>
+          <span>Confirm password</span>
+          <input
+            type="password"
+            name="confirmPassword"
+            value={form.confirmPassword}
+            onChange={handleChange}
+          />
+          {fieldErrors.confirmPassword && <span className="field-error-msg">{fieldErrors.confirmPassword}</span>}
+        </label>
 
         <fieldset className={`field${fieldErrors.role ? " field--error" : ""}`}>
           <legend>I am a</legend>
