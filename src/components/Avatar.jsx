@@ -22,8 +22,10 @@ export default function Avatar({ url, name, size = 48 }) {
       aria-label="No profile photo"
     >
       <rect width="100" height="100" fill="#d9d9d9" />
-      <circle cx="50" cy="37" r="18" fill="#b3b3b3" />
-      <circle cx="50" cy="84" r="33" fill="#b3b3b3" />
+      {/* head — bottom edge at y=47 */}
+      <circle cx="50" cy="31" r="16" fill="#b3b3b3" />
+      {/* shoulders — top edge at y=54, clear gap from head */}
+      <circle cx="50" cy="92" r="38" fill="#b3b3b3" />
     </svg>
   );
 }
