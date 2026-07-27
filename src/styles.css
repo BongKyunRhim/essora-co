@@ -414,11 +414,10 @@ button:hover {
 
 /* Auth / status messages */
 .error {
-  border: 1px solid #000;
-  border-radius: var(--radius-sm);
-  padding: 0.5rem 0.7rem;
-  margin-bottom: 1rem;
+  color: #e02424;
   font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  padding-left: 0.1rem;
 }
 
 .notice {
