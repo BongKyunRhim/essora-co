@@ -18,7 +18,6 @@ export default function ReviewerHome() {
     bio: profile?.bio ?? "",
     long_bio: profile?.long_bio ?? "",
     price: profile?.price ?? "",
-    essay_types: profile?.essay_types ?? "",
     is_listed: profile?.is_listed ?? true,
   });
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url ?? "");
@@ -46,7 +45,6 @@ export default function ReviewerHome() {
         bio: form.bio,
         long_bio: form.long_bio,
         price: form.price === "" ? null : Number(form.price),
-        essay_types: form.essay_types,
         is_listed: form.is_listed,
       })
       .eq("id", profile.id);
@@ -65,11 +63,17 @@ export default function ReviewerHome() {
     await refreshProfile();
   }
 
+  async function handleRemoveAvatar() {
+    setAvatarUrl("");
+    await supabase.from("profiles").update({ avatar_url: null }).eq("id", profile.id);
+    await refreshProfile();
+  }
+
   return (
     <div className="settings-layout">
       {/* Sidebar */}
       <aside className="settings-sidebar">
-        <h2 className="settings-sidebar-title">Profile Settings</h2>
+        <p className="settings-sidebar-title">Profile Settings</p>
         <nav className="settings-nav">
           {SECTIONS.map((s) => (
             <button
@@ -88,17 +92,28 @@ export default function ReviewerHome() {
       <main className="settings-main">
         {activeSection === "Public Profile" && (
           <>
-            <h2 className="settings-section-title">Public Profile</h2>
+            <div className="settings-section-header">
+              <h2 className="settings-section-title">Public Profile</h2>
+              <p className="settings-section-desc">This is how applicants will see you on Essora.</p>
+            </div>
 
-            <AvatarUpload
-              userId={profile.id}
-              url={avatarUrl}
-              name={form.full_name}
-              onUploaded={handleAvatar}
-            />
+            {/* Avatar row */}
+            <div className="settings-avatar-row">
+              <AvatarUpload
+                userId={profile.id}
+                url={avatarUrl}
+                name={form.full_name}
+                onUploaded={handleAvatar}
+              />
+              {avatarUrl && (
+                <button type="button" className="settings-remove-photo" onClick={handleRemoveAvatar}>
+                  Remove photo
+                </button>
+              )}
+            </div>
 
             <form className="form settings-form" onSubmit={handleSave}>
-              {/* Row 1: name */}
+              {/* Name + Age */}
               <div className="settings-grid">
                 <label className="field">
                   <span>Full name</span>
@@ -110,7 +125,6 @@ export default function ReviewerHome() {
                     placeholder="First & last name"
                   />
                 </label>
-
                 <label className="field">
                   <span>Age</span>
                   <input
@@ -124,7 +138,7 @@ export default function ReviewerHome() {
                 </label>
               </div>
 
-              {/* Row 2: college + major */}
+              {/* College + Major */}
               <div className="settings-grid">
                 <label className="field">
                   <span>College / University</span>
@@ -136,7 +150,6 @@ export default function ReviewerHome() {
                     placeholder="e.g. Stanford University"
                   />
                 </label>
-
                 <label className="field">
                   <span>Major</span>
                   <input
@@ -149,7 +162,7 @@ export default function ReviewerHome() {
                 </label>
               </div>
 
-              {/* Row 3: grad year + high school */}
+              {/* Grad year + High school */}
               <div className="settings-grid">
                 <label className="field">
                   <span>Graduation year</span>
@@ -163,9 +176,8 @@ export default function ReviewerHome() {
                     placeholder="e.g. 2028"
                   />
                 </label>
-
                 <label className="field">
-                  <span>High school (optional)</span>
+                  <span>High school <span className="field-hint-inline">(optional)</span></span>
                   <input
                     type="text"
                     name="high_school"
@@ -176,31 +188,18 @@ export default function ReviewerHome() {
                 </label>
               </div>
 
-              {/* Row 4: essay types + price */}
-              <div className="settings-grid">
-                <label className="field">
-                  <span>Essay types you review</span>
-                  <input
-                    type="text"
-                    name="essay_types"
-                    value={form.essay_types}
-                    onChange={handleChange}
-                    placeholder="e.g. Common App, Supplemental, Scholarship"
-                  />
-                </label>
-
-                <label className="field">
-                  <span>Price per essay (USD)</span>
-                  <input
-                    type="number"
-                    name="price"
-                    min="0"
-                    value={form.price}
-                    onChange={handleChange}
-                    placeholder="e.g. 25"
-                  />
-                </label>
-              </div>
+              {/* Price */}
+              <label className="field" style={{ maxWidth: "240px" }}>
+                <span>Price per essay (USD)</span>
+                <input
+                  type="number"
+                  name="price"
+                  min="0"
+                  value={form.price}
+                  onChange={handleChange}
+                  placeholder="e.g. 25"
+                />
+              </label>
 
               {/* Short bio */}
               <label className="field">
@@ -239,7 +238,11 @@ export default function ReviewerHome() {
 
               <div className="settings-footer">
                 <button type="submit">Save profile</button>
-                {status && <p className={`notice${status.startsWith("Error") ? " error" : ""}`}>{status}</p>}
+                {status && (
+                  <p className={`notice${status.startsWith("Error") ? " error" : ""}`}>
+                    {status}
+                  </p>
+                )}
               </div>
             </form>
           </>
@@ -247,15 +250,21 @@ export default function ReviewerHome() {
 
         {activeSection === "My Activity" && (
           <>
-            <h2 className="settings-section-title">My Activity</h2>
-            <p className="muted">Your review history and completed requests will appear here.</p>
+            <div className="settings-section-header">
+              <h2 className="settings-section-title">My Activity</h2>
+              <p className="settings-section-desc">Your review history and completed requests.</p>
+            </div>
+            <p className="muted">No activity yet. Once you accept review requests they'll appear here.</p>
           </>
         )}
 
         {activeSection === "Account & Privacy" && (
           <>
-            <h2 className="settings-section-title">Account & Privacy</h2>
-            <p className="muted">Account settings and privacy controls coming soon.</p>
+            <div className="settings-section-header">
+              <h2 className="settings-section-title">Account & Privacy</h2>
+              <p className="settings-section-desc">Manage your account and privacy preferences.</p>
+            </div>
+            <p className="muted">Account settings coming soon.</p>
           </>
         )}
       </main>

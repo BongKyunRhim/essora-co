@@ -186,6 +186,12 @@ a {
   padding: 0 1rem;
 }
 
+/* Settings page: a bit more breathing room */
+.app-main:has(.settings-layout) {
+  align-items: start;
+  padding: 2.5rem 2rem;
+}
+
 /* Center the login / sign-up card in the screen so it feels framed */
 .app-main:has(.auth-card) {
   align-items: center;
@@ -798,70 +804,115 @@ button:disabled {
 /* ---- Settings layout (Reviewer profile page) ---- */
 .settings-layout {
   display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 2.5rem;
+  grid-template-columns: 210px 1fr;
+  gap: 0;
   width: 100%;
-  max-width: 860px;
+  max-width: 920px;
   align-items: start;
+  border: 1px solid #e8e8e8;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .settings-sidebar {
   position: sticky;
   top: calc(var(--nav-h) + 1.5rem);
+  border-right: 1px solid #e8e8e8;
+  background: #fafafa;
+  padding: 1.5rem 0;
+  min-height: 400px;
 }
 
 .settings-sidebar-title {
-  font-family: var(--font-display);
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: #000;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #e5e5e5;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #999;
+  margin: 0 0 0.75rem;
+  padding: 0 1.25rem 0.75rem;
+  border-bottom: 1px solid #e8e8e8;
 }
 
 .settings-nav {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  padding: 0.5rem 0;
 }
 
 .settings-nav-item {
   display: block;
   width: 100%;
   text-align: left;
-  padding: 0.55rem 0.75rem;
+  padding: 0.6rem 1.25rem;
   border: none;
-  border-radius: var(--radius-sm);
+  border-left: 3px solid transparent;
+  border-radius: 0;
   background: none;
   color: #555;
   font-size: 0.9rem;
   font-weight: 400;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
   box-shadow: none;
 }
 
 .settings-nav-item:hover {
-  background: #f5f5f5;
+  background: #f0f0f0;
   color: #000;
 }
 
 .settings-nav-item.active {
-  background: #000;
-  color: #fff;
+  background: #fff;
+  color: #000;
+  font-weight: 600;
+  border-left-color: #000;
 }
 
 .settings-main {
   min-width: 0;
+  padding: 2rem 2.25rem;
+}
+
+.settings-section-header {
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e8e8e8;
 }
 
 .settings-section-title {
   font-family: var(--font-display);
-  font-size: 1.45rem;
+  font-size: 1.3rem;
   font-weight: 600;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.settings-section-desc {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.settings-avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+.settings-remove-photo {
+  border: 1px solid #d0d0d0;
+  background: #fff;
+  color: #555;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.85rem;
+}
+
+.settings-remove-photo:hover {
+  border-color: #e02424;
+  color: #e02424;
+  background: #fff;
 }
 
 .settings-grid {
@@ -874,8 +925,9 @@ button:disabled {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-top: 0.5rem;
-  padding-top: 0.25rem;
+  margin-top: 0.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #e8e8e8;
 }
 
 .settings-footer button {
@@ -1057,29 +1109,43 @@ button:disabled {
   /* Settings layout collapses to single column on mobile */
   .settings-layout {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
+    border-radius: var(--radius-sm);
   }
 
   .settings-sidebar {
     position: static;
+    border-right: none;
+    border-bottom: 1px solid #e8e8e8;
+    min-height: 0;
+    padding: 1rem 0;
   }
 
   .settings-nav {
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 0.4rem;
+    padding: 0 1rem;
+    gap: 0.25rem;
   }
 
   .settings-nav-item {
     width: auto;
     flex: none;
-    padding: 0.4rem 0.75rem;
+    padding: 0.4rem 0.85rem;
     border: 1px solid #d0d0d0;
+    border-left: 1px solid #d0d0d0;
+    border-radius: var(--radius-sm);
     font-size: 0.85rem;
   }
 
   .settings-nav-item.active {
     border-color: #000;
+    border-left-color: #000;
+    background: #000;
+    color: #fff;
+  }
+
+  .settings-main {
+    padding: 1.5rem 1.25rem;
   }
 
   .settings-grid {
