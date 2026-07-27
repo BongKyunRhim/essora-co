@@ -34,11 +34,22 @@ export default function SignUp() {
     const errs = {};
     if (!form.name) errs.name = "Full name is required.";
     if (!form.email) errs.email = "Email is required.";
-    if (!form.password) errs.password = "Password is required.";
-    if (!form.confirmPassword) errs.confirmPassword = "Please confirm your password.";
+    if (!form.password) {
+      errs.password = "Password is required.";
+    } else if (form.confirmPassword && form.password !== form.confirmPassword) {
+      errs.password = " "; // red border only, no message
+    }
+    if (!form.confirmPassword) {
+      errs.confirmPassword = "Please confirm your password.";
+    } else if (form.password && form.password !== form.confirmPassword) {
+      errs.confirmPassword = "Passwords do not match.";
+    }
     if (!form.role) errs.role = "Please select a role.";
     if (form.role === "reviewer" && !form.schoolEmail) {
       errs.schoolEmail = "School email is required for reviewers.";
+    }
+    if (form.role === "reviewer" && form.schoolEmail && !form.schoolEmail.toLowerCase().endsWith(".edu")) {
+      errs.schoolEmail = "Must be a valid .edu address.";
     }
     if (Object.keys(errs).length) {
       setFieldErrors(errs);
@@ -47,14 +58,6 @@ export default function SignUp() {
 
     if (!isSupabaseConfigured) {
       setError("Storage isn't connected yet. Add your Supabase keys in src/lib/config.js.");
-      return;
-    }
-    if (form.role === "reviewer" && !form.schoolEmail.toLowerCase().endsWith(".edu")) {
-      setFieldErrors({ schoolEmail: "Must be a valid .edu address." });
-      return;
-    }
-    if (form.password !== form.confirmPassword) {
-      setFieldErrors({ confirmPassword: "Passwords do not match." });
       return;
     }
 
@@ -115,7 +118,9 @@ export default function SignUp() {
             value={form.password}
             onChange={handleChange}
           />
-          {fieldErrors.password && <span className="field-error-msg">{fieldErrors.password}</span>}
+          {fieldErrors.password && fieldErrors.password.trim() && (
+            <span className="field-error-msg">{fieldErrors.password}</span>
+          )}
         </label>
 
         <label className={`field${fieldErrors.confirmPassword ? " field--error" : ""}`}>
