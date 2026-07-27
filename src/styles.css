@@ -237,37 +237,42 @@ input[type="number"] {
   font-size: 1rem;
 }
 
-.role-picker {
+.radio {
   display: flex;
-  gap: 0.65rem;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.6rem;
   margin-top: 0.25rem;
 }
 
-.role-btn {
-  flex: 1;
-  padding: 0.6rem 1rem;
-  border: 1.5px solid #d0d0d0;
-  border-radius: var(--radius-sm);
+/* Square checkbox style for the Applicant / Reviewer choice */
+.radio input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #000;
+  border-radius: 5px;
   background: #fff;
-  color: #555;
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 500;
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
-  box-shadow: none;
+  margin: 0;
+  flex: 0 0 auto;
 }
 
-.role-btn:hover {
-  border-color: #000;
+.radio input[type="radio"]:checked {
+  background-color: #000;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 13px;
+}
+
+.radio span {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
   color: #000;
-  background: #fff;
-}
-
-.role-btn.selected {
-  border-color: #000;
-  background: #000;
-  color: #fff;
+  font-weight: 500;
+  line-height: 1;
 }
 
 button {
