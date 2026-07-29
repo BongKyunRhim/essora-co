@@ -121,7 +121,7 @@ export default function Account() {
               <Avatar url={avatarUrl} name={form.full_name} size={68} />
               <div className="settings-photo-info">
                 <p className="settings-photo-title">Profile picture</p>
-                <p className="settings-photo-hint">PNG, JPEG · under 15 MB</p>
+                <p className="settings-photo-hint">PNG, JPEG, WebP, GIF · under 50 MB</p>
                 {photoError && <p className="error" style={{ marginTop: "0.2rem", fontSize: "0.8rem" }}>{photoError}</p>}
               </div>
               <div className="settings-photo-actions">
