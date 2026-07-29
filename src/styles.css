@@ -924,7 +924,7 @@ button:disabled {
 /* ---- Settings layout (Reviewer profile page) ---- */
 .settings-layout {
   display: grid;
-  grid-template-columns: 210px 1fr;
+  grid-template-columns: 260px 1fr;
   gap: 0;
   width: 100%;
   align-items: start;
