@@ -73,11 +73,7 @@ export default function Account() {
       .upload(path, file, { upsert: true });
     if (err) {
       const isBucketMissing = err.message?.toLowerCase().includes("bucket");
-      setPhotoError(
-        isBucketMissing
-          ? "Photo uploads aren't set up yet — ask the site admin to create the storage bucket."
-          : "Couldn't upload photo. Please try a different image or try again."
-      );
+      setPhotoError("Upload error: " + err.message);
       setUploading(false);
       return;
     }
