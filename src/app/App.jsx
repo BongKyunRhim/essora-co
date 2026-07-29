@@ -97,7 +97,7 @@ export default function App() {
                   aria-label="Profile menu"
                   onClick={() => setProfileOpen((o) => !o)}
                 >
-                  <Avatar url={profile?.avatar_url} name={profile?.full_name} size={34} />
+                  <Avatar url={profile?.avatar_url} name={profile?.full_name} size={40} />
                 </button>
 
                 {profileOpen && (

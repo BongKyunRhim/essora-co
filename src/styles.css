@@ -136,6 +136,14 @@ a {
   background: none;
 }
 
+.nav-avatar-btn .avatar {
+  border: 2px solid #000;
+}
+
+.nav-avatar-btn .avatar-placeholder {
+  border: 2px solid #000;
+}
+
 .nav-profile-dropdown {
   position: absolute;
   top: calc(100% + 0.6rem);
