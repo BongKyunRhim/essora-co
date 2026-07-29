@@ -264,6 +264,10 @@ a {
     z-index: 90;
     background: rgba(0, 0, 0, 0.15);
   }
+
+  .app-main:has(.settings-layout) {
+    padding: 1rem 0.75rem;
+  }
 }
 
 /* Pages */
@@ -1123,6 +1127,22 @@ button:disabled {
   .hero-text {
     max-width: 100%;
   }
+
+  /* Narrow sidebar a little on tablet */
+  .settings-layout {
+    grid-template-columns: 200px 1fr;
+  }
+
+  /* Photo row wraps earlier on tablet */
+  .settings-photo-row {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .settings-photo-actions {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
 }
 
 /* ---- Responsive: phone ---- */
@@ -1298,6 +1318,25 @@ button:disabled {
 
   .settings-grid {
     grid-template-columns: 1fr;
+  }
+
+  /* Photo row stacks on small screens */
+  .settings-photo-row {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .settings-photo-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .avatar-upload-btn,
+  .avatar-delete-btn {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
   }
 
   .settings-footer {
