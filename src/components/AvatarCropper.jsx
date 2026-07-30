@@ -19,7 +19,6 @@ export default function AvatarCropper({ file, onCancel, onCrop }) {
   const [imgSrc, setImgSrc] = useState("");
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const [showGrid, setShowGrid] = useState(false);
   const [dragging, setDragging] = useState(false);
 
   const circleRef = useRef(null);
@@ -146,27 +145,15 @@ export default function AvatarCropper({ file, onCancel, onCrop }) {
             </div>
           )}
 
-          {showGrid && (
-            <div className="cropper-grid" aria-hidden="true">
-              <div className="cropper-grid-line" style={{ left: "33.33%", top: 0, bottom: 0, width: 1 }} />
-              <div className="cropper-grid-line" style={{ left: "66.66%", top: 0, bottom: 0, width: 1 }} />
-              <div className="cropper-grid-line" style={{ top: "33.33%", left: 0, right: 0, height: 1 }} />
-              <div className="cropper-grid-line" style={{ top: "66.66%", left: 0, right: 0, height: 1 }} />
-            </div>
-          )}
+          <div className="cropper-grid" aria-hidden="true">
+            <div className="cropper-grid-line" style={{ left: "33.33%", top: 0, bottom: 0, width: 1 }} />
+            <div className="cropper-grid-line" style={{ left: "66.66%", top: 0, bottom: 0, width: 1 }} />
+            <div className="cropper-grid-line" style={{ top: "33.33%", left: 0, right: 0, height: 1 }} />
+            <div className="cropper-grid-line" style={{ top: "66.66%", left: 0, right: 0, height: 1 }} />
+          </div>
         </div>
 
         <p className="cropper-hint">Scroll or pinch to zoom · drag to reposition</p>
-
-        <div className="cropper-controls">
-          <button
-            type="button"
-            className={`cropper-grid-btn${showGrid ? " active" : ""}`}
-            onClick={() => setShowGrid((g) => !g)}
-          >
-            Grid
-          </button>
-        </div>
 
         <div className="cropper-actions">
           <button type="button" className="cropper-cancel-btn" onClick={onCancel}>Cancel</button>
