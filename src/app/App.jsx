@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, Link, useLocation, useNavigate } from "react-router-dom";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { useAuth } from "./AuthContext.jsx";
 import BrandLogo from "../components/BrandLogo.jsx";
@@ -35,12 +35,17 @@ function Home() {
 }
 
 export default function App() {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, signOut, isRecovery } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const isLanding = location.pathname === "/";
+
+  useEffect(() => {
+    if (isRecovery) navigate("/account", { replace: true });
+  }, [isRecovery, navigate]);
   const closeMenu = () => setMenuOpen(false);
   const closeProfile = () => setProfileOpen(false);
 
