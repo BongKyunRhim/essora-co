@@ -36,6 +36,8 @@ export default function SignUp() {
     if (!form.email) errs.email = "Email is required.";
     if (!form.password) {
       errs.password = "Password is required.";
+    } else if (form.password.length < 8) {
+      errs.password = "Password must be at least 8 characters.";
     } else if (form.confirmPassword && form.password !== form.confirmPassword) {
       errs.password = " "; // red border only, no message
     }
