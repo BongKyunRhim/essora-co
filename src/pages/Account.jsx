@@ -36,6 +36,10 @@ export default function Account() {
   const [photoError, setPhotoError] = useState("");
   const [status, setStatus] = useState("");
 
+  // Email change
+  const [emailForm, setEmailForm] = useState({ newEmail: "" });
+  const [emailStatus, setEmailStatus] = useState("");
+
   // Password change
   const [pwForm, setPwForm] = useState({ current: "", password: "", confirm: "" });
   const [pwStatus, setPwStatus] = useState("");
@@ -136,6 +140,17 @@ export default function Account() {
     });
     if (error) { setForgotStatus("Error: " + error.message); return; }
     setForgotStatus("Reset email sent — check your inbox.");
+  }
+
+  async function handleEmailUpdate(event) {
+    event.preventDefault();
+    if (!emailForm.newEmail) { setEmailStatus("Error: Please enter a new email address."); return; }
+    if (emailForm.newEmail === user.email) { setEmailStatus("Error: That's already your current email."); return; }
+    setEmailStatus("Sending confirmation…");
+    const { error } = await supabase.auth.updateUser({ email: emailForm.newEmail });
+    if (error) { setEmailStatus("Error: " + error.message); return; }
+    setEmailForm({ newEmail: "" });
+    setEmailStatus("Confirmation sent — check your new inbox and click the link to apply the change.");
   }
 
   async function handleDeleteAccount() {
@@ -301,10 +316,25 @@ export default function Account() {
             {/* Email */}
             <div className="settings-block">
               <h3 className="settings-block-title">Email address</h3>
-              <p className="settings-block-desc">Your sign-in email. Contact support to update it.</p>
-              <div className="settings-email-row">
-                <span className="settings-email-value">{user?.email}</span>
-              </div>
+              <p className="settings-block-desc">Current: <strong>{user?.email}</strong></p>
+              <form className="settings-email-form" onSubmit={handleEmailUpdate}>
+                <label className="field">
+                  <span>New email address</span>
+                  <input
+                    type="email"
+                    value={emailForm.newEmail}
+                    onChange={(e) => { setEmailForm({ newEmail: e.target.value }); setEmailStatus(""); }}
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                  />
+                </label>
+                <div className="settings-pw-row">
+                  <button type="submit">Update email</button>
+                  {emailStatus && (
+                    <p className={`notice${emailStatus.startsWith("Error") ? " error" : ""}`}>{emailStatus}</p>
+                  )}
+                </div>
+              </form>
             </div>
 
             {/* Change password */}

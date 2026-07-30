@@ -1181,6 +1181,13 @@ button:disabled {
   margin: 0 0 1.25rem;
 }
 
+.settings-email-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
 .settings-email-row {
   display: flex;
   align-items: center;
