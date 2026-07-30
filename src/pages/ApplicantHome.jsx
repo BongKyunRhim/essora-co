@@ -38,13 +38,16 @@ export default function ApplicantHome() {
       <div className="cards">
         {reviewers.map((r) => (
           <Link className="card reviewer-card" to={`/reviewers/${r.id}`} key={r.id}>
-            <Avatar url={r.avatar_url} name={r.full_name} size={64} />
-            <h2>{r.full_name || "Reviewer"}</h2>
-            <p className="muted">
-              {[r.college, r.major].filter(Boolean).join(" · ") || "—"}
-            </p>
-            {r.age != null && <p className="muted">Age {r.age}</p>}
-            {r.price != null && <p className="price">${r.price} / essay</p>}
+            <div className="reviewer-card-photo">
+              <Avatar url={r.avatar_url} name={r.full_name} size={120} />
+            </div>
+            <div className="reviewer-card-body">
+              <h2>{r.full_name || "Reviewer"}</h2>
+              <p className="muted">
+                {[r.college, r.major].filter(Boolean).join(" · ") || "—"}
+              </p>
+              {r.price != null && <p className="price">${r.price} / essay</p>}
+            </div>
           </Link>
         ))}
       </div>
