@@ -7,7 +7,7 @@ import AvatarCropper from "../components/AvatarCropper.jsx";
 const SECTIONS = ["Profile Settings", "Past Feedback", "Account & Privacy"];
 
 export default function Account() {
-  const { profile, refreshProfile } = useAuth();
+  const { user, profile, refreshProfile, signOut } = useAuth();
   const [activeSection, setActiveSection] = useState("Profile Settings");
   const [form, setForm] = useState({
     full_name: profile?.full_name ?? "",
@@ -21,6 +21,15 @@ export default function Account() {
   const [uploading, setUploading] = useState(false);
   const [photoError, setPhotoError] = useState("");
   const [status, setStatus] = useState("");
+
+  // Password change
+  const [pwForm, setPwForm] = useState({ password: "", confirm: "" });
+  const [pwStatus, setPwStatus] = useState("");
+  const [pwVisible, setPwVisible] = useState(false);
+
+  // Delete account
+  const [deleteStep, setDeleteStep] = useState(0); // 0 idle, 1 confirm
+  const [deleteStatus, setDeleteStatus] = useState("");
 
   if (!profile) return <p className="page">Loading…</p>;
 
@@ -78,6 +87,23 @@ export default function Account() {
     await supabase.from("profiles").update({ avatar_url: url }).eq("id", profile.id);
     await refreshProfile();
     setUploading(false);
+  }
+
+  async function handlePasswordUpdate(event) {
+    event.preventDefault();
+    if (pwForm.password.length < 8) { setPwStatus("Error: Password must be at least 8 characters."); return; }
+    if (pwForm.password !== pwForm.confirm) { setPwStatus("Error: Passwords don't match."); return; }
+    setPwStatus("Updating…");
+    const { error } = await supabase.auth.updateUser({ password: pwForm.password });
+    if (error) { setPwStatus("Error: " + error.message); return; }
+    setPwForm({ password: "", confirm: "" });
+    setPwStatus("Password updated.");
+  }
+
+  async function handleDeleteAccount() {
+    setDeleteStatus("Deleting…");
+    await supabase.from("profiles").delete().eq("id", profile.id);
+    await supabase.auth.signOut();
   }
 
   async function handleDeletePhoto() {
@@ -227,9 +253,76 @@ export default function Account() {
           <>
             <div className="settings-section-header">
               <h2 className="settings-section-title">Account & Privacy</h2>
-              <p className="settings-section-desc">Manage your login and privacy preferences.</p>
+              <p className="settings-section-desc">Manage your login credentials and account preferences.</p>
             </div>
-            <p className="muted">Account settings coming soon.</p>
+
+            {/* Email */}
+            <div className="settings-block">
+              <h3 className="settings-block-title">Email address</h3>
+              <p className="settings-block-desc">Your sign-in email. Contact support to update it.</p>
+              <div className="settings-email-row">
+                <span className="settings-email-value">{user?.email}</span>
+              </div>
+            </div>
+
+            {/* Change password */}
+            <div className="settings-block">
+              <h3 className="settings-block-title">Change password</h3>
+              <p className="settings-block-desc">Choose a strong password you don't use anywhere else.</p>
+              <form className="settings-pw-form" onSubmit={handlePasswordUpdate}>
+                <div className="settings-grid">
+                  <label className="field">
+                    <span>New password</span>
+                    <input
+                      type={pwVisible ? "text" : "password"}
+                      value={pwForm.password}
+                      onChange={(e) => setPwForm((f) => ({ ...f, password: e.target.value }))}
+                      placeholder="Min. 8 characters"
+                      autoComplete="new-password"
+                    />
+                  </label>
+                  <label className="field">
+                    <span>Confirm password</span>
+                    <input
+                      type={pwVisible ? "text" : "password"}
+                      value={pwForm.confirm}
+                      onChange={(e) => setPwForm((f) => ({ ...f, confirm: e.target.value }))}
+                      placeholder="Repeat new password"
+                      autoComplete="new-password"
+                    />
+                  </label>
+                </div>
+                <div className="settings-pw-actions">
+                  <label className="settings-pw-show">
+                    <input type="checkbox" checked={pwVisible} onChange={(e) => setPwVisible(e.target.checked)} />
+                    Show passwords
+                  </label>
+                  <div className="settings-pw-row">
+                    <button type="submit">Update password</button>
+                    {pwStatus && <p className={`notice${pwStatus.startsWith("Error") ? " error" : ""}`}>{pwStatus}</p>}
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            {/* Danger zone */}
+            <div className="settings-block settings-block--danger">
+              <h3 className="settings-block-title">Delete account</h3>
+              <p className="settings-block-desc">Permanently removes your account and all associated data. This cannot be undone.</p>
+              {deleteStep === 0 ? (
+                <button type="button" className="btn-danger" onClick={() => setDeleteStep(1)}>Delete my account</button>
+              ) : (
+                <div className="settings-delete-confirm">
+                  <p className="settings-delete-warning">Are you sure? This will permanently erase your profile and cannot be recovered.</p>
+                  <div className="settings-delete-actions">
+                    <button type="button" className="btn-danger" onClick={handleDeleteAccount}>
+                      {deleteStatus === "Deleting…" ? "Deleting…" : "Yes, delete my account"}
+                    </button>
+                    <button type="button" className="cropper-cancel-btn" onClick={() => setDeleteStep(0)}>Cancel</button>
+                  </div>
+                </div>
+              )}
+            </div>
           </>
         )}
       </main>

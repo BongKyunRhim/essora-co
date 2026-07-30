@@ -1157,6 +1157,132 @@ button:disabled {
   gap: 0.6rem;
 }
 
+/* ---- Account & Privacy blocks ---- */
+.settings-block {
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.settings-block:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.settings-block-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.3rem;
+}
+
+.settings-block-desc {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 0 0 1.25rem;
+}
+
+.settings-email-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.7rem 1rem;
+  background: #f5f5f5;
+  border: 1px solid #e8e8e8;
+  border-radius: var(--radius-sm);
+}
+
+.settings-email-value {
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.settings-pw-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.settings-pw-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.settings-pw-show {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #555;
+  cursor: pointer;
+  user-select: none;
+}
+
+.settings-pw-show input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: #000;
+  cursor: pointer;
+}
+
+.settings-pw-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.settings-pw-row .notice {
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.settings-pw-row .notice.error {
+  color: #e02424;
+}
+
+.settings-block--danger .settings-block-title {
+  color: #c0392b;
+}
+
+.settings-delete-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.settings-delete-warning {
+  font-size: 0.875rem;
+  color: #c0392b;
+  background: #fff5f5;
+  border: 1px solid #fcc;
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  margin: 0;
+}
+
+.settings-delete-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.btn-danger {
+  padding: 0.55rem 1.2rem;
+  border: 1.5px solid #c0392b;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: #c0392b;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-danger:hover {
+  background: #c0392b;
+  color: #fff;
+}
+
 .field-hint-inline {
   font-size: 0.78rem;
   color: #888;
