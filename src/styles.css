@@ -1009,7 +1009,7 @@ button:disabled {
 .settings-fields-col {
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: 1.75rem;
 }
 
 .settings-grid {
