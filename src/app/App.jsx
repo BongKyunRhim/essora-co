@@ -119,7 +119,7 @@ export default function App() {
                       <button
                         type="button"
                         className="nav-profile-item nav-profile-signout"
-                        onClick={() => { closeMenu(); closeProfile(); signOut(); }}
+                        onClick={() => { closeMenu(); closeProfile(); signOut(); navigate("/"); }}
                       >
                         Log out
                       </button>
