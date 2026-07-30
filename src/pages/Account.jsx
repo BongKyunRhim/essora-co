@@ -120,94 +120,96 @@ export default function Account() {
               <p className="settings-section-desc">This is what reviewers see before reviewing your essay.</p>
             </div>
 
-            <div className="settings-profile-cols">
-              {/* Left column: avatar */}
-              <div className="settings-avatar-col">
-                <Avatar url={avatarUrl} name={form.full_name} size={220} />
-                <p className="settings-photo-hint">PNG, JPEG, WebP, GIF · under 50 MB</p>
-                {photoError && <p className="error" style={{ fontSize: "0.8rem" }}>{photoError}</p>}
-                <div className="settings-avatar-actions">
-                  <label className="avatar-upload-btn" aria-disabled={uploading}>
-                    {uploading ? "Uploading…" : "Upload photo"}
-                    <input type="file" accept="image/*" onChange={handleUpload} hidden disabled={uploading} />
+            <form className="form settings-form" onSubmit={handleSave}>
+              <div className="settings-profile-cols">
+                {/* Left column: avatar */}
+                <div className="settings-avatar-col">
+                  <Avatar url={avatarUrl} name={form.full_name} size={220} />
+                  <p className="settings-photo-hint">PNG, JPEG, WebP, GIF · under 50 MB</p>
+                  {photoError && <p className="error" style={{ fontSize: "0.8rem" }}>{photoError}</p>}
+                  <div className="settings-avatar-actions">
+                    <label className="avatar-upload-btn" aria-disabled={uploading}>
+                      {uploading ? "Uploading…" : "Upload photo"}
+                      <input type="file" accept="image/*" onChange={handleUpload} hidden disabled={uploading} />
+                    </label>
+                    <button
+                      type="button"
+                      className="avatar-delete-btn"
+                      onClick={handleDeletePhoto}
+                      disabled={!avatarUrl}
+                    >
+                      Delete photo
+                    </button>
+                  </div>
+                </div>
+
+                {/* Right column: form fields */}
+                <div className="settings-fields-col">
+                  <div className="settings-grid">
+                    <label className="field">
+                      <span>Full name</span>
+                      <input
+                        type="text"
+                        name="full_name"
+                        value={form.full_name}
+                        onChange={handleChange}
+                        placeholder="First & last name"
+                      />
+                    </label>
+                    <label className="field">
+                      <span>Grade</span>
+                      <select name="age" value={form.age} onChange={handleChange}>
+                        <option value="">Select grade</option>
+                        <option value="9">9th grade</option>
+                        <option value="10">10th grade</option>
+                        <option value="11">11th grade</option>
+                        <option value="12">12th grade</option>
+                      </select>
+                    </label>
+                  </div>
+
+                  <label className="field">
+                    <span>About me <span className="field-hint-inline">(shown to reviewers)</span></span>
+                    <textarea
+                      name="bio"
+                      rows={3}
+                      value={form.bio}
+                      onChange={handleChange}
+                      placeholder="Tell reviewers a little about yourself — your goals or what kind of feedback you're looking for…"
+                    />
                   </label>
-                  <button
-                    type="button"
-                    className="avatar-delete-btn"
-                    onClick={handleDeletePhoto}
-                    disabled={!avatarUrl}
-                  >
-                    Delete photo
-                  </button>
+
+                  <label className="field">
+                    <span>Intended major <span className="field-hint-inline">(optional)</span></span>
+                    <input
+                      type="text"
+                      name="intended_major"
+                      value={form.intended_major}
+                      onChange={handleChange}
+                      placeholder="e.g. Computer Science, Engineering, Undecided"
+                    />
+                  </label>
+
+                  <label className="field">
+                    <span>College list <span className="field-hint-inline">(optional)</span></span>
+                    <textarea
+                      name="dream_schools"
+                      rows={3}
+                      value={form.dream_schools}
+                      onChange={handleChange}
+                      placeholder="e.g. MIT, Stanford, UMich, UCLA…"
+                    />
+                  </label>
                 </div>
               </div>
 
-              {/* Right column: form fields */}
-              <form className="form settings-form" onSubmit={handleSave}>
-                <div className="settings-grid">
-                  <label className="field">
-                    <span>Full name</span>
-                    <input
-                      type="text"
-                      name="full_name"
-                      value={form.full_name}
-                      onChange={handleChange}
-                      placeholder="First & last name"
-                    />
-                  </label>
-                  <label className="field">
-                    <span>Grade</span>
-                    <select name="age" value={form.age} onChange={handleChange}>
-                      <option value="">Select grade</option>
-                      <option value="9">9th grade</option>
-                      <option value="10">10th grade</option>
-                      <option value="11">11th grade</option>
-                      <option value="12">12th grade</option>
-                    </select>
-                  </label>
-                </div>
-
-                <label className="field">
-                  <span>About me <span className="field-hint-inline">(shown to reviewers)</span></span>
-                  <textarea
-                    name="bio"
-                    rows={3}
-                    value={form.bio}
-                    onChange={handleChange}
-                    placeholder="Tell reviewers a little about yourself — your goals or what kind of feedback you're looking for…"
-                  />
-                </label>
-
-                <label className="field">
-                  <span>Intended major <span className="field-hint-inline">(optional)</span></span>
-                  <input
-                    type="text"
-                    name="intended_major"
-                    value={form.intended_major}
-                    onChange={handleChange}
-                    placeholder="e.g. Computer Science, Engineering, Undecided"
-                  />
-                </label>
-
-                <label className="field">
-                  <span>College list <span className="field-hint-inline">(optional)</span></span>
-                  <textarea
-                    name="dream_schools"
-                    rows={3}
-                    value={form.dream_schools}
-                    onChange={handleChange}
-                    placeholder="e.g. MIT, Stanford, UMich, UCLA…"
-                  />
-                </label>
-
-                <div className="settings-footer">
-                  <button type="submit">Save profile</button>
-                  {status && (
-                    <p className={`notice${status.startsWith("Error") ? " error" : ""}`}>{status}</p>
-                  )}
-                </div>
-              </form>
-            </div>
+              <div className="settings-footer">
+                <button type="submit">Save profile</button>
+                {status && (
+                  <p className={`notice${status.startsWith("Error") ? " error" : ""}`}>{status}</p>
+                )}
+              </div>
+            </form>
           </>
         )}
 
