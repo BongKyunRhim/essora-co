@@ -1196,6 +1196,16 @@ button:disabled {
   color: #333;
 }
 
+.settings-recovery-banner {
+  font-size: 0.875rem;
+  color: #1a5c2a;
+  background: #f0faf3;
+  border: 1px solid #a3d9b1;
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  margin: 0 0 1.25rem;
+}
+
 .settings-pw-form {
   display: flex;
   flex-direction: column;

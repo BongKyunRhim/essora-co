@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import Avatar from "../components/Avatar.jsx";
@@ -7,7 +7,7 @@ import AvatarCropper from "../components/AvatarCropper.jsx";
 const SECTIONS = ["Profile Settings", "Past Feedback", "Account & Privacy"];
 
 export default function Account() {
-  const { user, profile, refreshProfile, signOut } = useAuth();
+  const { user, profile, refreshProfile, signOut, isRecovery, clearRecovery } = useAuth();
   const [activeSection, setActiveSection] = useState("Profile Settings");
   const [form, setForm] = useState({
     full_name: profile?.full_name ?? "",
@@ -31,6 +31,10 @@ export default function Account() {
   // Delete account
   const [deleteStep, setDeleteStep] = useState(0); // 0 idle, 1 confirm
   const [deleteStatus, setDeleteStatus] = useState("");
+
+  useEffect(() => {
+    if (isRecovery) setActiveSection("Account & Privacy");
+  }, [isRecovery]);
 
   if (!profile) return <p className="page">Loading…</p>;
 
@@ -92,20 +96,23 @@ export default function Account() {
 
   async function handlePasswordUpdate(event) {
     event.preventDefault();
-    if (!pwForm.current) { setPwStatus("Error: Please enter your current password."); return; }
-    if (pwForm.password.length < 8) { setPwStatus("Error: New password must be at least 8 characters."); return; }
-    if (pwForm.password !== pwForm.confirm) { setPwStatus("Error: New passwords don't match."); return; }
-    setPwStatus("Verifying…");
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: user.email,
-      password: pwForm.current,
-    });
-    if (signInError) { setPwStatus("Error: Current password is incorrect."); return; }
+    if (pwForm.password.length < 8) { setPwStatus("Error: Password must be at least 8 characters."); return; }
+    if (pwForm.password !== pwForm.confirm) { setPwStatus("Error: Passwords don't match."); return; }
+    if (!isRecovery) {
+      if (!pwForm.current) { setPwStatus("Error: Please enter your current password."); return; }
+      setPwStatus("Verifying…");
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: pwForm.current,
+      });
+      if (signInError) { setPwStatus("Error: Current password is incorrect."); return; }
+    }
     setPwStatus("Updating…");
     const { error } = await supabase.auth.updateUser({ password: pwForm.password });
     if (error) { setPwStatus("Error: " + error.message); return; }
     setPwForm({ current: "", password: "", confirm: "" });
     setPwStatus("Password updated.");
+    if (isRecovery) clearRecovery();
   }
 
   async function handleForgotPassword() {
@@ -285,18 +292,24 @@ export default function Account() {
             {/* Change password */}
             <div className="settings-block">
               <h3 className="settings-block-title">Change password</h3>
-              <p className="settings-block-desc">Choose a strong password you don't use anywhere else.</p>
+              {isRecovery ? (
+                <p className="settings-recovery-banner">You followed a password reset link — set your new password below.</p>
+              ) : (
+                <p className="settings-block-desc">Choose a strong password you don't use anywhere else.</p>
+              )}
               <form className="settings-pw-form" onSubmit={handlePasswordUpdate}>
-                <label className="field">
-                  <span>Current password</span>
-                  <input
-                    type={pwVisible ? "text" : "password"}
-                    value={pwForm.current}
-                    onChange={(e) => setPwForm((f) => ({ ...f, current: e.target.value }))}
-                    placeholder="Your existing password"
-                    autoComplete="current-password"
-                  />
-                </label>
+                {!isRecovery && (
+                  <label className="field">
+                    <span>Current password</span>
+                    <input
+                      type={pwVisible ? "text" : "password"}
+                      value={pwForm.current}
+                      onChange={(e) => setPwForm((f) => ({ ...f, current: e.target.value }))}
+                      placeholder="Your existing password"
+                      autoComplete="current-password"
+                    />
+                  </label>
+                )}
                 <div className="settings-grid">
                   <label className="field">
                     <span>New password</span>

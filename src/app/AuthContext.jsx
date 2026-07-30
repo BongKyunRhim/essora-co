@@ -15,6 +15,7 @@ export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isRecovery, setIsRecovery] = useState(false);
 
   // Load the user's profile row (name, role, bio, price) from the database.
   const fetchProfile = useCallback(async (userId) => {
@@ -42,7 +43,8 @@ export function AuthProvider({ children }) {
     });
 
     // React to logging in / out from anywhere in the app.
-    const { data: sub } = supabase.auth.onAuthStateChange(async (_event, s) => {
+    const { data: sub } = supabase.auth.onAuthStateChange(async (event, s) => {
+      if (event === "PASSWORD_RECOVERY") setIsRecovery(true);
       setSession(s);
       await fetchProfile(s?.user?.id);
     });
@@ -58,6 +60,8 @@ export function AuthProvider({ children }) {
     user: session?.user ?? null,
     profile,
     loading,
+    isRecovery,
+    clearRecovery: () => setIsRecovery(false),
     refreshProfile: () => fetchProfile(session?.user?.id),
     signOut: () => supabase.auth.signOut(),
   };
