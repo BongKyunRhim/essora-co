@@ -999,7 +999,7 @@ button:disabled {
 
 .settings-main {
   min-width: 0;
-  padding: 2rem 2.25rem;
+  padding: 2rem 2.25rem 2rem 3rem;
 }
 
 .settings-section-header {
@@ -1056,7 +1056,7 @@ button:disabled {
 .settings-profile-cols {
   display: grid;
   grid-template-columns: 250px 1fr;
-  gap: 2.5rem;
+  gap: 3.5rem;
   align-items: start;
 }
 
