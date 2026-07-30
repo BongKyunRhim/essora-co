@@ -941,7 +941,7 @@ button:disabled {
   grid-template-columns: 260px 1fr;
   gap: 0;
   width: 100%;
-  align-items: start;
+  align-items: stretch;
 }
 
 .settings-sidebar {
@@ -1002,10 +1002,15 @@ button:disabled {
 .settings-main {
   min-width: 0;
   padding: 2.5rem 2.25rem 3rem 3rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .settings-form {
   gap: 3rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .settings-fields-col {
@@ -1126,7 +1131,7 @@ button:disabled {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-top: 2rem;
+  margin-top: auto;
   padding-top: 1.5rem;
   border-top: 1px solid #e8e8e8;
 }
