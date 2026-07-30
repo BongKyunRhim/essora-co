@@ -3,6 +3,10 @@ import { createClient } from "@supabase/supabase-js";
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
 
+  if (!process.env.VITE_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return res.status(500).json({ error: "Server misconfiguration: missing Supabase env vars." });
+  }
+
   const authHeader = req.headers.authorization;
   if (!authHeader?.startsWith("Bearer ")) {
     return res.status(401).json({ error: "Unauthorized" });
