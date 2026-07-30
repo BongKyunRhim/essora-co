@@ -1006,6 +1006,12 @@ button:disabled {
   gap: 3rem;
 }
 
+.settings-fields-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
 .settings-grid {
   gap: 1.5rem;
 }
