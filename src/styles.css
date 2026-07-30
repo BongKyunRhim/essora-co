@@ -138,12 +138,12 @@ a {
 
 .nav-avatar-btn .avatar {
   border: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.45), 0 0 0 1.5px rgba(0, 0, 0, 0.12);
 }
 
 .nav-avatar-btn .avatar-placeholder {
   border: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.45), 0 0 0 1.5px rgba(0, 0, 0, 0.12);
 }
 
 .nav-profile-dropdown {
