@@ -140,7 +140,11 @@ export default function Account() {
 
   async function handleDeleteAccount() {
     setDeleteStatus("Deleting…");
-    await supabase.from("profiles").delete().eq("id", profile.id);
+    const { error } = await supabase.rpc("delete_user");
+    if (error) {
+      setDeleteStatus("Error: " + error.message);
+      return;
+    }
     await supabase.auth.signOut();
   }
 
