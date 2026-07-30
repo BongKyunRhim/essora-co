@@ -1240,6 +1240,34 @@ button:disabled {
   color: #e02424;
 }
 
+.settings-pw-forgot {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.settings-pw-forgot .notice {
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.875rem;
+  color: #555;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.12s;
+}
+
+.link-btn:hover {
+  color: #000;
+  box-shadow: none;
+  background: none;
+}
+
 .settings-block--danger .settings-block-title {
   color: #c0392b;
 }

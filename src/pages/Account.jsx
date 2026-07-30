@@ -23,9 +23,10 @@ export default function Account() {
   const [status, setStatus] = useState("");
 
   // Password change
-  const [pwForm, setPwForm] = useState({ password: "", confirm: "" });
+  const [pwForm, setPwForm] = useState({ current: "", password: "", confirm: "" });
   const [pwStatus, setPwStatus] = useState("");
   const [pwVisible, setPwVisible] = useState(false);
+  const [forgotStatus, setForgotStatus] = useState("");
 
   // Delete account
   const [deleteStep, setDeleteStep] = useState(0); // 0 idle, 1 confirm
@@ -91,13 +92,29 @@ export default function Account() {
 
   async function handlePasswordUpdate(event) {
     event.preventDefault();
-    if (pwForm.password.length < 8) { setPwStatus("Error: Password must be at least 8 characters."); return; }
-    if (pwForm.password !== pwForm.confirm) { setPwStatus("Error: Passwords don't match."); return; }
+    if (!pwForm.current) { setPwStatus("Error: Please enter your current password."); return; }
+    if (pwForm.password.length < 8) { setPwStatus("Error: New password must be at least 8 characters."); return; }
+    if (pwForm.password !== pwForm.confirm) { setPwStatus("Error: New passwords don't match."); return; }
+    setPwStatus("Verifying…");
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: pwForm.current,
+    });
+    if (signInError) { setPwStatus("Error: Current password is incorrect."); return; }
     setPwStatus("Updating…");
     const { error } = await supabase.auth.updateUser({ password: pwForm.password });
     if (error) { setPwStatus("Error: " + error.message); return; }
-    setPwForm({ password: "", confirm: "" });
+    setPwForm({ current: "", password: "", confirm: "" });
     setPwStatus("Password updated.");
+  }
+
+  async function handleForgotPassword() {
+    setForgotStatus("Sending…");
+    const { error } = await supabase.auth.resetPasswordForEmail(user.email, {
+      redirectTo: `${window.location.origin}/account`,
+    });
+    if (error) { setForgotStatus("Error: " + error.message); return; }
+    setForgotStatus("Reset email sent — check your inbox.");
   }
 
   async function handleDeleteAccount() {
@@ -270,6 +287,16 @@ export default function Account() {
               <h3 className="settings-block-title">Change password</h3>
               <p className="settings-block-desc">Choose a strong password you don't use anywhere else.</p>
               <form className="settings-pw-form" onSubmit={handlePasswordUpdate}>
+                <label className="field">
+                  <span>Current password</span>
+                  <input
+                    type={pwVisible ? "text" : "password"}
+                    value={pwForm.current}
+                    onChange={(e) => setPwForm((f) => ({ ...f, current: e.target.value }))}
+                    placeholder="Your existing password"
+                    autoComplete="current-password"
+                  />
+                </label>
                 <div className="settings-grid">
                   <label className="field">
                     <span>New password</span>
@@ -282,7 +309,7 @@ export default function Account() {
                     />
                   </label>
                   <label className="field">
-                    <span>Confirm password</span>
+                    <span>Confirm new password</span>
                     <input
                       type={pwVisible ? "text" : "password"}
                       value={pwForm.confirm}
@@ -300,6 +327,12 @@ export default function Account() {
                   <div className="settings-pw-row">
                     <button type="submit">Update password</button>
                     {pwStatus && <p className={`notice${pwStatus.startsWith("Error") ? " error" : ""}`}>{pwStatus}</p>}
+                  </div>
+                  <div className="settings-pw-forgot">
+                    <button type="button" className="link-btn" onClick={handleForgotPassword}>
+                      Forgot your password?
+                    </button>
+                    {forgotStatus && <p className={`notice${forgotStatus.startsWith("Error") ? " error" : ""}`}>{forgotStatus}</p>}
                   </div>
                 </div>
               </form>
