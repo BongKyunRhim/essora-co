@@ -37,7 +37,7 @@ export default function Account() {
   const [status, setStatus] = useState("");
 
   // Email change
-  const [emailForm, setEmailForm] = useState({ newEmail: "" });
+  const [emailForm, setEmailForm] = useState({ newEmail: "", currentPassword: "" });
   const [emailStatus, setEmailStatus] = useState("");
 
   // Password change
@@ -150,11 +150,31 @@ export default function Account() {
     event.preventDefault();
     if (!emailForm.newEmail) { setEmailStatus("Error: Please enter a new email address."); return; }
     if (emailForm.newEmail === user.email) { setEmailStatus("Error: That's already your current email."); return; }
-    setEmailStatus("Sending confirmation…");
-    const { error } = await supabase.auth.updateUser({ email: emailForm.newEmail });
-    if (error) { setEmailStatus("Error: " + error.message); return; }
-    setEmailForm({ newEmail: "" });
-    setEmailStatus("Confirmation sent — check your new inbox and click the link to apply the change.");
+    if (!emailForm.currentPassword) { setEmailStatus("Error: Please enter your current password to confirm."); return; }
+
+    setEmailStatus("Verifying…");
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: emailForm.currentPassword,
+    });
+    if (signInError) { setEmailStatus("Error: Current password is incorrect."); return; }
+
+    setEmailStatus("Updating…");
+    const { data: { session } } = await supabase.auth.getSession();
+    const res = await fetch("/api/change-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({ newEmail: emailForm.newEmail }),
+    });
+    const result = await res.json();
+    if (!res.ok) { setEmailStatus("Error: " + result.error); return; }
+
+    await supabase.auth.refreshSession();
+    setEmailForm({ newEmail: "", currentPassword: "" });
+    setEmailStatus("Email updated successfully.");
   }
 
   async function handleDeleteAccount() {
@@ -329,16 +349,28 @@ export default function Account() {
               <h3 className="settings-block-title">Email address</h3>
               <p className="settings-block-desc">Current: <strong>{user?.email}</strong></p>
               <form className="settings-email-form" onSubmit={handleEmailUpdate}>
-                <label className="field">
-                  <span>New email address</span>
-                  <input
-                    type="email"
-                    value={emailForm.newEmail}
-                    onChange={(e) => { setEmailForm({ newEmail: e.target.value }); setEmailStatus(""); }}
-                    placeholder="you@example.com"
-                    autoComplete="email"
-                  />
-                </label>
+                <div className="settings-grid">
+                  <label className="field">
+                    <span>New email address</span>
+                    <input
+                      type="email"
+                      value={emailForm.newEmail}
+                      onChange={(e) => { setEmailForm((f) => ({ ...f, newEmail: e.target.value })); setEmailStatus(""); }}
+                      placeholder="you@example.com"
+                      autoComplete="email"
+                    />
+                  </label>
+                  <label className="field">
+                    <span>Current password <span className="field-hint-inline">(to confirm)</span></span>
+                    <input
+                      type="password"
+                      value={emailForm.currentPassword}
+                      onChange={(e) => { setEmailForm((f) => ({ ...f, currentPassword: e.target.value })); setEmailStatus(""); }}
+                      placeholder="Your current password"
+                      autoComplete="current-password"
+                    />
+                  </label>
+                </div>
                 <div className="settings-pw-row">
                   <button type="submit">Update email</button>
                   {emailStatus && (
