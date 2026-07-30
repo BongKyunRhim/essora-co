@@ -948,7 +948,6 @@ button:disabled {
   position: sticky;
   top: calc(var(--nav-h) + 1.5rem);
   align-self: start;
-  border-right: 1px solid #e8e8e8;
   background: transparent;
   padding: 1.5rem 0;
 }
@@ -1001,6 +1000,7 @@ button:disabled {
 
 .settings-main {
   min-width: 0;
+  border-left: 1px solid #e8e8e8;
   padding: 2.5rem 2.25rem 0 3rem;
   display: flex;
   flex-direction: column;
@@ -1691,7 +1691,6 @@ button:disabled {
 
   .settings-sidebar {
     position: static;
-    border-right: none;
     border-bottom: 1px solid #e8e8e8;
     min-height: 0;
     padding: 1rem 0;
