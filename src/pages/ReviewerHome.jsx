@@ -81,8 +81,6 @@ export default function ReviewerHome() {
         college: form.college,
         major: form.major,
         grad_year: form.grad_year === "" ? null : Number(form.grad_year),
-        high_school: form.high_school,
-        bio: form.bio,
         long_bio: form.long_bio,
         price: form.price === "" ? null : Number(form.price),
         is_listed: form.is_listed,
@@ -284,20 +282,10 @@ export default function ReviewerHome() {
                       <input type="number" name="grad_year" min="2020" max="2035" value={form.grad_year} onChange={handleChange} placeholder="e.g. 2028" />
                     </label>
                     <label className="field">
-                      <span>High school <span className="field-hint-inline">(optional)</span></span>
-                      <input type="text" name="high_school" value={form.high_school} onChange={handleChange} placeholder="e.g. Lincoln High School" />
+                      <span>Price per essay (USD)</span>
+                      <input type="number" name="price" min="0" value={form.price} onChange={handleChange} placeholder="e.g. 25" />
                     </label>
                   </div>
-
-                  <label className="field" style={{ maxWidth: "240px" }}>
-                    <span>Price per essay (USD)</span>
-                    <input type="number" name="price" min="0" value={form.price} onChange={handleChange} placeholder="e.g. 25" />
-                  </label>
-
-                  <label className="field">
-                    <span>Short tagline <span className="field-hint-inline">(shown on your card)</span></span>
-                    <input type="text" name="bio" value={form.bio} onChange={handleChange} placeholder="One sentence about yourself as a reviewer" />
-                  </label>
 
                   <label className="field">
                     <span>Detailed bio <span className="field-hint-inline">(shown on your full profile page)</span></span>
