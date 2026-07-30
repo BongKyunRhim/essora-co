@@ -44,12 +44,12 @@ export default function App() {
   const isLanding = location.pathname === "/";
 
   useEffect(() => {
-    if (isRecovery) navigate("/account", { replace: true });
-  }, [isRecovery, navigate]);
+    if (isRecovery) navigate(profile?.role === "reviewer" ? "/reviewer" : "/account", { replace: true });
+  }, [isRecovery, navigate, profile?.role]);
 
   useEffect(() => {
-    if (isEmailChanged) navigate("/account", { replace: true });
-  }, [isEmailChanged, navigate]);
+    if (isEmailChanged) navigate(profile?.role === "reviewer" ? "/reviewer" : "/account", { replace: true });
+  }, [isEmailChanged, navigate, profile?.role]);
   const closeMenu = () => setMenuOpen(false);
   const closeProfile = () => setProfileOpen(false);
 

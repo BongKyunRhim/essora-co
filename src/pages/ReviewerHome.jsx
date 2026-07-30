@@ -1,12 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import AvatarUpload from "../components/AvatarUpload.jsx";
 
 const SECTIONS = ["Public Profile", "My Activity", "Account & Privacy"];
 
+function EyeIcon({ open }) {
+  return open ? (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+  ) : (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+      <line x1="1" y1="1" x2="23" y2="23"/>
+    </svg>
+  );
+}
+
 export default function ReviewerHome() {
-  const { profile, refreshProfile } = useAuth();
+  const { user, profile, refreshProfile, signOut, isRecovery, clearRecovery, isEmailChanged, clearEmailChanged } = useAuth();
   const [activeSection, setActiveSection] = useState("Public Profile");
   const [form, setForm] = useState({
     full_name: profile?.full_name ?? "",
@@ -22,6 +36,28 @@ export default function ReviewerHome() {
   });
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url ?? "");
   const [status, setStatus] = useState("");
+
+  // Email change
+  const [emailForm, setEmailForm] = useState({ newEmail: "", currentPassword: "" });
+  const [emailStatus, setEmailStatus] = useState("");
+
+  // Password change
+  const [pwForm, setPwForm] = useState({ current: "", password: "", confirm: "" });
+  const [pwStatus, setPwStatus] = useState("");
+  const [pwShow, setPwShow] = useState({ current: false, password: false, confirm: false });
+  const [forgotStatus, setForgotStatus] = useState("");
+
+  // Delete account
+  const [deleteStep, setDeleteStep] = useState(0);
+  const [deleteStatus, setDeleteStatus] = useState("");
+
+  useEffect(() => {
+    if (isRecovery) setActiveSection("Account & Privacy");
+  }, [isRecovery]);
+
+  useEffect(() => {
+    if (isEmailChanged) setActiveSection("Account & Privacy");
+  }, [isEmailChanged]);
 
   if (!profile) return <p className="page">Loading…</p>;
 
@@ -49,10 +85,7 @@ export default function ReviewerHome() {
       })
       .eq("id", profile.id);
 
-    if (error) {
-      setStatus("Error: " + error.message);
-      return;
-    }
+    if (error) { setStatus("Error: " + error.message); return; }
     await refreshProfile();
     setStatus("Saved.");
   }
@@ -69,11 +102,78 @@ export default function ReviewerHome() {
     await refreshProfile();
   }
 
+  async function handleEmailUpdate(event) {
+    event.preventDefault();
+    if (!emailForm.newEmail) { setEmailStatus("Error: Please enter a new email address."); return; }
+    if (emailForm.newEmail === user.email) { setEmailStatus("Error: That's already your current email."); return; }
+    if (!emailForm.currentPassword) { setEmailStatus("Error: Please enter your current password to confirm."); return; }
+
+    setEmailStatus("Verifying…");
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: emailForm.currentPassword,
+    });
+    if (signInError) { setEmailStatus("Error: Current password is incorrect."); return; }
+
+    setEmailStatus("Updating…");
+    const { data: { session } } = await supabase.auth.getSession();
+    const res = await fetch("/api/change-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({ newEmail: emailForm.newEmail }),
+    });
+    const result = await res.json();
+    if (!res.ok) { setEmailStatus("Error: " + result.error); return; }
+
+    await supabase.auth.refreshSession();
+    setEmailForm({ newEmail: "", currentPassword: "" });
+    setEmailStatus("Email updated successfully.");
+  }
+
+  async function handlePasswordUpdate(event) {
+    event.preventDefault();
+    if (pwForm.password.length < 8) { setPwStatus("Error: Password must be at least 8 characters."); return; }
+    if (pwForm.password !== pwForm.confirm) { setPwStatus("Error: Passwords don't match."); return; }
+    if (!isRecovery) {
+      if (!pwForm.current) { setPwStatus("Error: Please enter your current password."); return; }
+      setPwStatus("Verifying…");
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: pwForm.current,
+      });
+      if (signInError) { setPwStatus("Error: Current password is incorrect."); return; }
+    }
+    setPwStatus("Updating…");
+    const { error } = await supabase.auth.updateUser({ password: pwForm.password });
+    if (error) { setPwStatus("Error: " + error.message); return; }
+    setPwForm({ current: "", password: "", confirm: "" });
+    setPwStatus("Password updated.");
+    if (isRecovery) clearRecovery();
+  }
+
+  async function handleForgotPassword() {
+    setForgotStatus("Sending…");
+    const { error } = await supabase.auth.resetPasswordForEmail(user.email, {
+      redirectTo: `${window.location.origin}/reviewer`,
+    });
+    if (error) { setForgotStatus("Error: " + error.message); return; }
+    setForgotStatus("Reset email sent — check your inbox.");
+  }
+
+  async function handleDeleteAccount() {
+    setDeleteStatus("Deleting…");
+    const { error } = await supabase.rpc("delete_user");
+    if (error) { setDeleteStatus("Error: " + error.message); return; }
+    await supabase.auth.signOut();
+  }
+
   return (
     <div className="settings-layout">
-      {/* Sidebar */}
       <aside className="settings-sidebar">
-        <p className="settings-sidebar-title">Profile Settings</p>
+        <p className="settings-sidebar-title">Account Settings</p>
         <nav className="settings-nav">
           {SECTIONS.map((s) => (
             <button
@@ -88,7 +188,6 @@ export default function ReviewerHome() {
         </nav>
       </aside>
 
-      {/* Main content */}
       <main className="settings-main">
         {activeSection === "Public Profile" && (
           <>
@@ -97,7 +196,6 @@ export default function ReviewerHome() {
               <p className="settings-section-desc">This is how applicants will see you on Essora.</p>
             </div>
 
-            {/* Avatar row */}
             <div className="settings-avatar-row">
               <AvatarUpload
                 userId={profile.id}
@@ -113,135 +211,63 @@ export default function ReviewerHome() {
             </div>
 
             <form className="form settings-form" onSubmit={handleSave}>
-              {/* Name + Age */}
               <div className="settings-grid">
                 <label className="field">
                   <span>Full name</span>
-                  <input
-                    type="text"
-                    name="full_name"
-                    value={form.full_name}
-                    onChange={handleChange}
-                    placeholder="First & last name"
-                  />
+                  <input type="text" name="full_name" value={form.full_name} onChange={handleChange} placeholder="First & last name" />
                 </label>
                 <label className="field">
                   <span>Age</span>
-                  <input
-                    type="number"
-                    name="age"
-                    min="0"
-                    value={form.age}
-                    onChange={handleChange}
-                    placeholder="e.g. 19"
-                  />
+                  <input type="number" name="age" min="0" value={form.age} onChange={handleChange} placeholder="e.g. 19" />
                 </label>
               </div>
 
-              {/* College + Major */}
               <div className="settings-grid">
                 <label className="field">
                   <span>College / University</span>
-                  <input
-                    type="text"
-                    name="college"
-                    value={form.college}
-                    onChange={handleChange}
-                    placeholder="e.g. Stanford University"
-                  />
+                  <input type="text" name="college" value={form.college} onChange={handleChange} placeholder="e.g. Stanford University" />
                 </label>
                 <label className="field">
                   <span>Major</span>
-                  <input
-                    type="text"
-                    name="major"
-                    value={form.major}
-                    onChange={handleChange}
-                    placeholder="e.g. Computer Science"
-                  />
+                  <input type="text" name="major" value={form.major} onChange={handleChange} placeholder="e.g. Computer Science" />
                 </label>
               </div>
 
-              {/* Grad year + High school */}
               <div className="settings-grid">
                 <label className="field">
                   <span>Graduation year</span>
-                  <input
-                    type="number"
-                    name="grad_year"
-                    min="2020"
-                    max="2035"
-                    value={form.grad_year}
-                    onChange={handleChange}
-                    placeholder="e.g. 2028"
-                  />
+                  <input type="number" name="grad_year" min="2020" max="2035" value={form.grad_year} onChange={handleChange} placeholder="e.g. 2028" />
                 </label>
                 <label className="field">
                   <span>High school <span className="field-hint-inline">(optional)</span></span>
-                  <input
-                    type="text"
-                    name="high_school"
-                    value={form.high_school}
-                    onChange={handleChange}
-                    placeholder="e.g. Lincoln High School"
-                  />
+                  <input type="text" name="high_school" value={form.high_school} onChange={handleChange} placeholder="e.g. Lincoln High School" />
                 </label>
               </div>
 
-              {/* Price */}
               <label className="field" style={{ maxWidth: "240px" }}>
                 <span>Price per essay (USD)</span>
-                <input
-                  type="number"
-                  name="price"
-                  min="0"
-                  value={form.price}
-                  onChange={handleChange}
-                  placeholder="e.g. 25"
-                />
+                <input type="number" name="price" min="0" value={form.price} onChange={handleChange} placeholder="e.g. 25" />
               </label>
 
-              {/* Short bio */}
               <label className="field">
                 <span>Short tagline <span className="field-hint-inline">(shown on your card)</span></span>
-                <input
-                  type="text"
-                  name="bio"
-                  value={form.bio}
-                  onChange={handleChange}
-                  placeholder="One sentence about yourself as a reviewer"
-                />
+                <input type="text" name="bio" value={form.bio} onChange={handleChange} placeholder="One sentence about yourself as a reviewer" />
               </label>
 
-              {/* Detailed bio */}
               <label className="field">
                 <span>Detailed bio <span className="field-hint-inline">(shown on your full profile page)</span></span>
-                <textarea
-                  name="long_bio"
-                  rows={5}
-                  value={form.long_bio}
-                  onChange={handleChange}
-                  placeholder="Tell applicants about your admissions experience, writing style, and what makes your feedback valuable…"
-                />
+                <textarea name="long_bio" rows={5} value={form.long_bio} onChange={handleChange} placeholder="Tell applicants about your admissions experience, writing style, and what makes your feedback valuable…" />
               </label>
 
-              {/* Listing toggle */}
               <label className="field checkbox settings-listing">
-                <input
-                  type="checkbox"
-                  name="is_listed"
-                  checked={form.is_listed}
-                  onChange={handleChange}
-                />
+                <input type="checkbox" name="is_listed" checked={form.is_listed} onChange={handleChange} />
                 <span>Show my profile to applicants</span>
               </label>
 
               <div className="settings-footer">
                 <button type="submit">Save profile</button>
                 {status && (
-                  <p className={`notice${status.startsWith("Error") ? " error" : ""}`}>
-                    {status}
-                  </p>
+                  <p className={`notice${status.startsWith("Error") ? " error" : ""}`}>{status}</p>
                 )}
               </div>
             </form>
@@ -262,9 +288,143 @@ export default function ReviewerHome() {
           <>
             <div className="settings-section-header">
               <h2 className="settings-section-title">Account & Privacy</h2>
-              <p className="settings-section-desc">Manage your account and privacy preferences.</p>
+              <p className="settings-section-desc">Manage your login credentials and account preferences.</p>
             </div>
-            <p className="muted">Account settings coming soon.</p>
+
+            {isEmailChanged && (
+              <div className="settings-success-banner">
+                <span>Email updated successfully.</span>
+                <button type="button" className="settings-success-dismiss" onClick={clearEmailChanged}>✕</button>
+              </div>
+            )}
+
+            {/* Email */}
+            <div className="settings-block">
+              <h3 className="settings-block-title">Email address</h3>
+              <p className="settings-block-desc">Current: <strong>{user?.email}</strong></p>
+              <form className="settings-email-form" onSubmit={handleEmailUpdate}>
+                <div className="settings-grid">
+                  <label className="field">
+                    <span>New email address</span>
+                    <input
+                      type="email"
+                      value={emailForm.newEmail}
+                      onChange={(e) => { setEmailForm((f) => ({ ...f, newEmail: e.target.value })); setEmailStatus(""); }}
+                      placeholder="you@example.com"
+                      autoComplete="email"
+                    />
+                  </label>
+                  <label className="field">
+                    <span>Current password <span className="field-hint-inline">(to confirm)</span></span>
+                    <input
+                      type="password"
+                      value={emailForm.currentPassword}
+                      onChange={(e) => { setEmailForm((f) => ({ ...f, currentPassword: e.target.value })); setEmailStatus(""); }}
+                      placeholder="Your current password"
+                      autoComplete="current-password"
+                    />
+                  </label>
+                </div>
+                <div className="settings-pw-row">
+                  <button type="submit">Update email</button>
+                  {emailStatus && (
+                    <p className={`notice${emailStatus.startsWith("Error") ? " error" : ""}`}>{emailStatus}</p>
+                  )}
+                </div>
+              </form>
+            </div>
+
+            {/* Change password */}
+            <div className="settings-block">
+              <h3 className="settings-block-title">Change password</h3>
+              {isRecovery ? (
+                <p className="settings-recovery-banner">You followed a password reset link — set your new password below.</p>
+              ) : (
+                <p className="settings-block-desc">Choose a strong password you don't use anywhere else.</p>
+              )}
+              <form className="settings-pw-form" onSubmit={handlePasswordUpdate}>
+                {!isRecovery && (
+                  <label className="field">
+                    <span>Current password</span>
+                    <div className="pw-input-wrap">
+                      <input
+                        type={pwShow.current ? "text" : "password"}
+                        value={pwForm.current}
+                        onChange={(e) => setPwForm((f) => ({ ...f, current: e.target.value }))}
+                        placeholder="Your existing password"
+                        autoComplete="current-password"
+                      />
+                      <button type="button" className="pw-eye-btn" onClick={() => setPwShow((s) => ({ ...s, current: !s.current }))} aria-label={pwShow.current ? "Hide" : "Show"}>
+                        <EyeIcon open={pwShow.current} />
+                      </button>
+                    </div>
+                  </label>
+                )}
+                <div className="settings-grid">
+                  <label className="field">
+                    <span>New password</span>
+                    <div className="pw-input-wrap">
+                      <input
+                        type={pwShow.password ? "text" : "password"}
+                        value={pwForm.password}
+                        onChange={(e) => setPwForm((f) => ({ ...f, password: e.target.value }))}
+                        placeholder="Min. 8 characters"
+                        autoComplete="new-password"
+                      />
+                      <button type="button" className="pw-eye-btn" onClick={() => setPwShow((s) => ({ ...s, password: !s.password }))} aria-label={pwShow.password ? "Hide" : "Show"}>
+                        <EyeIcon open={pwShow.password} />
+                      </button>
+                    </div>
+                  </label>
+                  <label className="field">
+                    <span>Confirm new password</span>
+                    <div className="pw-input-wrap">
+                      <input
+                        type={pwShow.confirm ? "text" : "password"}
+                        value={pwForm.confirm}
+                        onChange={(e) => setPwForm((f) => ({ ...f, confirm: e.target.value }))}
+                        placeholder="Repeat new password"
+                        autoComplete="new-password"
+                      />
+                      <button type="button" className="pw-eye-btn" onClick={() => setPwShow((s) => ({ ...s, confirm: !s.confirm }))} aria-label={pwShow.confirm ? "Hide" : "Show"}>
+                        <EyeIcon open={pwShow.confirm} />
+                      </button>
+                    </div>
+                  </label>
+                </div>
+                <div className="settings-pw-actions">
+                  <div className="settings-pw-row">
+                    <button type="submit">Update password</button>
+                    {pwStatus && <p className={`notice${pwStatus.startsWith("Error") ? " error" : ""}`}>{pwStatus}</p>}
+                  </div>
+                  <div className="settings-pw-forgot">
+                    <button type="button" className="link-btn" onClick={handleForgotPassword}>
+                      Forgot your password?
+                    </button>
+                    {forgotStatus && <p className={`notice${forgotStatus.startsWith("Error") ? " error" : ""}`}>{forgotStatus}</p>}
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            {/* Danger zone */}
+            <div className="settings-block settings-block--danger">
+              <h3 className="settings-block-title">Delete account</h3>
+              <p className="settings-block-desc">Permanently removes your account and all associated data. This cannot be undone.</p>
+              {deleteStep === 0 ? (
+                <button type="button" className="btn-danger" onClick={() => setDeleteStep(1)}>Delete my account</button>
+              ) : (
+                <div className="settings-delete-confirm">
+                  <p className="settings-delete-warning">Are you sure? This will permanently erase your profile and cannot be recovered.</p>
+                  <div className="settings-delete-actions">
+                    <button type="button" className="btn-danger" onClick={handleDeleteAccount}>
+                      {deleteStatus === "Deleting…" ? "Deleting…" : "Yes, delete my account"}
+                    </button>
+                    <button type="button" className="cropper-cancel-btn" onClick={() => setDeleteStep(0)}>Cancel</button>
+                  </div>
+                </div>
+              )}
+            </div>
           </>
         )}
       </main>
