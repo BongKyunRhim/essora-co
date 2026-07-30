@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import Avatar from "../components/Avatar.jsx";
+import AvatarCropper from "../components/AvatarCropper.jsx";
 
 const SECTIONS = ["Profile Settings", "Past Feedback", "Account & Privacy"];
 
@@ -16,6 +17,7 @@ export default function Account() {
     dream_schools: profile?.dream_schools ?? "",
   });
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url ?? "");
+  const [cropFile, setCropFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [photoError, setPhotoError] = useState("");
   const [status, setStatus] = useState("");
@@ -49,16 +51,22 @@ export default function Account() {
     setStatus("Saved.");
   }
 
-  async function handleUpload(event) {
+  function handleUpload(event) {
     const file = event.target.files?.[0];
     if (!file) return;
+    event.target.value = "";
+    setPhotoError("");
+    setCropFile(file);
+  }
+
+  async function handleCrop(blob) {
+    setCropFile(null);
     setUploading(true);
     setPhotoError("");
-    const ext = file.name.split(".").pop();
-    const path = `${profile.id}/avatar.${ext}`;
+    const path = `${profile.id}/avatar.jpg`;
     const { error: err } = await supabase.storage
       .from("avatars")
-      .upload(path, file, { upsert: true });
+      .upload(path, blob, { upsert: true, contentType: "image/jpeg" });
     if (err) {
       setPhotoError("Upload error: " + err.message);
       setUploading(false);
@@ -79,6 +87,14 @@ export default function Account() {
   }
 
   return (
+    <>
+    {cropFile && (
+      <AvatarCropper
+        file={cropFile}
+        onCancel={() => setCropFile(null)}
+        onCrop={handleCrop}
+      />
+    )}
     <div className="settings-layout">
       <aside className="settings-sidebar">
         <p className="settings-sidebar-title">Account Settings</p>
@@ -111,9 +127,9 @@ export default function Account() {
                 <p className="settings-photo-hint">PNG, JPEG, WebP, GIF · under 50 MB</p>
                 {photoError && <p className="error" style={{ fontSize: "0.8rem" }}>{photoError}</p>}
                 <div className="settings-avatar-actions">
-                  <label className="avatar-upload-btn">
+                  <label className="avatar-upload-btn" aria-disabled={uploading}>
                     {uploading ? "Uploading…" : "Upload photo"}
-                    <input type="file" accept="image/*" onChange={handleUpload} hidden />
+                    <input type="file" accept="image/*" onChange={handleUpload} hidden disabled={uploading} />
                   </label>
                   <button
                     type="button"
@@ -216,5 +232,6 @@ export default function Account() {
         )}
       </main>
     </div>
+    </>
   );
 }

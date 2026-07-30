@@ -1143,6 +1143,149 @@ button:disabled {
   letter-spacing: 0;
 }
 
+/* ---- Avatar cropper modal ---- */
+.cropper-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+}
+
+.cropper-modal {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 2rem;
+  width: min(440px, calc(100vw - 2rem));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+}
+
+.cropper-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  align-self: flex-start;
+}
+
+.cropper-circle {
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  cursor: grab;
+  background: #d9d9d9;
+  user-select: none;
+  flex-shrink: 0;
+  border: 2px solid #000;
+}
+
+.cropper-circle.dragging {
+  cursor: grabbing;
+}
+
+.cropper-img-wrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cropper-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  transform-origin: center center;
+}
+
+.cropper-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cropper-grid-line {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.cropper-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.cropper-zoom-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.cropper-zoom {
+  flex: 1;
+  accent-color: #000;
+  cursor: pointer;
+}
+
+.cropper-grid-btn {
+  padding: 0.4rem 0.9rem;
+  border: 1.5px solid #d0d0d0;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.12s, background 0.12s, color 0.12s;
+}
+
+.cropper-grid-btn:hover {
+  border-color: #888;
+}
+
+.cropper-grid-btn.active {
+  border-color: #000;
+  background: #000;
+  color: #fff;
+}
+
+.cropper-actions {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.cropper-cancel-btn {
+  padding: 0.55rem 1.2rem;
+  border: 1.5px solid #d0d0d0;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: #333;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.12s;
+}
+
+.cropper-cancel-btn:hover {
+  border-color: #888;
+}
+
 /* ---- Responsive: tablet ---- */
 @media (max-width: 900px) {
   .app-main {
