@@ -692,6 +692,79 @@ button:disabled {
   margin-top: 2rem;
 }
 
+.request-review-page {
+  max-width: 640px;
+}
+
+.request-review-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 2rem 0;
+}
+
+.request-review-header h1 {
+  font-size: 1.75rem;
+  margin-bottom: 0.2rem;
+}
+
+.request-review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.essay-upload-btn {
+  display: inline-block;
+  padding: 0.6rem 1.25rem;
+  border: 1px solid #000;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  cursor: pointer;
+  background: #fff;
+  transition: background 0.15s, color 0.15s;
+}
+
+.essay-upload-btn:hover {
+  background: #000;
+  color: #fff;
+}
+
+.essay-file-chosen {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radius-sm);
+  background: #f9f9f9;
+}
+
+.essay-file-name {
+  font-size: 0.9rem;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.request-review-footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e8e8e8;
+}
+
 /* Reviewer notifications list */
 .request-list {
   list-style: none;

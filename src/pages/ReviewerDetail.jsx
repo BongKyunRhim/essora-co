@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import Avatar from "../components/Avatar.jsx";
@@ -8,10 +8,11 @@ import Avatar from "../components/Avatar.jsx";
 export default function ReviewerDetail() {
   const { id } = useParams();
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [reviewer, setReviewer] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [requestStatus, setRequestStatus] = useState("");
-  const [requesting, setRequesting] = useState(false);
+  const justRequested = location.state?.requested === true;
 
   useEffect(() => {
     let active = true;
@@ -30,22 +31,6 @@ export default function ReviewerDetail() {
     };
   }, [id]);
 
-  async function requestReview() {
-    setRequesting(true);
-    setRequestStatus("");
-    const { error } = await supabase.from("requests").insert({
-      applicant_id: user.id,
-      reviewer_id: reviewer.id,
-    });
-    setRequesting(false);
-    if (error) {
-      setRequestStatus("Error: " + error.message);
-      return;
-    }
-    setRequestStatus(
-      "Request sent! The reviewer will see it in their notifications."
-    );
-  }
 
   if (loading) return <p className="page">Loading…</p>;
   if (!reviewer) {
@@ -84,10 +69,13 @@ export default function ReviewerDetail() {
 
       {profile?.role === "applicant" && (
         <div className="request-box">
-          <button type="button" onClick={requestReview} disabled={requesting}>
-            {requesting ? "Sending…" : "Request a review"}
-          </button>
-          {requestStatus && <p className="notice">{requestStatus}</p>}
+          {justRequested ? (
+            <p className="notice">Request sent! The reviewer will be in touch.</p>
+          ) : (
+            <button type="button" onClick={() => navigate(`/reviewers/${id}/request`)}>
+              Request a review
+            </button>
+          )}
         </div>
       )}
     </section>

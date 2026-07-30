@@ -12,6 +12,7 @@ import ApplicantHome from "../pages/ApplicantHome.jsx";
 import Account from "../pages/Account.jsx";
 import ReviewerDetail from "../pages/ReviewerDetail.jsx";
 import ReviewerNotifications from "../pages/ReviewerNotifications.jsx";
+import RequestReview from "../pages/RequestReview.jsx";
 import Landing from "../pages/Landing.jsx";
 
 function ProtectedRoute({ children }) {
@@ -150,6 +151,7 @@ export default function App() {
           <Route path="/applicant" element={<ProtectedRoute><ApplicantHome /></ProtectedRoute>} />
           <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
           <Route path="/reviewers/:id" element={<ProtectedRoute><ReviewerDetail /></ProtectedRoute>} />
+          <Route path="/reviewers/:id/request" element={<ProtectedRoute><RequestReview /></ProtectedRoute>} />
           <Route path="/notifications" element={<ProtectedRoute><ReviewerNotifications /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
