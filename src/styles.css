@@ -1001,7 +1001,7 @@ button:disabled {
 
 .settings-main {
   min-width: 0;
-  padding: 2.5rem 2.25rem 3rem 3rem;
+  padding: 2.5rem 2.25rem 0 3rem;
   display: flex;
   flex-direction: column;
 }
@@ -1133,6 +1133,7 @@ button:disabled {
   gap: 1rem;
   margin-top: auto;
   padding-top: 1.5rem;
+  padding-bottom: 2.5rem;
   border-top: 1px solid #e8e8e8;
 }
 
