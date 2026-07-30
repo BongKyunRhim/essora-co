@@ -2,6 +2,18 @@ import { useState, useRef, useEffect, useCallback } from "react";
 
 const PREVIEW_SIZE = 280;
 const OUTPUT_SIZE = 400;
+const MIN_SCALE = 0.5;
+const MAX_SCALE = 4;
+
+function clamp(v, min, max) {
+  return Math.min(max, Math.max(min, v));
+}
+
+function pinchDist(touches) {
+  const dx = touches[0].clientX - touches[1].clientX;
+  const dy = touches[0].clientY - touches[1].clientY;
+  return Math.hypot(dx, dy);
+}
 
 export default function AvatarCropper({ file, onCancel, onCrop }) {
   const [imgSrc, setImgSrc] = useState("");
@@ -9,7 +21,13 @@ export default function AvatarCropper({ file, onCancel, onCrop }) {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [showGrid, setShowGrid] = useState(false);
   const [dragging, setDragging] = useState(false);
+
+  const circleRef = useRef(null);
   const dragOrigin = useRef(null);
+  const pinchRef = useRef(null); // { dist, scale }
+  // keep a ref in sync so wheel handler can read current scale
+  const scaleRef = useRef(scale);
+  useEffect(() => { scaleRef.current = scale; }, [scale]);
 
   useEffect(() => {
     const reader = new FileReader();
@@ -17,22 +35,60 @@ export default function AvatarCropper({ file, onCancel, onCrop }) {
     reader.readAsDataURL(file);
   }, [file]);
 
+  // Scroll-wheel zoom (non-passive so we can preventDefault)
+  useEffect(() => {
+    const el = circleRef.current;
+    if (!el) return;
+    const onWheel = (e) => {
+      e.preventDefault();
+      setScale((s) => clamp(s - e.deltaY * 0.002, MIN_SCALE, MAX_SCALE));
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
+
+  // --- drag helpers ---
   const startDrag = (clientX, clientY) => {
     setDragging(true);
     dragOrigin.current = { x: clientX - offset.x, y: clientY - offset.y };
   };
 
   const moveDrag = useCallback((clientX, clientY) => {
-    if (!dragging || !dragOrigin.current) return;
+    if (!dragOrigin.current) return;
     setOffset({
       x: clientX - dragOrigin.current.x,
       y: clientY - dragOrigin.current.y,
     });
-  }, [dragging]);
+  }, []);
 
   const endDrag = () => {
     setDragging(false);
     dragOrigin.current = null;
+  };
+
+  // --- touch handlers (single = drag, two-finger = pinch) ---
+  const handleTouchStart = (e) => {
+    if (e.touches.length === 2) {
+      pinchRef.current = { dist: pinchDist(e.touches), scale: scaleRef.current };
+    } else {
+      const t = e.touches[0];
+      startDrag(t.clientX, t.clientY);
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (e.touches.length === 2 && pinchRef.current) {
+      const ratio = pinchDist(e.touches) / pinchRef.current.dist;
+      setScale(clamp(pinchRef.current.scale * ratio, MIN_SCALE, MAX_SCALE));
+    } else if (e.touches.length === 1) {
+      const t = e.touches[0];
+      moveDrag(t.clientX, t.clientY);
+    }
+  };
+
+  const handleTouchEnd = (e) => {
+    if (e.touches.length < 2) pinchRef.current = null;
+    if (e.touches.length === 0) endDrag();
   };
 
   async function handleSave() {
@@ -68,14 +124,15 @@ export default function AvatarCropper({ file, onCancel, onCrop }) {
         <h3 className="cropper-title">Adjust photo</h3>
 
         <div
+          ref={circleRef}
           className={`cropper-circle${dragging ? " dragging" : ""}`}
           onMouseDown={(e) => { e.preventDefault(); startDrag(e.clientX, e.clientY); }}
-          onMouseMove={(e) => moveDrag(e.clientX, e.clientY)}
+          onMouseMove={(e) => { if (dragOrigin.current) moveDrag(e.clientX, e.clientY); }}
           onMouseUp={endDrag}
           onMouseLeave={endDrag}
-          onTouchStart={(e) => { const t = e.touches[0]; startDrag(t.clientX, t.clientY); }}
-          onTouchMove={(e) => { const t = e.touches[0]; moveDrag(t.clientX, t.clientY); }}
-          onTouchEnd={endDrag}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
           {imgSrc && (
             <div className="cropper-img-wrap">
@@ -99,19 +156,9 @@ export default function AvatarCropper({ file, onCancel, onCrop }) {
           )}
         </div>
 
+        <p className="cropper-hint">Scroll or pinch to zoom · drag to reposition</p>
+
         <div className="cropper-controls">
-          <label className="cropper-zoom-label">
-            <span>Zoom</span>
-            <input
-              type="range"
-              min="0.5"
-              max="3"
-              step="0.01"
-              value={scale}
-              onChange={(e) => setScale(Number(e.target.value))}
-              className="cropper-zoom"
-            />
-          </label>
           <button
             type="button"
             className={`cropper-grid-btn${showGrid ? " active" : ""}`}
