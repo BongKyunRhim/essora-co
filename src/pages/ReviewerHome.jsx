@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
-import AvatarUpload from "../components/AvatarUpload.jsx";
+import Avatar from "../components/Avatar.jsx";
+import AvatarCropper from "../components/AvatarCropper.jsx";
 
 const SECTIONS = ["Public Profile", "My Activity", "Account & Privacy"];
 
@@ -35,6 +36,9 @@ export default function ReviewerHome() {
     is_listed: profile?.is_listed ?? true,
   });
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url ?? "");
+  const [cropFile, setCropFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [photoError, setPhotoError] = useState("");
   const [status, setStatus] = useState("");
 
   // Email change
@@ -90,13 +94,36 @@ export default function ReviewerHome() {
     setStatus("Saved.");
   }
 
-  async function handleAvatar(url) {
+  function handleUpload(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    event.target.value = "";
+    setPhotoError("");
+    setCropFile(file);
+  }
+
+  async function handleCrop(blob) {
+    setCropFile(null);
+    setUploading(true);
+    setPhotoError("");
+    const path = `${profile.id}/avatar.jpg`;
+    const { error: err } = await supabase.storage
+      .from("avatars")
+      .upload(path, blob, { upsert: true, contentType: "image/jpeg" });
+    if (err) {
+      setPhotoError("Upload error: " + err.message);
+      setUploading(false);
+      return;
+    }
+    const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+    const url = `${data.publicUrl}?updated=${Date.now()}`;
     setAvatarUrl(url);
     await supabase.from("profiles").update({ avatar_url: url }).eq("id", profile.id);
     await refreshProfile();
+    setUploading(false);
   }
 
-  async function handleRemoveAvatar() {
+  async function handleDeletePhoto() {
     setAvatarUrl("");
     await supabase.from("profiles").update({ avatar_url: null }).eq("id", profile.id);
     await refreshProfile();
@@ -171,6 +198,14 @@ export default function ReviewerHome() {
   }
 
   return (
+    <>
+    {cropFile && (
+      <AvatarCropper
+        file={cropFile}
+        onCancel={() => setCropFile(null)}
+        onCrop={handleCrop}
+      />
+    )}
     <div className="settings-layout">
       <aside className="settings-sidebar">
         <p className="settings-sidebar-title">Account Settings</p>
@@ -196,73 +231,85 @@ export default function ReviewerHome() {
               <p className="settings-section-desc">This is how applicants will see you on Essora.</p>
             </div>
 
-            <div className="settings-avatar-row">
-              <AvatarUpload
-                userId={profile.id}
-                url={avatarUrl}
-                name={form.full_name}
-                onUploaded={handleAvatar}
-              />
-              {avatarUrl && (
-                <button type="button" className="settings-remove-photo" onClick={handleRemoveAvatar}>
-                  Remove photo
-                </button>
-              )}
-            </div>
-
             <form className="form settings-form" onSubmit={handleSave}>
-              <div className="settings-grid">
-                <label className="field">
-                  <span>Full name</span>
-                  <input type="text" name="full_name" value={form.full_name} onChange={handleChange} placeholder="First & last name" />
-                </label>
-                <label className="field">
-                  <span>Age</span>
-                  <input type="number" name="age" min="0" value={form.age} onChange={handleChange} placeholder="e.g. 19" />
-                </label>
+              <div className="settings-profile-cols">
+                {/* Left column: avatar */}
+                <div className="settings-avatar-col">
+                  <Avatar url={avatarUrl} name={form.full_name} size={220} />
+                  <p className="settings-photo-hint">PNG, JPEG, WebP, GIF · under 50 MB</p>
+                  {photoError && <p className="error" style={{ fontSize: "0.8rem" }}>{photoError}</p>}
+                  <div className="settings-avatar-actions">
+                    <label className="avatar-upload-btn" aria-disabled={uploading}>
+                      {uploading ? "Uploading…" : "Upload photo"}
+                      <input type="file" accept="image/*" onChange={handleUpload} hidden disabled={uploading} />
+                    </label>
+                    <button
+                      type="button"
+                      className="avatar-delete-btn"
+                      onClick={handleDeletePhoto}
+                      disabled={!avatarUrl}
+                    >
+                      Delete photo
+                    </button>
+                  </div>
+                </div>
+
+                {/* Right column: form fields */}
+                <div className="settings-fields-col">
+                  <div className="settings-grid">
+                    <label className="field">
+                      <span>Full name</span>
+                      <input type="text" name="full_name" value={form.full_name} onChange={handleChange} placeholder="First & last name" />
+                    </label>
+                    <label className="field">
+                      <span>Age</span>
+                      <input type="number" name="age" min="0" value={form.age} onChange={handleChange} placeholder="e.g. 19" />
+                    </label>
+                  </div>
+
+                  <div className="settings-grid">
+                    <label className="field">
+                      <span>College / University</span>
+                      <input type="text" name="college" value={form.college} onChange={handleChange} placeholder="e.g. Stanford University" />
+                    </label>
+                    <label className="field">
+                      <span>Major</span>
+                      <input type="text" name="major" value={form.major} onChange={handleChange} placeholder="e.g. Computer Science" />
+                    </label>
+                  </div>
+
+                  <div className="settings-grid">
+                    <label className="field">
+                      <span>Graduation year</span>
+                      <input type="number" name="grad_year" min="2020" max="2035" value={form.grad_year} onChange={handleChange} placeholder="e.g. 2028" />
+                    </label>
+                    <label className="field">
+                      <span>High school <span className="field-hint-inline">(optional)</span></span>
+                      <input type="text" name="high_school" value={form.high_school} onChange={handleChange} placeholder="e.g. Lincoln High School" />
+                    </label>
+                  </div>
+
+                  <label className="field" style={{ maxWidth: "240px" }}>
+                    <span>Price per essay (USD)</span>
+                    <input type="number" name="price" min="0" value={form.price} onChange={handleChange} placeholder="e.g. 25" />
+                  </label>
+
+                  <label className="field">
+                    <span>Short tagline <span className="field-hint-inline">(shown on your card)</span></span>
+                    <input type="text" name="bio" value={form.bio} onChange={handleChange} placeholder="One sentence about yourself as a reviewer" />
+                  </label>
+
+                  <label className="field">
+                    <span>Detailed bio <span className="field-hint-inline">(shown on your full profile page)</span></span>
+                    <textarea name="long_bio" rows={5} value={form.long_bio} onChange={handleChange} placeholder="Tell applicants about your admissions experience, writing style, and what makes your feedback valuable…" />
+                  </label>
+
+                  <label className="field checkbox settings-listing">
+                    <input type="checkbox" name="is_listed" checked={form.is_listed} onChange={handleChange} />
+                    <span>Show my profile to applicants</span>
+                  </label>
+                </div>
               </div>
-
-              <div className="settings-grid">
-                <label className="field">
-                  <span>College / University</span>
-                  <input type="text" name="college" value={form.college} onChange={handleChange} placeholder="e.g. Stanford University" />
-                </label>
-                <label className="field">
-                  <span>Major</span>
-                  <input type="text" name="major" value={form.major} onChange={handleChange} placeholder="e.g. Computer Science" />
-                </label>
-              </div>
-
-              <div className="settings-grid">
-                <label className="field">
-                  <span>Graduation year</span>
-                  <input type="number" name="grad_year" min="2020" max="2035" value={form.grad_year} onChange={handleChange} placeholder="e.g. 2028" />
-                </label>
-                <label className="field">
-                  <span>High school <span className="field-hint-inline">(optional)</span></span>
-                  <input type="text" name="high_school" value={form.high_school} onChange={handleChange} placeholder="e.g. Lincoln High School" />
-                </label>
-              </div>
-
-              <label className="field" style={{ maxWidth: "240px" }}>
-                <span>Price per essay (USD)</span>
-                <input type="number" name="price" min="0" value={form.price} onChange={handleChange} placeholder="e.g. 25" />
-              </label>
-
-              <label className="field">
-                <span>Short tagline <span className="field-hint-inline">(shown on your card)</span></span>
-                <input type="text" name="bio" value={form.bio} onChange={handleChange} placeholder="One sentence about yourself as a reviewer" />
-              </label>
-
-              <label className="field">
-                <span>Detailed bio <span className="field-hint-inline">(shown on your full profile page)</span></span>
-                <textarea name="long_bio" rows={5} value={form.long_bio} onChange={handleChange} placeholder="Tell applicants about your admissions experience, writing style, and what makes your feedback valuable…" />
-              </label>
-
-              <label className="field checkbox settings-listing">
-                <input type="checkbox" name="is_listed" checked={form.is_listed} onChange={handleChange} />
-                <span>Show my profile to applicants</span>
-              </label>
 
               <div className="settings-footer">
                 <button type="submit">Save profile</button>
@@ -429,5 +476,6 @@ export default function ReviewerHome() {
         )}
       </main>
     </div>
+    </>
   );
 }
