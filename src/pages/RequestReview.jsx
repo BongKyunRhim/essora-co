@@ -21,11 +21,11 @@ export default function RequestReview() {
   useEffect(() => {
     supabase
       .from("profiles")
-      .select("id, full_name, avatar_url, college, major, price")
+      .select("*")
       .eq("id", id)
       .single()
-      .then(({ data }) => {
-        setReviewer(data ?? null);
+      .then(({ data, error }) => {
+        if (!error) setReviewer(data);
         setLoading(false);
       });
   }, [id]);
