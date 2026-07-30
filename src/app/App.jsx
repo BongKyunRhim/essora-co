@@ -35,7 +35,7 @@ function Home() {
 }
 
 export default function App() {
-  const { user, profile, signOut, isRecovery } = useAuth();
+  const { user, profile, signOut, isRecovery, isEmailChanged } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -46,6 +46,10 @@ export default function App() {
   useEffect(() => {
     if (isRecovery) navigate("/account", { replace: true });
   }, [isRecovery, navigate]);
+
+  useEffect(() => {
+    if (isEmailChanged) navigate("/account", { replace: true });
+  }, [isEmailChanged, navigate]);
   const closeMenu = () => setMenuOpen(false);
   const closeProfile = () => setProfileOpen(false);
 

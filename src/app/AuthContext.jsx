@@ -16,6 +16,7 @@ export function AuthProvider({ children }) {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isRecovery, setIsRecovery] = useState(false);
+  const [isEmailChanged, setIsEmailChanged] = useState(false);
 
   // Load the user's profile row (name, role, bio, price) from the database.
   const fetchProfile = useCallback(async (userId) => {
@@ -45,6 +46,7 @@ export function AuthProvider({ children }) {
     // React to logging in / out from anywhere in the app.
     const { data: sub } = supabase.auth.onAuthStateChange(async (event, s) => {
       if (event === "PASSWORD_RECOVERY") setIsRecovery(true);
+      if (event === "EMAIL_CHANGE") setIsEmailChanged(true);
       setSession(s);
       await fetchProfile(s?.user?.id);
     });
@@ -62,6 +64,8 @@ export function AuthProvider({ children }) {
     loading,
     isRecovery,
     clearRecovery: () => setIsRecovery(false),
+    isEmailChanged,
+    clearEmailChanged: () => setIsEmailChanged(false),
     refreshProfile: () => fetchProfile(session?.user?.id),
     signOut: () => supabase.auth.signOut(),
   };

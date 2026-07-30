@@ -21,7 +21,7 @@ function EyeIcon({ open }) {
 }
 
 export default function Account() {
-  const { user, profile, refreshProfile, signOut, isRecovery, clearRecovery } = useAuth();
+  const { user, profile, refreshProfile, signOut, isRecovery, clearRecovery, isEmailChanged, clearEmailChanged } = useAuth();
   const [activeSection, setActiveSection] = useState("Profile Settings");
   const [form, setForm] = useState({
     full_name: profile?.full_name ?? "",
@@ -53,6 +53,10 @@ export default function Account() {
   useEffect(() => {
     if (isRecovery) setActiveSection("Account & Privacy");
   }, [isRecovery]);
+
+  useEffect(() => {
+    if (isEmailChanged) setActiveSection("Account & Privacy");
+  }, [isEmailChanged]);
 
   if (!profile) return <p className="page">Loading…</p>;
 
@@ -312,6 +316,13 @@ export default function Account() {
               <h2 className="settings-section-title">Account & Privacy</h2>
               <p className="settings-section-desc">Manage your login credentials and account preferences.</p>
             </div>
+
+            {isEmailChanged && (
+              <div className="settings-success-banner">
+                <span>Email updated successfully.</span>
+                <button type="button" className="settings-success-dismiss" onClick={clearEmailChanged}>✕</button>
+              </div>
+            )}
 
             {/* Email */}
             <div className="settings-block">
