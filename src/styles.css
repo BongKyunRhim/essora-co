@@ -1055,7 +1055,7 @@ button:disabled {
 /* Two-column layout inside Profile Settings: avatar left, fields right */
 .settings-profile-cols {
   display: grid;
-  grid-template-columns: 160px 1fr;
+  grid-template-columns: 200px 1fr;
   gap: 2.5rem;
   align-items: start;
 }
@@ -1168,7 +1168,7 @@ button:disabled {
 
   /* Narrow avatar col on tablet */
   .settings-profile-cols {
-    grid-template-columns: 140px 1fr;
+    grid-template-columns: 170px 1fr;
     gap: 1.75rem;
   }
 

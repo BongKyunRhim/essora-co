@@ -107,7 +107,7 @@ export default function Account() {
             <div className="settings-profile-cols">
               {/* Left column: avatar */}
               <div className="settings-avatar-col">
-                <Avatar url={avatarUrl} name={form.full_name} size={120} />
+                <Avatar url={avatarUrl} name={form.full_name} size={160} />
                 <p className="settings-photo-hint">PNG, JPEG, WebP, GIF · under 50 MB</p>
                 {photoError && <p className="error" style={{ fontSize: "0.8rem" }}>{photoError}</p>}
                 <div className="settings-avatar-actions">
