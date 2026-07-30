@@ -6,6 +6,20 @@ import AvatarCropper from "../components/AvatarCropper.jsx";
 
 const SECTIONS = ["Profile Settings", "Past Feedback", "Account & Privacy"];
 
+function EyeIcon({ open }) {
+  return open ? (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+  ) : (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+      <line x1="1" y1="1" x2="23" y2="23"/>
+    </svg>
+  );
+}
+
 export default function Account() {
   const { user, profile, refreshProfile, signOut, isRecovery, clearRecovery } = useAuth();
   const [activeSection, setActiveSection] = useState("Profile Settings");
@@ -25,7 +39,7 @@ export default function Account() {
   // Password change
   const [pwForm, setPwForm] = useState({ current: "", password: "", confirm: "" });
   const [pwStatus, setPwStatus] = useState("");
-  const [pwVisible, setPwVisible] = useState(false);
+  const [pwShow, setPwShow] = useState({ current: false, password: false, confirm: false });
   const [forgotStatus, setForgotStatus] = useState("");
 
   // Delete account
@@ -301,42 +315,53 @@ export default function Account() {
                 {!isRecovery && (
                   <label className="field">
                     <span>Current password</span>
-                    <input
-                      type={pwVisible ? "text" : "password"}
-                      value={pwForm.current}
-                      onChange={(e) => setPwForm((f) => ({ ...f, current: e.target.value }))}
-                      placeholder="Your existing password"
-                      autoComplete="current-password"
-                    />
+                    <div className="pw-input-wrap">
+                      <input
+                        type={pwShow.current ? "text" : "password"}
+                        value={pwForm.current}
+                        onChange={(e) => setPwForm((f) => ({ ...f, current: e.target.value }))}
+                        placeholder="Your existing password"
+                        autoComplete="current-password"
+                      />
+                      <button type="button" className="pw-eye-btn" onClick={() => setPwShow((s) => ({ ...s, current: !s.current }))} aria-label={pwShow.current ? "Hide password" : "Show password"}>
+                        <EyeIcon open={pwShow.current} />
+                      </button>
+                    </div>
                   </label>
                 )}
                 <div className="settings-grid">
                   <label className="field">
                     <span>New password</span>
-                    <input
-                      type={pwVisible ? "text" : "password"}
-                      value={pwForm.password}
-                      onChange={(e) => setPwForm((f) => ({ ...f, password: e.target.value }))}
-                      placeholder="Min. 8 characters"
-                      autoComplete="new-password"
-                    />
+                    <div className="pw-input-wrap">
+                      <input
+                        type={pwShow.password ? "text" : "password"}
+                        value={pwForm.password}
+                        onChange={(e) => setPwForm((f) => ({ ...f, password: e.target.value }))}
+                        placeholder="Min. 8 characters"
+                        autoComplete="new-password"
+                      />
+                      <button type="button" className="pw-eye-btn" onClick={() => setPwShow((s) => ({ ...s, password: !s.password }))} aria-label={pwShow.password ? "Hide password" : "Show password"}>
+                        <EyeIcon open={pwShow.password} />
+                      </button>
+                    </div>
                   </label>
                   <label className="field">
                     <span>Confirm new password</span>
-                    <input
-                      type={pwVisible ? "text" : "password"}
-                      value={pwForm.confirm}
-                      onChange={(e) => setPwForm((f) => ({ ...f, confirm: e.target.value }))}
-                      placeholder="Repeat new password"
-                      autoComplete="new-password"
-                    />
+                    <div className="pw-input-wrap">
+                      <input
+                        type={pwShow.confirm ? "text" : "password"}
+                        value={pwForm.confirm}
+                        onChange={(e) => setPwForm((f) => ({ ...f, confirm: e.target.value }))}
+                        placeholder="Repeat new password"
+                        autoComplete="new-password"
+                      />
+                      <button type="button" className="pw-eye-btn" onClick={() => setPwShow((s) => ({ ...s, confirm: !s.confirm }))} aria-label={pwShow.confirm ? "Hide password" : "Show password"}>
+                        <EyeIcon open={pwShow.confirm} />
+                      </button>
+                    </div>
                   </label>
                 </div>
                 <div className="settings-pw-actions">
-                  <label className="settings-pw-show">
-                    <input type="checkbox" checked={pwVisible} onChange={(e) => setPwVisible(e.target.checked)} />
-                    Show passwords
-                  </label>
                   <div className="settings-pw-row">
                     <button type="submit">Update password</button>
                     {pwStatus && <p className={`notice${pwStatus.startsWith("Error") ? " error" : ""}`}>{pwStatus}</p>}

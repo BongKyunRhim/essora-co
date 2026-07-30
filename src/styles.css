@@ -1218,21 +1218,34 @@ button:disabled {
   gap: 0.85rem;
 }
 
-.settings-pw-show {
+.pw-input-wrap {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.85rem;
-  color: #555;
-  cursor: pointer;
-  user-select: none;
 }
 
-.settings-pw-show input[type="checkbox"] {
-  width: 15px;
-  height: 15px;
-  accent-color: #000;
+.pw-input-wrap input {
+  width: 100%;
+  padding-right: 2.75rem;
+}
+
+.pw-eye-btn {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  padding: 0;
   cursor: pointer;
+  color: #888;
+  display: flex;
+  align-items: center;
+  box-shadow: none;
+}
+
+.pw-eye-btn:hover {
+  color: #000;
+  background: none;
+  box-shadow: none;
 }
 
 .settings-pw-row {
