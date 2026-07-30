@@ -1,10 +1,12 @@
 import { createClient } from "@supabase/supabase-js";
 
+const SUPABASE_URL = "https://hpfogpvschhzzyksbwcg.supabase.co";
+
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
 
-  if (!process.env.VITE_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    return res.status(500).json({ error: "Server misconfiguration: missing Supabase env vars." });
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return res.status(500).json({ error: "Server misconfiguration: missing SUPABASE_SERVICE_ROLE_KEY." });
   }
 
   const authHeader = req.headers.authorization;
@@ -16,7 +18,7 @@ export default async function handler(req, res) {
   if (!newEmail) return res.status(400).json({ error: "newEmail is required" });
 
   const adminClient = createClient(
-    process.env.VITE_SUPABASE_URL,
+    SUPABASE_URL,
     process.env.SUPABASE_SERVICE_ROLE_KEY
   );
 
