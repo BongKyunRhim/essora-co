@@ -953,6 +953,7 @@ button:disabled {
   grid-template-columns: 240px 1fr;
   gap: 3rem;
   align-items: start;
+  margin-top: 3rem;
 }
 
 .reviewer-detail-left {
