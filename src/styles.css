@@ -757,16 +757,9 @@ button:disabled {
 
 .find-reviewers-heading {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.find-reviewers-heading-left {
-  display: flex;
   align-items: baseline;
   gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .find-reviewers-heading h1 {
@@ -776,6 +769,13 @@ button:disabled {
 .frs-count {
   font-size: 0.85rem;
   color: #888;
+}
+
+.find-reviewers-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 
 /* Filter toggle button */

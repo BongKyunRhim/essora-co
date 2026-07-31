@@ -128,12 +128,13 @@ export default function ApplicantHome() {
       {/* Main content */}
       <main className="find-reviewers-main">
         <div className="find-reviewers-heading">
-          <div className="find-reviewers-heading-left">
-            <h1>Find Reviewers</h1>
-            {!loading && (
-              <span className="frs-count">{filtered.length} reviewer{filtered.length !== 1 ? "s" : ""}</span>
-            )}
-          </div>
+          <h1>Find Reviewers</h1>
+          {!loading && (
+            <span className="frs-count">{filtered.length} reviewer{filtered.length !== 1 ? "s" : ""}</span>
+          )}
+        </div>
+
+        <div className="find-reviewers-toolbar">
           <button
             type="button"
             className={`filter-btn${isFiltered ? " filter-btn--active" : ""}`}
