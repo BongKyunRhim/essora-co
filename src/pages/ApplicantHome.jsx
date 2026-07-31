@@ -29,6 +29,7 @@ export default function ApplicantHome() {
   const [maxPrice, setMaxPrice]   = useState(200);
   const [sortBy, setSortBy]       = useState("default");
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [query, setQuery]           = useState("");
 
   const highestPrice = useMemo(
     () => Math.max(200, ...reviewers.map((r) => r.price ?? 0)),
@@ -53,14 +54,21 @@ export default function ApplicantHome() {
   }, []);
 
   const filtered = useMemo(() => {
-    let list = reviewers.filter((r) =>
-      r.price == null || r.price <= maxPrice
-    );
+    const q = query.trim().toLowerCase();
+    let list = reviewers.filter((r) => {
+      if (r.price != null && r.price > maxPrice) return false;
+      if (!q) return true;
+      return (
+        (r.full_name  ?? "").toLowerCase().includes(q) ||
+        (r.college    ?? "").toLowerCase().includes(q) ||
+        (r.major      ?? "").toLowerCase().includes(q)
+      );
+    });
     if (sortBy === "price_asc")  list = [...list].sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));
     if (sortBy === "price_desc") list = [...list].sort((a, b) => (b.price ?? -Infinity) - (a.price ?? -Infinity));
     if (sortBy === "name_asc")   list = [...list].sort((a, b) => (a.full_name ?? "").localeCompare(b.full_name ?? ""));
     return list;
-  }, [reviewers, maxPrice, sortBy]);
+  }, [reviewers, maxPrice, sortBy, query]);
 
   const isFiltered = sortBy !== "default" || maxPrice < highestPrice;
 
@@ -133,7 +141,7 @@ export default function ApplicantHome() {
         )}
       </div>
 
-      {/* Toolbar — full width so the filter button sits at the far left */}
+      {/* Toolbar — filter left, search right */}
       <div className="find-reviewers-toolbar">
         <button
           type="button"
@@ -143,6 +151,23 @@ export default function ApplicantHome() {
           <FilterIcon />
           Filter{isFiltered ? " ·" : ""}
         </button>
+
+        <div className="toolbar-search">
+          <svg className="toolbar-search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.4"/>
+            <line x1="9.5" y1="9.5" x2="13" y2="13" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+          </svg>
+          <input
+            type="search"
+            className="toolbar-search-input"
+            placeholder="Search by name, school, major…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          {query && (
+            <button type="button" className="toolbar-search-clear" onClick={() => setQuery("")}>✕</button>
+          )}
+        </div>
       </div>
 
       {/* Cards */}

@@ -780,10 +780,58 @@ button:disabled {
 .find-reviewers-toolbar {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: space-between;
+  gap: 1rem;
   padding: 1rem 2rem 0;
   margin-bottom: 2.5rem;
 }
+
+.toolbar-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.toolbar-search-icon {
+  position: absolute;
+  left: 0.75rem;
+  color: #999;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.toolbar-search-input {
+  padding: 0.45rem 2rem 0.45rem 2.1rem;
+  border: 1.5px solid #d0d0d0;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  width: 240px;
+  outline: none;
+  background: #fff;
+  color: #000;
+  transition: border-color 0.15s;
+}
+
+.toolbar-search-input::placeholder { color: #aaa; }
+
+.toolbar-search-input:focus { border-color: #888; }
+
+/* hide browser's built-in clear button */
+.toolbar-search-input::-webkit-search-cancel-button { display: none; }
+
+.toolbar-search-clear {
+  position: absolute;
+  right: 0.6rem;
+  background: none;
+  border: none;
+  font-size: 0.75rem;
+  color: #aaa;
+  cursor: pointer;
+  padding: 0.1rem 0.2rem;
+  line-height: 1;
+}
+
+.toolbar-search-clear:hover { color: #000; }
 
 .find-reviewers-main {
   padding: 0 2rem;
