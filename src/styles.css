@@ -392,30 +392,30 @@ select {
 }
 
 .role-btn:hover {
-  border-color: #000;
-  color: #000;
+  border-color: #203651;
+  color: #203651;
   background: #fff;
 }
 
 .role-btn.selected {
-  border-color: #000;
-  background: #000;
+  border-color: #203651;
+  background: #203651;
   color: #fff;
   cursor: default;
 }
 
 button {
   padding: 0.65rem;
-  border: 1px solid #000;
+  border: 1px solid #203651;
   border-radius: var(--radius-sm);
-  background: #000;
+  background: #203651;
   color: #fff;
   font-size: 1rem;
   cursor: pointer;
 }
 
 button:hover {
-  background: #000;
+  background: #203651;
   color: #fff;
 }
 
@@ -456,7 +456,7 @@ button:hover {
 }
 
 .auth-tab.active {
-  background: #000;
+  background: #203651;
   color: #fff;
 }
 
@@ -616,7 +616,7 @@ button:disabled {
 }
 
 .avatar-upload-btn:hover {
-  background: #000;
+  background: #203651;
   color: #fff;
 }
 
@@ -861,14 +861,14 @@ button:disabled {
 }
 
 .filter-btn--active {
-  background: #000;
+  background: #203651;
   color: #fff;
-  border-color: #000;
+  border-color: #203651;
 }
 
 .filter-btn--active:hover {
-  background: #222;
-  border-color: #222;
+  background: #1a2d44;
+  border-color: #1a2d44;
 }
 
 @media (max-width: 700px) {
@@ -917,12 +917,12 @@ button:disabled {
 }
 
 .reviewer-card:hover {
-  background: #000;
+  background: #203651;
   color: #fff;
 }
 
 .reviewer-card:hover .reviewer-card-photo {
-  background: #111;
+  background: #1a2d44;
 }
 
 .reviewer-card:hover .avatar {
@@ -996,7 +996,7 @@ button:disabled {
 }
 
 .essay-upload-btn:hover {
-  background: #000;
+  background: #203651;
   color: #fff;
 }
 
@@ -1142,7 +1142,7 @@ button:disabled {
 }
 
 .btn:hover {
-  background: #000;
+  background: #203651;
   color: #fff;
 }
 
@@ -1562,8 +1562,8 @@ button:disabled {
 }
 
 .availability-option.selected {
-  border-color: #000;
-  background: #000;
+  border-color: #203651;
+  background: #203651;
   color: #fff;
 }
 
@@ -1906,8 +1906,8 @@ button:disabled {
 }
 
 .cropper-grid-btn.active {
-  border-color: #000;
-  background: #000;
+  border-color: #203651;
+  background: #203651;
   color: #fff;
 }
 
@@ -2154,9 +2154,9 @@ button:disabled {
   }
 
   .settings-nav-item.active {
-    border-color: #000;
-    border-left-color: #000;
-    background: #000;
+    border-color: #203651;
+    border-left-color: #203651;
+    background: #203651;
     color: #fff;
   }
 
