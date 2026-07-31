@@ -47,6 +47,7 @@ export default function RequestReview() {
     e.preventDefault();
     if (!essayFile)  { setStatus("Error: Please upload your essay."); return; }
     if (!essayType)  { setStatus("Error: Please select an essay type."); return; }
+    if (!notes.trim()) { setStatus("Error: Please fill in the details for your reviewer."); return; }
 
     setSubmitting(true);
     setStatus("Uploading essay…");
@@ -148,7 +149,7 @@ export default function RequestReview() {
             <h2 className="rrl-section-label">Details</h2>
 
             <div className="rrl-field">
-              <span className="rrl-field-label">What should the reviewer focus on? <span className="rrl-optional">(optional)</span></span>
+              <span className="rrl-field-label">What should the reviewer focus on?</span>
               <textarea
                 rows={5}
                 maxLength={600}
