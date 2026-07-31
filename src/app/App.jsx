@@ -129,7 +129,7 @@ export default function App() {
                 </Link>
               )}
 
-              {/* Profile avatar dropdown */}
+              {/* Profile avatar dropdown — desktop only */}
               <div className="nav-profile-wrap">
                 <button
                   type="button"
@@ -159,6 +159,18 @@ export default function App() {
                   </>
                 )}
               </div>
+
+              {/* Mobile-only flat links that replace the avatar dropdown in the hamburger menu */}
+              <Link to={profileHref} className="nav-mobile-item" onClick={closeMenu}>
+                Profile settings
+              </Link>
+              <button
+                type="button"
+                className="nav-mobile-item nav-mobile-signout"
+                onClick={() => { closeMenu(); signOut(); navigate("/"); }}
+              >
+                Log out
+              </button>
             </>
           ) : (
             <>

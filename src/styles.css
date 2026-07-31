@@ -209,6 +209,11 @@ a {
   z-index: 199;
 }
 
+/* Mobile-only flat nav links — hidden on desktop, revealed in media query */
+.nav-mobile-item {
+  display: none;
+}
+
 /* Bell icon button in the nav */
 .nav-icon-btn {
   position: relative;
@@ -893,6 +898,29 @@ button:disabled {
 
   .filter-drawer {
     width: 85vw;
+  }
+
+  .find-reviewers-toolbar {
+    padding: 1rem 1.25rem 0;
+    gap: 0.6rem;
+  }
+
+  .find-reviewers-heading {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .find-reviewers-main {
+    padding: 0 1.25rem;
+  }
+
+  /* Search bar fills remaining width instead of fixed 300px */
+  .toolbar-search {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .toolbar-search-input {
+    width: 100%;
   }
 }
 
@@ -2442,6 +2470,44 @@ button:disabled {
     text-align: left;
     text-decoration: none;
     font-size: 1rem;
+  }
+
+  /* Hide the avatar dropdown in the hamburger — use flat links instead */
+  .nav-profile-wrap {
+    display: none;
+  }
+
+  /* Flat profile / log-out links in hamburger menu */
+  .nav-mobile-item {
+    display: block;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid #e2e2e2;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-radius: 0;
+    text-align: left;
+    text-decoration: none;
+    font-size: 1rem;
+    color: #000;
+    background: none;
+    cursor: pointer;
+    box-shadow: none;
+  }
+
+  .nav-mobile-item:hover {
+    color: #555;
+    background: none;
+  }
+
+  .nav-mobile-signout {
+    color: #e02424;
+  }
+
+  .nav-mobile-signout:hover {
+    color: #c0392b;
+    background: none;
   }
 
   .app-main {
