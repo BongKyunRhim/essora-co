@@ -37,36 +37,43 @@ export default function ReviewerDetail() {
     );
   }
 
+  const school = [reviewer.college, reviewer.major].filter(Boolean).join(" · ");
+
   return (
     <section className="reviewer-detail">
       <Link to="/applicant" className="back-link">← Back to Reviewers</Link>
 
       <div className="reviewer-detail-layout">
 
-        {/* Left: avatar + key info */}
+        {/* Left: profile info */}
         <div className="reviewer-detail-left">
-          <Avatar url={reviewer.avatar_url} name={reviewer.full_name} size={220} />
+          <div className="rdl-avatar-wrap">
+            <Avatar url={reviewer.avatar_url} name={reviewer.full_name} size={200} />
+          </div>
 
-          <div className="reviewer-detail-info">
-            <div className="rdl-row">
-              <span className="rdl-name">{reviewer.full_name || "Reviewer"}</span>
-              {reviewer.age != null && <span className="rdl-secondary">Age {reviewer.age}</span>}
-            </div>
-            <div className="rdl-row">
-              {reviewer.college && <span className="rdl-secondary">{reviewer.college}</span>}
-              {reviewer.major  && <span className="rdl-secondary">{reviewer.major}</span>}
-            </div>
-            {reviewer.price != null && (
-              <p className="rdl-price">${reviewer.price} / essay</p>
+          <div className="rdl-identity">
+            <h1 className="rdl-name">{reviewer.full_name || "Reviewer"}</h1>
+            {school && <p className="rdl-school">{school}</p>}
+            {reviewer.age != null && (
+              <span className="rdl-age-tag">Age {reviewer.age}</span>
             )}
           </div>
+
+          {reviewer.price != null && (
+            <div className="rdl-price-card">
+              <span className="rdl-price-label">Review fee</span>
+              <div className="rdl-price-value">
+                ${reviewer.price}<span className="rdl-price-unit"> / essay</span>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Right: about box + request button */}
+        {/* Right: about + request */}
         <div className="reviewer-detail-right">
           <div className="reviewer-about-box">
             <h2>About</h2>
-            <p>{reviewer.long_bio || reviewer.bio || "No details yet."}</p>
+            <p>{reviewer.long_bio || reviewer.bio || "This reviewer hasn't added a bio yet."}</p>
           </div>
 
           {profile?.role === "applicant" && (
@@ -74,7 +81,11 @@ export default function ReviewerDetail() {
               {justRequested ? (
                 <p className="notice">Request sent! The reviewer will be in touch.</p>
               ) : (
-                <button type="button" onClick={() => navigate(`/reviewers/${id}/request`)}>
+                <button
+                  type="button"
+                  className="rdl-request-btn"
+                  onClick={() => navigate(`/reviewers/${id}/request`)}
+                >
                   Request a Review
                 </button>
               )}

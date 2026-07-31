@@ -935,62 +935,106 @@ button:disabled {
 
 .reviewer-detail {
   width: 100%;
-  padding: 1.25rem 3rem 3rem;
+  padding: 1.25rem 3rem 4rem;
 }
 
 .back-link {
   display: inline-block;
-  margin-bottom: 2rem;
-  font-size: 0.9rem;
+  margin-bottom: 0;
+  font-size: 0.88rem;
   text-decoration: none;
-  color: #555;
+  color: #888;
+  letter-spacing: 0.01em;
 }
 
 .back-link:hover { color: #000; }
 
 .reviewer-detail-layout {
   display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 3rem;
+  grid-template-columns: 280px 1fr;
+  gap: 4rem;
   align-items: start;
-  margin-top: 3rem;
+  margin-top: 2.5rem;
 }
 
+/* ---- Left column ---- */
 .reviewer-detail-left {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.75rem;
 }
 
-.reviewer-detail-info {
+.rdl-avatar-wrap {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.rdl-identity {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-}
-
-.rdl-row {
-  display: flex;
-  gap: 1.25rem;
-  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
 .rdl-name {
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 1.6rem;
   font-weight: 600;
+  line-height: 1.2;
+  margin: 0;
 }
 
-.rdl-secondary {
+.rdl-school {
   font-size: 0.95rem;
   color: #555;
+  margin: 0;
 }
 
-.rdl-price {
-  font-weight: 700;
-  font-size: 1rem;
+.rdl-age-tag {
+  display: inline-block;
   margin-top: 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #666;
+  background: #f2f2f2;
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  width: fit-content;
 }
 
+.rdl-price-card {
+  border: 1px solid #e8e8e8;
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.rdl-price-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #999;
+}
+
+.rdl-price-value {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #000;
+}
+
+.rdl-price-unit {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #777;
+}
+
+/* ---- Right column ---- */
 .reviewer-detail-right {
   display: flex;
   flex-direction: column;
@@ -998,21 +1042,25 @@ button:disabled {
 }
 
 .reviewer-about-box {
-  border: 1px solid #e0e0e0;
+  border: 1px solid #e8e8e8;
   border-radius: var(--radius);
-  padding: 1.5rem 1.75rem;
-  min-height: 300px;
+  padding: 2rem 2rem;
+  min-height: 320px;
 }
 
 .reviewer-about-box h2 {
-  font-size: 1.1rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #999;
   margin-bottom: 0.75rem;
 }
 
 .reviewer-about-box p {
-  font-size: 0.95rem;
-  color: #333;
-  line-height: 1.7;
+  font-size: 0.97rem;
+  color: #222;
+  line-height: 1.75;
 }
 
 .reviewer-detail-actions {
@@ -1020,20 +1068,27 @@ button:disabled {
   justify-content: flex-end;
 }
 
-@media (max-width: 700px) {
+.rdl-request-btn {
+  padding: 0.75rem 2rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+}
+
+@media (max-width: 780px) {
   .reviewer-detail-layout {
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
-  .reviewer-detail-left {
-    align-items: center;
-    text-align: center;
-  }
+  .rdl-avatar-wrap { justify-content: center; }
 
-  .rdl-row { justify-content: center; }
+  .reviewer-detail-left { align-items: center; text-align: center; }
+
+  .rdl-age-tag { margin-left: auto; margin-right: auto; }
 
   .reviewer-detail-actions { justify-content: stretch; }
-  .reviewer-detail-actions button { width: 100%; }
+  .rdl-request-btn { width: 100%; }
 }
 
 /* Checkbox row (e.g. "Show my profile to applicants") */
