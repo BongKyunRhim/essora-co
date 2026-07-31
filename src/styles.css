@@ -18,7 +18,7 @@ body {
   color: #000;
   background: #fff;
   line-height: 1.5;
-  overflow-x: hidden; /* allow full-bleed dividers without a sideways scrollbar */
+  overflow-x: clip; /* allow full-bleed dividers without a scrollbar; clip (not hidden) lets child overflow:auto scroll independently on mobile */
 }
 
 /* Headings across the whole site use the display serif */
@@ -2633,7 +2633,7 @@ button:disabled {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    padding: 1rem 1rem 0.875rem;
+    padding: 1rem 1.25rem 0.875rem;
     gap: 0.5rem;
     border-bottom: 1px solid #e8e8e8;
   }
@@ -2664,6 +2664,14 @@ button:disabled {
   .settings-main {
     padding: 1.5rem 1.25rem;
     border-left: none;
+  }
+
+  /* Section header divider bleeds to screen edges */
+  .settings-section-header {
+    margin-left: -1.25rem;
+    margin-right: -1.25rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
   }
 
   .settings-grid {
