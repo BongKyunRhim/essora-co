@@ -81,37 +81,11 @@ export default function RequestReview() {
   if (loading) return <p className="page">Loading…</p>;
   if (!reviewer) return <p className="page">Reviewer not found. <Link to="/applicant">Back to reviewers</Link></p>;
 
-  const school = [reviewer.college, reviewer.major].filter(Boolean).join(" · ");
-
   return (
     <section className="request-review-page">
       <Link to={`/reviewers/${id}`} className="back-link">← Back to {reviewer.full_name || "reviewer"}</Link>
 
       <div className="request-review-layout">
-
-        {/* Sidebar */}
-        <aside className="rrl-sidebar">
-          <div className="rrl-reviewer-card">
-            <Avatar url={reviewer.avatar_url} name={reviewer.full_name} size={72} />
-            <div className="rrl-reviewer-info">
-              <p className="rrl-reviewer-name">{reviewer.full_name || "Reviewer"}</p>
-              {school && <p className="rrl-reviewer-school">{school}</p>}
-            </div>
-          </div>
-
-          {reviewer.price != null && (
-            <div className="rrl-price-row">
-              <span className="rrl-price-label">Review fee</span>
-              <span className="rrl-price-value">
-                ${reviewer.price}<span className="rrl-price-unit"> / essay</span>
-              </span>
-            </div>
-          )}
-
-          <p className="rrl-security-note">
-            Your essay is shared securely with this reviewer only.
-          </p>
-        </aside>
 
         {/* Form */}
         <form className="rrl-form" onSubmit={handleSubmit}>

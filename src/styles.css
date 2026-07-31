@@ -1071,11 +1071,8 @@ button:disabled {
 }
 
 .request-review-layout {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 4rem;
+  max-width: 640px;
   margin-top: 2rem;
-  align-items: start;
 }
 
 /* ---- Sidebar ---- */
