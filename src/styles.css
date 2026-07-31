@@ -57,10 +57,10 @@ a {
   justify-content: space-between;
   height: var(--nav-h);
   padding: 0 2rem;
-  background: #fff;
-  color: #000;
+  background: #203651;
+  color: #fff;
   border-bottom: none;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
   transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -87,6 +87,7 @@ a {
   text-decoration: none;
   color: #000;
   font-size: 1.4rem;
+  text-shadow: 0 0 6px #fff, 0 0 14px #fff, 0 0 28px rgba(255, 255, 255, 0.9);
 }
 
 .brand-logo {
@@ -94,6 +95,7 @@ a {
   width: auto;
   display: block;
   transform-origin: center;
+  filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 14px rgba(255, 255, 255, 0.85));
 }
 
 .app-nav {
@@ -105,12 +107,12 @@ a {
 /* Header links + the Log out button */
 .app-nav a,
 .app-header .linklike {
-  color: #000;
+  color: #fff;
 }
 
 .app-nav a:hover,
 .app-header .linklike:hover {
-  color: #555;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* Avatar circle button + dropdown */
