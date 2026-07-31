@@ -832,7 +832,12 @@ button:disabled {
   transition: border-color 0.15s;
 }
 
-.toolbar-search-input::placeholder { color: #aaa; }
+.toolbar-search-input::placeholder {
+  color: #aaa;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 .toolbar-search-input:focus { border-color: #888; }
 
@@ -1091,8 +1096,20 @@ button:disabled {
 
   .rdl-header {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 1.25rem;
+    align-items: center;
+    gap: 1.5rem;
+    text-align: center;
+  }
+
+  /* Larger centered avatar on mobile — override inline style */
+  .rdl-header .avatar,
+  .rdl-header .avatar-placeholder {
+    width: min(220px, 60vw) !important;
+    height: min(220px, 60vw) !important;
+  }
+
+  .rdl-meta-row {
+    justify-content: center;
   }
 
   .rdl-request-btn { width: 100%; }
