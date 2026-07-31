@@ -1021,7 +1021,7 @@ button:disabled {
 .rdl-divider {
   border: none;
   border-top: 1px solid #e8e8e8;
-  margin: 2.5rem 0;
+  margin: 2.5rem -3rem;
 }
 
 /* ---- About section ---- */
