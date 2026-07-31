@@ -300,7 +300,7 @@ a {
   }
 
   .app-main:has(.settings-layout) {
-    padding: 1rem 0.75rem;
+    padding: 0;
   }
 }
 
@@ -2614,62 +2614,81 @@ button:disabled {
     gap: 0;
   }
 
+  /* Sidebar: no border, just the scrollable tab row */
   .settings-sidebar {
     position: static;
-    border-bottom: 1px solid #e8e8e8;
+    border-bottom: none;
     min-height: 0;
-    padding: 1rem 0;
+    padding: 0;
   }
 
-  /* Profile cols stack on mobile */
+  .settings-sidebar-title {
+    display: none;
+  }
+
+  /* Horizontal scrollable tabs — no wrapping */
+  .settings-nav {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 1rem 1rem 0.875rem;
+    gap: 0.5rem;
+    border-bottom: 1px solid #e8e8e8;
+  }
+
+  .settings-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .settings-nav-item {
+    flex-shrink: 0;
+    width: auto;
+    flex: none;
+    padding: 0.45rem 1rem;
+    border: 1.5px solid #d0d0d0;
+    border-left: 1.5px solid #d0d0d0;
+    border-radius: 999px;
+    font-size: 0.85rem;
+  }
+
+  .settings-nav-item.active {
+    border-color: #000;
+    border-left-color: #000;
+    background: #000;
+    color: #fff;
+  }
+
+  /* Main content: no left border, flat edge-to-edge */
+  .settings-main {
+    padding: 1.5rem 1.25rem;
+    border-left: none;
+  }
+
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Profile cols stack, avatar centered above fields */
   .settings-profile-cols {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 2rem;
   }
 
   .settings-avatar-col {
-    flex-direction: row;
-    text-align: left;
-    gap: 1rem;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.75rem;
+    flex-wrap: nowrap;
   }
 
   .settings-avatar-actions {
     flex-direction: row;
     width: auto;
     gap: 0.5rem;
-  }
-
-  .settings-nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 0 1rem;
-    gap: 0.25rem;
-  }
-
-  .settings-nav-item {
-    width: auto;
-    flex: none;
-    padding: 0.4rem 0.85rem;
-    border: 1px solid #d0d0d0;
-    border-left: 1px solid #d0d0d0;
-    border-radius: var(--radius-sm);
-    font-size: 0.85rem;
-  }
-
-  .settings-nav-item.active {
-    border-color: #000;
-    border-left-color: #203651;
-    background: #000;
-    color: #fff;
-  }
-
-  .settings-main {
-    padding: 1.5rem 1.25rem;
-  }
-
-  .settings-grid {
-    grid-template-columns: 1fr;
+    justify-content: center;
   }
 
   /* Photo row stacks on small screens */
@@ -2684,11 +2703,10 @@ button:disabled {
     gap: 0.5rem;
   }
 
-  .avatar-upload-btn,
-  .avatar-delete-btn {
-    width: 100%;
-    justify-content: center;
-    text-align: center;
+  /* Upload / Delete buttons stay side-by-side on mobile */
+  .settings-avatar-actions .avatar-upload-btn,
+  .settings-avatar-actions .avatar-delete-btn {
+    width: auto;
   }
 
   .settings-footer {
