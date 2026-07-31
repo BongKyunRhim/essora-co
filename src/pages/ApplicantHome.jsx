@@ -136,9 +136,6 @@ export default function ApplicantHome() {
       {/* Title row — full width so the divider line can reach both edges */}
       <div className="find-reviewers-heading">
         <h1>Find Reviewers</h1>
-        {!loading && (
-          <span className="frs-count">{filtered.length} reviewer{filtered.length !== 1 ? "s" : ""}</span>
-        )}
       </div>
 
       {/* Toolbar — filter left, search right */}
