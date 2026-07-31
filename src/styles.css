@@ -1261,6 +1261,53 @@ button:disabled {
   gap: 0.6rem;
 }
 
+.availability-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.availability-option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1rem 1.1rem;
+  border: 1.5px solid #d0d0d0;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.availability-option:hover {
+  border-color: #888;
+}
+
+.availability-option.selected {
+  border-color: #000;
+  background: #000;
+  color: #fff;
+}
+
+.availability-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.availability-desc {
+  font-size: 0.78rem;
+  opacity: 0.7;
+  line-height: 1.4;
+}
+
+@media (max-width: 500px) {
+  .availability-toggle {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ---- Account & Privacy blocks ---- */
 .settings-block {
   padding-bottom: 2rem;
