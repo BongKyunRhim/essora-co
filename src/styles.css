@@ -620,28 +620,59 @@ button:disabled {
   color: #fff;
 }
 
-/* Find Reviewers: sidebar + grid layout */
+/* Find Reviewers: full-width layout with slide-out filter drawer */
 .find-reviewers-layout {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 2.5rem;
-  align-items: start;
   padding-top: 2.5rem;
   padding-bottom: 3rem;
 }
 
-.find-reviewers-sidebar {
-  position: sticky;
-  top: calc(var(--nav-h) + 1.5rem);
+/* Overlay behind open drawer */
+.filter-drawer-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 150;
+  cursor: pointer;
+}
+
+.filter-drawer-overlay.visible {
+  display: block;
+}
+
+/* Slide-out filter drawer */
+.filter-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 300px;
+  background: #fff;
+  z-index: 200;
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  padding: 1.75rem 1.5rem;
+  overflow-y: auto;
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
+}
+
+.filter-drawer.open {
+  transform: translateX(0);
 }
 
 .frs-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.frs-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .frs-title {
@@ -660,6 +691,21 @@ button:disabled {
 }
 
 .frs-reset:hover { color: #000; }
+
+.filter-drawer-close {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: #666;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-drawer-close:hover { color: #000; }
 
 .frs-group {
   display: flex;
@@ -711,9 +757,16 @@ button:disabled {
 
 .find-reviewers-heading {
   display: flex;
-  align-items: baseline;
+  align-items: center;
+  justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1.5rem;
+}
+
+.find-reviewers-heading-left {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
 }
 
 .find-reviewers-heading h1 {
@@ -725,22 +778,47 @@ button:disabled {
   color: #888;
 }
 
+/* Filter toggle button */
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 1rem;
+  border: 1.5px solid #d0d0d0;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: #333;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.filter-btn:hover {
+  border-color: #888;
+  color: #000;
+}
+
+.filter-btn--active {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.filter-btn--active:hover {
+  background: #222;
+  border-color: #222;
+}
+
 @media (max-width: 700px) {
   .find-reviewers-layout {
-    grid-template-columns: 1fr;
     padding-top: 1.5rem;
   }
 
-  .find-reviewers-sidebar {
-    position: static;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 1.25rem;
-    padding-bottom: 1.25rem;
-    border-bottom: 1px solid #e8e8e8;
+  .filter-drawer {
+    width: 85vw;
   }
-
-  .frs-header { width: 100%; }
 }
 
 /* Reviewer cards link to detail pages */
