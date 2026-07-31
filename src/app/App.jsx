@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Routes, Route, Navigate, Link, useLocation, useNavigate } from "react-router-dom";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { useAuth } from "./AuthContext.jsx";
+import { supabase } from "../lib/supabase.js";
 import BrandLogo from "../components/BrandLogo.jsx";
 import Avatar from "../components/Avatar.jsx";
 import SignUp from "../pages/SignUp.jsx";
@@ -13,6 +14,7 @@ import Account from "../pages/Account.jsx";
 import ReviewerDetail from "../pages/ReviewerDetail.jsx";
 import ReviewerNotifications from "../pages/ReviewerNotifications.jsx";
 import RequestReview from "../pages/RequestReview.jsx";
+import RequestDetail from "../pages/RequestDetail.jsx";
 import Landing from "../pages/Landing.jsx";
 
 function ProtectedRoute({ children }) {
@@ -37,9 +39,10 @@ function Home() {
 
 export default function App() {
   const { user, profile, signOut, isRecovery, isEmailChanged } = useAuth();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen]       = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled]       = useState(false);
+  const [pendingCount, setPendingCount] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
   const isLanding = location.pathname === "/";
@@ -59,6 +62,30 @@ export default function App() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (!user || profile?.role !== "reviewer") return;
+
+    const fetchCount = () =>
+      supabase
+        .from("requests")
+        .select("id", { count: "exact", head: true })
+        .eq("reviewer_id", user.id)
+        .eq("status", "pending")
+        .then(({ count }) => setPendingCount(count ?? 0));
+
+    fetchCount();
+
+    const channel = supabase
+      .channel("reviewer-pending")
+      .on("postgres_changes", {
+        event: "*", schema: "public", table: "requests",
+        filter: `reviewer_id=eq.${user.id}`,
+      }, fetchCount)
+      .subscribe();
+
+    return () => supabase.removeChannel(channel);
+  }, [user, profile?.role]);
 
   const profileHref = profile?.role === "reviewer" ? "/reviewer" : "/account";
 
@@ -96,6 +123,9 @@ export default function App() {
               {profile?.role === "reviewer" && (
                 <Link to="/notifications" className="nav-icon-btn" onClick={closeMenu} aria-label="Notifications">
                   <BellIcon />
+                  {pendingCount > 0 && (
+                    <span className="nav-badge">{pendingCount}</span>
+                  )}
                 </Link>
               )}
 
@@ -153,6 +183,7 @@ export default function App() {
           <Route path="/reviewers/:id" element={<ProtectedRoute><ReviewerDetail /></ProtectedRoute>} />
           <Route path="/reviewers/:id/request" element={<ProtectedRoute><RequestReview /></ProtectedRoute>} />
           <Route path="/notifications" element={<ProtectedRoute><ReviewerNotifications /></ProtectedRoute>} />
+          <Route path="/requests/:id" element={<ProtectedRoute><RequestDetail /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </main>
