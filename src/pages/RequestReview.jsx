@@ -4,15 +4,6 @@ import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import Avatar from "../components/Avatar.jsx";
 
-const FOCUS_AREAS = [
-  "Story & Authenticity",
-  "Structure & Flow",
-  "Opening Hook",
-  "Tone & Voice",
-  "Grammar & Clarity",
-  "Conclusion",
-  "Overall Impression",
-];
 
 export default function RequestReview() {
   const { id } = useParams();
@@ -25,7 +16,6 @@ export default function RequestReview() {
   const [essayFile, setEssayFile]   = useState(null);
   const [essayType, setEssayType]   = useState("");
   const [notes, setNotes]           = useState("");
-  const [focusAreas, setFocusAreas] = useState([]);
   const [dragging, setDragging]     = useState(false);
   const [status, setStatus]         = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -54,12 +44,6 @@ export default function RequestReview() {
     pickFile(e.dataTransfer.files?.[0]);
   }
 
-  function toggleFocusArea(area) {
-    setFocusAreas((prev) =>
-      prev.includes(area) ? prev.filter((a) => a !== area) : [...prev, area]
-    );
-  }
-
   async function handleSubmit(e) {
     e.preventDefault();
     if (!essayFile)  { setStatus("Error: Please upload your essay."); return; }
@@ -86,7 +70,6 @@ export default function RequestReview() {
       essay_name:    essayFile.name,
       essay_type:    essayType,
       notes:         notes       || null,
-      focus_areas:   focusAreas.length ? focusAreas : null,
     });
 
     setSubmitting(false);
@@ -187,9 +170,9 @@ export default function RequestReview() {
             </label>
           </div>
 
-          {/* Section 2 — Message */}
+          {/* Section 2 — Details */}
           <div className="rrl-section">
-            <h2 className="rrl-section-label">Message to Reviewer</h2>
+            <h2 className="rrl-section-label">Details</h2>
 
             <div className="rrl-field">
               <span className="rrl-field-label">What should the reviewer focus on? <span className="rrl-optional">(optional)</span></span>
@@ -200,31 +183,6 @@ export default function RequestReview() {
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="e.g. Does my story feel authentic? Is the structure clear? Are there any sections that feel weak or unclear?"
               />
-            </div>
-          </div>
-
-          {/* Section 3 — Focus Areas */}
-          <div className="rrl-section">
-            <h2 className="rrl-section-label">Focus Areas</h2>
-
-            <div className="rrl-field">
-              <span className="rrl-field-label">What should the reviewer pay attention to? <span className="rrl-optional">(optional — pick any)</span></span>
-              <div className="rrl-chip-group">
-                {FOCUS_AREAS.map((area) => (
-                  <label
-                    key={area}
-                    className={`rrl-chip${focusAreas.includes(area) ? " rrl-chip--active" : ""}`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={focusAreas.includes(area)}
-                      onChange={() => toggleFocusArea(area)}
-                      hidden
-                    />
-                    {area}
-                  </label>
-                ))}
-              </div>
             </div>
           </div>
 
