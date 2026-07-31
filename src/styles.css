@@ -1262,8 +1262,8 @@ button:disabled {
 }
 
 .availability-toggle {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
   margin-top: 0.5rem;
   max-width: 420px;
