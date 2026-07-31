@@ -64,17 +64,10 @@ a {
   transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Landing page: transparent until scrolled */
+/* Landing page nav matches the main nav — always blue */
 .app-header.landing-nav {
-  background: transparent;
-  box-shadow: none;
-}
-
-.app-header.landing-nav.scrolled {
-  background: rgba(245, 242, 236, 0.96);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+  background: #203651;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
 }
 
 .app-header .brand {
@@ -291,13 +284,11 @@ a {
   padding: 3rem 1.5rem;
 }
 
-/* Landing page starts at the very top so the hero image fills behind the transparent nav */
+/* Landing page: clear the fixed nav, white background */
 .app-main:has(.landing) {
-  margin-top: 0;
+  margin-top: var(--nav-h);
   padding: 0 1rem;
-  background-color: #f5f2ec;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  background-repeat: repeat;
+  background: #fff;
 }
 
 /* Settings page: full-width, no centering constraint */
