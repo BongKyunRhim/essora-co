@@ -1061,12 +1061,13 @@ button:disabled {
 
 /* ---- Request a Review page ---- */
 .app-main:has(.request-review-page) {
-  padding: 3rem 5rem;
+  padding: 1.5rem 0 0;
+  align-items: stretch;
 }
 
 .request-review-page {
   width: 100%;
-  max-width: 960px;
+  padding: 1.25rem 3rem 4rem;
 }
 
 .request-review-layout {
