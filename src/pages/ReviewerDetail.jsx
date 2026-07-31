@@ -44,7 +44,7 @@ export default function ReviewerDetail() {
       <Link to="/applicant" className="back-link">← Back to Reviewers</Link>
 
       <div className="rdl-header">
-        <Avatar url={reviewer.avatar_url} name={reviewer.full_name} size={100} />
+        <Avatar url={reviewer.avatar_url} name={reviewer.full_name} size={160} />
         <div className="rdl-header-info">
           <h1 className="rdl-name">{reviewer.full_name || "Reviewer"}</h1>
           {school && <p className="rdl-school">{school}</p>}
