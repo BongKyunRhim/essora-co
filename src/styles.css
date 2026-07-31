@@ -1062,7 +1062,7 @@ button:disabled {
 /* ---- Request a Review page ---- */
 .request-review-page {
   width: 100%;
-  max-width: 680px;
+  max-width: 860px;
 }
 
 .request-review-layout {
