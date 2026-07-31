@@ -1047,7 +1047,7 @@ button:disabled {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: #999;
+  color: #bbb;
   margin: 0 0 0.9rem;
 }
 
@@ -1059,6 +1059,7 @@ button:disabled {
 
 @media (max-width: 640px) {
   .reviewer-detail { padding: 1rem 1.25rem 3rem; }
+  .rdl-divider { margin: 2rem -1.25rem; }
 
   .rdl-header {
     flex-direction: column;
@@ -1616,7 +1617,7 @@ button:disabled {
   padding: 5rem 0;
 }
 
-.how h1 {
+.how h2 {
   text-align: center;
   letter-spacing: 0.08em;
   font-size: 1.9rem;
@@ -2492,7 +2493,7 @@ button:disabled {
   .how {
     padding: 3rem 0;
   }
-  .how h1 {
+  .how h2 {
     font-size: 1.4rem;
     margin-bottom: 1.75rem;
   }
@@ -2618,6 +2619,19 @@ button:disabled {
   .settings-footer button {
     width: 100%;
   }
+
+  /* Request pages: narrow padding + correct divider bleed */
+  .request-review-page { padding: 1rem 1.25rem 3rem; }
+
+  .request-detail-page { padding: 1rem 1.25rem 3rem; }
+  .rdp-divider { margin: 2rem -1.25rem; }
+
+  .rdp-header {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .rrl-submit-btn { width: 100%; }
 
   /* Inner pages: notifications adapt */
   ._placeholder {
