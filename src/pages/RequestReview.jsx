@@ -11,6 +11,16 @@ const TURNAROUND_OPTIONS = [
   { value: "flexible", label: "Flexible" },
 ];
 
+const FOCUS_AREAS = [
+  "Story & Authenticity",
+  "Structure & Flow",
+  "Opening Hook",
+  "Tone & Voice",
+  "Grammar & Clarity",
+  "Conclusion",
+  "Overall Impression",
+];
+
 export default function RequestReview() {
   const { id } = useParams();
   const { user } = useAuth();
@@ -21,10 +31,9 @@ export default function RequestReview() {
 
   const [essayFile, setEssayFile]   = useState(null);
   const [essayType, setEssayType]   = useState("");
-  const [notes, setNotes]           = useState("");
   const [schoolName, setSchoolName] = useState("");
-  const [deadline, setDeadline]     = useState("");
   const [turnaround, setTurnaround] = useState("");
+  const [focusAreas, setFocusAreas] = useState([]);
   const [dragging, setDragging]     = useState(false);
   const [status, setStatus]         = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -53,9 +62,16 @@ export default function RequestReview() {
     pickFile(e.dataTransfer.files?.[0]);
   }
 
+  function toggleFocusArea(area) {
+    setFocusAreas((prev) =>
+      prev.includes(area) ? prev.filter((a) => a !== area) : [...prev, area]
+    );
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!essayFile) { setStatus("Error: Please upload your essay."); return; }
+    if (!essayFile)  { setStatus("Error: Please upload your essay."); return; }
+    if (!essayType)  { setStatus("Error: Please select an essay type."); return; }
 
     setSubmitting(true);
     setStatus("Uploading essay…");
@@ -72,15 +88,14 @@ export default function RequestReview() {
 
     setStatus("Sending request…");
     const { error } = await supabase.from("requests").insert({
-      applicant_id: user.id,
-      reviewer_id:  id,
-      essay_url:    urlData.publicUrl,
-      essay_name:   essayFile.name,
-      essay_type:   essayType   || null,
-      notes:        notes       || null,
-      school_name:  schoolName  || null,
-      deadline:     deadline    || null,
-      turnaround:   turnaround  || null,
+      applicant_id:  user.id,
+      reviewer_id:   id,
+      essay_url:     urlData.publicUrl,
+      essay_name:    essayFile.name,
+      essay_type:    essayType,
+      school_name:   schoolName  || null,
+      turnaround:    turnaround  || null,
+      focus_areas:   focusAreas.length ? focusAreas : null,
     });
 
     setSubmitting(false);
@@ -170,7 +185,7 @@ export default function RequestReview() {
             </div>
 
             <label className="rrl-field">
-              <span className="rrl-field-label">Essay type <span className="rrl-optional">(optional)</span></span>
+              <span className="rrl-field-label">Essay type</span>
               <select value={essayType} onChange={(e) => setEssayType(e.target.value)}>
                 <option value="">Select a type</option>
                 <option value="personal_statement">Common App Personal Statement</option>
@@ -192,15 +207,6 @@ export default function RequestReview() {
                 placeholder="e.g. Harvard University"
                 value={schoolName}
                 onChange={(e) => setSchoolName(e.target.value)}
-              />
-            </label>
-
-            <label className="rrl-field">
-              <span className="rrl-field-label">Application deadline <span className="rrl-optional">(optional)</span></span>
-              <input
-                type="date"
-                value={deadline}
-                onChange={(e) => setDeadline(e.target.value)}
               />
             </label>
 
@@ -227,20 +233,28 @@ export default function RequestReview() {
             </div>
           </div>
 
-          {/* Section 3 — Message */}
+          {/* Section 3 — Focus Areas */}
           <div className="rrl-section">
-            <h2 className="rrl-section-label">Message to Reviewer</h2>
+            <h2 className="rrl-section-label">Focus Areas</h2>
 
             <div className="rrl-field">
-              <span className="rrl-field-label">What should the reviewer focus on? <span className="rrl-optional">(optional)</span></span>
-              <textarea
-                rows={5}
-                maxLength={600}
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="e.g. Does my story feel authentic? Is the structure clear? Are there any sections that feel weak or unclear?"
-              />
-              <span className="rrl-char-count">{notes.length} / 600</span>
+              <span className="rrl-field-label">What should the reviewer pay attention to? <span className="rrl-optional">(optional — pick any)</span></span>
+              <div className="rrl-chip-group">
+                {FOCUS_AREAS.map((area) => (
+                  <label
+                    key={area}
+                    className={`rrl-chip${focusAreas.includes(area) ? " rrl-chip--active" : ""}`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={focusAreas.includes(area)}
+                      onChange={() => toggleFocusArea(area)}
+                      hidden
+                    />
+                    {area}
+                  </label>
+                ))}
+              </div>
             </div>
           </div>
 

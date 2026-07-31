@@ -1311,12 +1311,6 @@ button:disabled {
   color: #fff;
 }
 
-/* ---- Character count ---- */
-.rrl-char-count {
-  font-size: 0.75rem;
-  color: #ccc;
-  text-align: right;
-}
 
 /* ---- Submit ---- */
 .rrl-submit-row {
