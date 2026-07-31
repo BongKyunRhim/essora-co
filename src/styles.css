@@ -929,14 +929,13 @@ button:disabled {
 
 /* Reviewer detail page */
 .app-main:has(.reviewer-detail) {
-  padding-left: 0;
-  padding-right: 0;
+  padding: 1.5rem 0 0;
   align-items: stretch;
 }
 
 .reviewer-detail {
   width: 100%;
-  padding: 2rem 3rem 3rem;
+  padding: 1.25rem 3rem 3rem;
 }
 
 .back-link {
