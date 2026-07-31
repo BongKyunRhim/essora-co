@@ -50,7 +50,7 @@ export default function ReviewerDetail() {
           <div className="reviewer-detail-info">
             <div className="rdl-row">
               <span className="rdl-name">{reviewer.full_name || "Reviewer"}</span>
-              {reviewer.age != null && <span className="rdl-secondary">{reviewer.age}</span>}
+              {reviewer.age != null && <span className="rdl-secondary">Age {reviewer.age}</span>}
             </div>
             <div className="rdl-row">
               {reviewer.college && <span className="rdl-secondary">{reviewer.college}</span>}
