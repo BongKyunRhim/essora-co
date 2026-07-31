@@ -4,7 +4,6 @@ import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import Avatar from "../components/Avatar.jsx";
 
-// The detailed page for a single reviewer, opened from a card.
 export default function ReviewerDetail() {
   const { id } = useParams();
   const { user, profile } = useAuth();
@@ -26,11 +25,8 @@ export default function ReviewerDetail() {
         setReviewer(data ?? null);
         setLoading(false);
       });
-    return () => {
-      active = false;
-    };
+    return () => { active = false; };
   }, [id]);
-
 
   if (loading) return <p className="page">Loading…</p>;
   if (!reviewer) {
@@ -42,42 +38,51 @@ export default function ReviewerDetail() {
   }
 
   return (
-    <section className="page page-wide">
-      <p>
-        <Link to="/applicant">← Back to reviewers</Link>
-      </p>
+    <section className="reviewer-detail page-wide">
+      <Link to="/applicant" className="back-link">← Back to Reviewers</Link>
 
-      <div className="detail-head">
-        <Avatar url={reviewer.avatar_url} name={reviewer.full_name} size={96} />
-        <div>
-          <h1>{reviewer.full_name || "Reviewer"}</h1>
-          <p className="muted">
-            {[reviewer.college, reviewer.major].filter(Boolean).join(" · ") ||
-              "—"}
-          </p>
-          {reviewer.age != null && <p className="muted">Age {reviewer.age}</p>}
-          <p className="price">
-            {reviewer.price != null
-              ? `$${reviewer.price} per essay`
-              : "Price not set"}
-          </p>
+      <div className="reviewer-detail-layout">
+
+        {/* Left: avatar + key info */}
+        <div className="reviewer-detail-left">
+          <Avatar url={reviewer.avatar_url} name={reviewer.full_name} size={220} />
+
+          <div className="reviewer-detail-info">
+            <div className="rdl-row">
+              <span className="rdl-name">{reviewer.full_name || "Reviewer"}</span>
+              {reviewer.age != null && <span className="rdl-secondary">{reviewer.age}</span>}
+            </div>
+            <div className="rdl-row">
+              {reviewer.college && <span className="rdl-secondary">{reviewer.college}</span>}
+              {reviewer.major  && <span className="rdl-secondary">{reviewer.major}</span>}
+            </div>
+            {reviewer.price != null && (
+              <p className="rdl-price">${reviewer.price} / essay</p>
+            )}
+          </div>
         </div>
-      </div>
 
-      <h2>About</h2>
-      <p>{reviewer.long_bio || reviewer.bio || "No details yet."}</p>
+        {/* Right: about box + request button */}
+        <div className="reviewer-detail-right">
+          <div className="reviewer-about-box">
+            <h2>About</h2>
+            <p>{reviewer.long_bio || reviewer.bio || "No details yet."}</p>
+          </div>
 
-      {profile?.role === "applicant" && (
-        <div className="request-box">
-          {justRequested ? (
-            <p className="notice">Request sent! The reviewer will be in touch.</p>
-          ) : (
-            <button type="button" onClick={() => navigate(`/reviewers/${id}/request`)}>
-              Request a review
-            </button>
+          {profile?.role === "applicant" && (
+            <div className="reviewer-detail-actions">
+              {justRequested ? (
+                <p className="notice">Request sent! The reviewer will be in touch.</p>
+              ) : (
+                <button type="button" onClick={() => navigate(`/reviewers/${id}/request`)}>
+                  Request a Review
+                </button>
+              )}
+            </div>
           )}
         </div>
-      )}
+
+      </div>
     </section>
   );
 }

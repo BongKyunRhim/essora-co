@@ -927,16 +927,107 @@ button:disabled {
   border-color: #444;
 }
 
-/* Reviewer detail header */
-.detail-head {
-  display: flex;
-  gap: 1.25rem;
-  align-items: flex-start;
-  margin-bottom: 1.5rem;
+/* Reviewer detail page */
+.reviewer-detail {
+  padding-top: 2rem;
+  padding-bottom: 3rem;
 }
 
-.detail-head h1 {
-  margin-bottom: 0.25rem;
+.back-link {
+  display: inline-block;
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: #555;
+}
+
+.back-link:hover { color: #000; }
+
+.reviewer-detail-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.reviewer-detail-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.reviewer-detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.rdl-row {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.rdl-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.rdl-secondary {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.rdl-price {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-top: 0.25rem;
+}
+
+.reviewer-detail-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.reviewer-about-box {
+  border: 1px solid #e0e0e0;
+  border-radius: var(--radius);
+  padding: 1.5rem 1.75rem;
+  min-height: 300px;
+}
+
+.reviewer-about-box h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+.reviewer-about-box p {
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.7;
+}
+
+.reviewer-detail-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 700px) {
+  .reviewer-detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .reviewer-detail-left {
+    align-items: center;
+    text-align: center;
+  }
+
+  .rdl-row { justify-content: center; }
+
+  .reviewer-detail-actions { justify-content: stretch; }
+  .reviewer-detail-actions button { width: 100%; }
 }
 
 /* Checkbox row (e.g. "Show my profile to applicants") */
@@ -2197,8 +2288,8 @@ button:disabled {
     width: 100%;
   }
 
-  /* Inner pages: reviewer detail + notifications adapt */
-  .detail-head {
+  /* Inner pages: notifications adapt */
+  ._placeholder {
     flex-direction: column;
     align-items: center;
     text-align: center;
