@@ -622,14 +622,13 @@ button:disabled {
 
 /* Find Reviewers: full-width layout with slide-out filter drawer */
 .app-main:has(.find-reviewers-layout) {
-  padding-left: 0;
-  padding-right: 0;
+  padding: 1.5rem 0 0;
   align-items: stretch;
 }
 
 .find-reviewers-layout {
   width: 100%;
-  padding-top: 2.5rem;
+  padding-top: 1.25rem;
   padding-bottom: 3rem;
 }
 
