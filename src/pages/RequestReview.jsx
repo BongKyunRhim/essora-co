@@ -135,7 +135,7 @@ export default function RequestReview() {
               <span className="rrl-field-label">Essay type</span>
               <select value={essayType} onChange={(e) => setEssayType(e.target.value)}>
                 <option value="">Select a type</option>
-                <option value="personal_statement">Common App Personal Statement</option>
+                <option value="personal_statement">Common App / Personal Statement</option>
                 <option value="supplemental">Supplemental Essay</option>
                 <option value="scholarship">Scholarship Essay</option>
                 <option value="other">Other</option>
