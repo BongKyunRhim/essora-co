@@ -67,30 +67,28 @@ export default function ReviewerDetail() {
               </div>
             </div>
           )}
+
+          {profile?.role === "applicant" && (
+            justRequested ? (
+              <p className="notice">Request sent! The reviewer will be in touch.</p>
+            ) : (
+              <button
+                type="button"
+                className="rdl-request-btn"
+                onClick={() => navigate(`/reviewers/${id}/request`)}
+              >
+                Request a Review
+              </button>
+            )
+          )}
         </div>
 
-        {/* Right: about + request */}
+        {/* Right: about */}
         <div className="reviewer-detail-right">
           <div className="reviewer-about-box">
             <h2>About</h2>
             <p>{reviewer.long_bio || reviewer.bio || "This reviewer hasn't added a bio yet."}</p>
           </div>
-
-          {profile?.role === "applicant" && (
-            <div className="reviewer-detail-actions">
-              {justRequested ? (
-                <p className="notice">Request sent! The reviewer will be in touch.</p>
-              ) : (
-                <button
-                  type="button"
-                  className="rdl-request-btn"
-                  onClick={() => navigate(`/reviewers/${id}/request`)}
-                >
-                  Request a Review
-                </button>
-              )}
-            </div>
-          )}
         </div>
 
       </div>

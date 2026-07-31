@@ -951,11 +951,10 @@ button:disabled {
 
 .reviewer-detail-layout {
   display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 3.5rem;
+  grid-template-columns: 300px 1fr;
+  gap: 4rem;
   align-items: start;
   margin-top: 2.5rem;
-  max-width: 900px;
 }
 
 /* ---- Left column ---- */
@@ -1064,16 +1063,13 @@ button:disabled {
   line-height: 1.75;
 }
 
-.reviewer-detail-actions {
-  display: flex;
-  justify-content: flex-end;
-}
-
 .rdl-request-btn {
-  padding: 0.75rem 2rem;
+  width: 100%;
+  padding: 0.8rem 1.5rem;
   font-size: 0.95rem;
   font-weight: 500;
   border-radius: var(--radius-sm);
+  text-align: center;
 }
 
 @media (max-width: 780px) {
@@ -1087,9 +1083,6 @@ button:disabled {
   .reviewer-detail-left { align-items: center; text-align: center; }
 
   .rdl-age-tag { margin-left: auto; margin-right: auto; }
-
-  .reviewer-detail-actions { justify-content: stretch; }
-  .rdl-request-btn { width: 100%; }
 }
 
 /* Checkbox row (e.g. "Show my profile to applicants") */
