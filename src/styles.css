@@ -64,11 +64,32 @@ a {
   transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Landing page nav matches the main nav — always blue */
+/* Landing page: transparent + black text until scrolled */
 .app-header.landing-nav {
+  background: transparent;
+  box-shadow: none;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.app-header.landing-nav .brand { color: #000; }
+.app-header.landing-nav .brand-logo { filter: none; }
+.app-header.landing-nav .app-nav a,
+.app-header.landing-nav .linklike { color: #000; }
+.app-header.landing-nav .app-nav a:hover,
+.app-header.landing-nav .linklike:hover { color: #555; }
+
+/* Once scrolled: switch to the blue nav with white text */
+.app-header.landing-nav.scrolled {
   background: #203651;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
 }
+
+.app-header.landing-nav.scrolled .brand { color: #fff; }
+.app-header.landing-nav.scrolled .brand-logo { filter: brightness(0) invert(1); }
+.app-header.landing-nav.scrolled .app-nav a,
+.app-header.landing-nav.scrolled .linklike { color: #fff; }
+.app-header.landing-nav.scrolled .app-nav a:hover,
+.app-header.landing-nav.scrolled .linklike:hover { color: rgba(255, 255, 255, 0.7); }
 
 .app-header .brand {
   display: flex;
@@ -284,9 +305,9 @@ a {
   padding: 3rem 1.5rem;
 }
 
-/* Landing page: clear the fixed nav, white background */
+/* Landing page: hero fills behind transparent nav */
 .app-main:has(.landing) {
-  margin-top: var(--nav-h);
+  margin-top: 0;
   padding: 0 1rem;
   background: #fff;
 }
