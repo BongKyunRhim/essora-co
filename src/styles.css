@@ -621,7 +621,14 @@ button:disabled {
 }
 
 /* Find Reviewers: full-width layout with slide-out filter drawer */
+.app-main:has(.find-reviewers-layout) {
+  padding-left: 0;
+  padding-right: 0;
+  align-items: stretch;
+}
+
 .find-reviewers-layout {
+  width: 100%;
   padding-top: 2.5rem;
   padding-bottom: 3rem;
 }
@@ -751,16 +758,13 @@ button:disabled {
   cursor: pointer;
 }
 
-.find-reviewers-main {
-  min-width: 0;
-}
 
 .find-reviewers-heading {
   display: flex;
   align-items: baseline;
   gap: 1rem;
   margin-bottom: 0;
-  padding-bottom: 1.25rem;
+  padding: 0 2rem 1.25rem;
   border-bottom: 1px solid #e0e0e0;
 }
 
@@ -777,8 +781,12 @@ button:disabled {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding-top: 1rem;
+  padding: 1rem 2rem 0;
   margin-bottom: 2.5rem;
+}
+
+.find-reviewers-main {
+  padding: 0 2rem;
 }
 
 /* Filter toggle button */

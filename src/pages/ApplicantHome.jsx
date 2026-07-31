@@ -70,7 +70,7 @@ export default function ApplicantHome() {
   }
 
   return (
-    <div className="find-reviewers-layout page-wide">
+    <div className="find-reviewers-layout">
 
       {/* Overlay behind the open drawer */}
       <div
