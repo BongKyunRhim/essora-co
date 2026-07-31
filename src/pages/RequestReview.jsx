@@ -4,13 +4,6 @@ import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import Avatar from "../components/Avatar.jsx";
 
-const TURNAROUND_OPTIONS = [
-  { value: "asap",     label: "ASAP" },
-  { value: "1-3days",  label: "1–3 days" },
-  { value: "1week",    label: "Within a week" },
-  { value: "flexible", label: "Flexible" },
-];
-
 const FOCUS_AREAS = [
   "Story & Authenticity",
   "Structure & Flow",
@@ -31,8 +24,7 @@ export default function RequestReview() {
 
   const [essayFile, setEssayFile]   = useState(null);
   const [essayType, setEssayType]   = useState("");
-  const [schoolName, setSchoolName] = useState("");
-  const [turnaround, setTurnaround] = useState("");
+  const [notes, setNotes]           = useState("");
   const [focusAreas, setFocusAreas] = useState([]);
   const [dragging, setDragging]     = useState(false);
   const [status, setStatus]         = useState("");
@@ -93,8 +85,7 @@ export default function RequestReview() {
       essay_url:     urlData.publicUrl,
       essay_name:    essayFile.name,
       essay_type:    essayType,
-      school_name:   schoolName  || null,
-      turnaround:    turnaround  || null,
+      notes:         notes       || null,
       focus_areas:   focusAreas.length ? focusAreas : null,
     });
 
@@ -196,40 +187,19 @@ export default function RequestReview() {
             </label>
           </div>
 
-          {/* Section 2 — Details */}
+          {/* Section 2 — Message */}
           <div className="rrl-section">
-            <h2 className="rrl-section-label">Details</h2>
-
-            <label className="rrl-field">
-              <span className="rrl-field-label">Which school is this for? <span className="rrl-optional">(optional)</span></span>
-              <input
-                type="text"
-                placeholder="e.g. Harvard University"
-                value={schoolName}
-                onChange={(e) => setSchoolName(e.target.value)}
-              />
-            </label>
+            <h2 className="rrl-section-label">Message to Reviewer</h2>
 
             <div className="rrl-field">
-              <span className="rrl-field-label">How soon do you need feedback? <span className="rrl-optional">(optional)</span></span>
-              <div className="rrl-chip-group">
-                {TURNAROUND_OPTIONS.map((o) => (
-                  <label
-                    key={o.value}
-                    className={`rrl-chip${turnaround === o.value ? " rrl-chip--active" : ""}`}
-                  >
-                    <input
-                      type="radio"
-                      name="turnaround"
-                      value={o.value}
-                      checked={turnaround === o.value}
-                      onChange={() => setTurnaround(o.value)}
-                      hidden
-                    />
-                    {o.label}
-                  </label>
-                ))}
-              </div>
+              <span className="rrl-field-label">What should the reviewer focus on? <span className="rrl-optional">(optional)</span></span>
+              <textarea
+                rows={5}
+                maxLength={600}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="e.g. Does my story feel authentic? Is the structure clear? Are there any sections that feel weak or unclear?"
+              />
             </div>
           </div>
 
