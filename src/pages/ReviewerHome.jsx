@@ -301,7 +301,7 @@ export default function ReviewerHome() {
                         onClick={() => setForm((f) => ({ ...f, is_listed: true }))}
                       >
                         <span className="availability-label">Accepting reviews</span>
-                        <span className="availability-desc">Visible to applicants</span>
+                        <span className="availability-desc">Your profile is visible and applicants can send you essays to review.</span>
                       </button>
                       <button
                         type="button"
@@ -309,7 +309,7 @@ export default function ReviewerHome() {
                         onClick={() => setForm((f) => ({ ...f, is_listed: false }))}
                       >
                         <span className="availability-label">Not accepting reviews</span>
-                        <span className="availability-desc">Hidden from applicants</span>
+                        <span className="availability-desc">Your profile is hidden and applicants cannot send you new requests.</span>
                       </button>
                     </div>
                   </div>
