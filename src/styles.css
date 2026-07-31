@@ -762,6 +762,7 @@ button:disabled {
 .find-reviewers-heading {
   display: flex;
   align-items: baseline;
+  justify-content: center;
   gap: 1rem;
   margin-bottom: 0;
   padding: 0 2rem 1.25rem;
@@ -787,6 +788,7 @@ button:disabled {
 
 .find-reviewers-main {
   padding: 0 2rem;
+  min-width: 0;
 }
 
 /* Filter toggle button */

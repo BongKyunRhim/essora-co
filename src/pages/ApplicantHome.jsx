@@ -125,26 +125,28 @@ export default function ApplicantHome() {
         </div>
       </aside>
 
-      {/* Main content */}
+      {/* Title row — full width so the divider line can reach both edges */}
+      <div className="find-reviewers-heading">
+        <h1>Find Reviewers</h1>
+        {!loading && (
+          <span className="frs-count">{filtered.length} reviewer{filtered.length !== 1 ? "s" : ""}</span>
+        )}
+      </div>
+
+      {/* Toolbar — full width so the filter button sits at the far left */}
+      <div className="find-reviewers-toolbar">
+        <button
+          type="button"
+          className={`filter-btn${isFiltered ? " filter-btn--active" : ""}`}
+          onClick={() => setDrawerOpen(true)}
+        >
+          <FilterIcon />
+          Filter{isFiltered ? " ·" : ""}
+        </button>
+      </div>
+
+      {/* Cards */}
       <main className="find-reviewers-main">
-        <div className="find-reviewers-heading">
-          <h1>Find Reviewers</h1>
-          {!loading && (
-            <span className="frs-count">{filtered.length} reviewer{filtered.length !== 1 ? "s" : ""}</span>
-          )}
-        </div>
-
-        <div className="find-reviewers-toolbar">
-          <button
-            type="button"
-            className={`filter-btn${isFiltered ? " filter-btn--active" : ""}`}
-            onClick={() => setDrawerOpen(true)}
-          >
-            <FilterIcon />
-            Filter{isFiltered ? " ·" : ""}
-          </button>
-        </div>
-
         {loading && <p className="muted">Loading reviewers…</p>}
 
         {!loading && filtered.length === 0 && (
