@@ -620,127 +620,127 @@ button:disabled {
   color: #fff;
 }
 
-/* Reviewer search + filter bar */
-.reviewer-search-bar {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin: 1.5rem 0 1rem;
+/* Find Reviewers: sidebar + grid layout */
+.find-reviewers-layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 2.5rem;
+  align-items: start;
+  padding-top: 2.5rem;
+  padding-bottom: 3rem;
 }
 
-.reviewer-search-input-wrap {
+.find-reviewers-sidebar {
+  position: sticky;
+  top: calc(var(--nav-h) + 1.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.frs-header {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  border: 1.5px solid #000;
-  border-radius: var(--radius-sm);
-  padding: 0.55rem 0.85rem;
-  background: #fff;
+  justify-content: space-between;
 }
 
-.reviewer-search-input-wrap svg {
-  flex-shrink: 0;
-  color: #888;
-}
-
-.reviewer-search-input {
-  flex: 1;
-  border: none;
-  outline: none;
-  font-size: 0.95rem;
-  background: transparent;
-}
-
-.reviewer-search-clear {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #888;
-  font-size: 0.85rem;
-  padding: 0;
-  line-height: 1;
-}
-
-.reviewer-search-clear:hover { color: #000; }
-
-.reviewer-filters {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 0.75rem;
-}
-
-.reviewer-filter-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  font-size: 0.75rem;
+.frs-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
   font-weight: 600;
+}
+
+.frs-reset {
+  background: none;
+  border: none;
+  font-size: 0.8rem;
+  color: #888;
+  cursor: pointer;
+  padding: 0;
+}
+
+.frs-reset:hover { color: #000; }
+
+.frs-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.frs-label {
+  font-size: 0.72rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   color: #555;
 }
 
-.reviewer-price-wrap {
+.frs-slider {
+  width: 100%;
+  accent-color: #000;
+  cursor: pointer;
+}
+
+.frs-slider-val {
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.frs-radio-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.frs-radio-item {
   display: flex;
   align-items: center;
-  border: 1.5px solid #ccc;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  background: #fff;
-}
-
-.reviewer-price-symbol {
-  padding: 0.45rem 0.5rem 0.45rem 0.7rem;
-  font-size: 0.9rem;
-  color: #555;
-}
-
-.reviewer-price-input {
-  border: none;
-  outline: none;
-  padding: 0.45rem 0.6rem 0.45rem 0;
-  font-size: 0.9rem;
-  width: 80px;
-  background: transparent;
-}
-
-.reviewer-sort-select {
-  border: 1.5px solid #ccc;
-  border-radius: var(--radius-sm);
-  padding: 0.45rem 0.7rem;
-  font-size: 0.9rem;
-  background: #fff;
+  gap: 0.5rem;
+  font-size: 0.88rem;
   cursor: pointer;
-  outline: none;
 }
 
-.reviewer-sort-select:focus { border-color: #000; }
-
-.reviewer-clear-btn {
-  align-self: flex-end;
-  background: none;
-  border: 1.5px solid #ccc;
-  border-radius: var(--radius-sm);
-  padding: 0.45rem 0.85rem;
-  font-size: 0.85rem;
+.frs-radio-item input[type="radio"] {
+  accent-color: #000;
   cursor: pointer;
-  color: #555;
-  white-space: nowrap;
 }
 
-.reviewer-clear-btn:hover {
-  border-color: #000;
-  color: #000;
+.find-reviewers-main {
+  min-width: 0;
 }
 
-.reviewer-count {
+.find-reviewers-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.find-reviewers-heading h1 {
+  font-size: 2rem;
+}
+
+.frs-count {
   font-size: 0.85rem;
-  margin-bottom: 0.5rem;
+  color: #888;
 }
 
-.reviewer-empty {
-  margin-top: 2rem;
+@media (max-width: 700px) {
+  .find-reviewers-layout {
+    grid-template-columns: 1fr;
+    padding-top: 1.5rem;
+  }
+
+  .find-reviewers-sidebar {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid #e8e8e8;
+  }
+
+  .frs-header { width: 100%; }
 }
 
 /* Reviewer cards link to detail pages */

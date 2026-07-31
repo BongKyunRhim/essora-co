@@ -3,29 +3,23 @@ import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase.js";
 import Avatar from "../components/Avatar.jsx";
 
-function SearchIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
-  );
-}
-
 const SORT_OPTIONS = [
-  { value: "default",   label: "Default" },
-  { value: "price_asc", label: "Price: low to high" },
-  { value: "price_desc",label: "Price: high to low" },
-  { value: "name_asc",  label: "Name: A – Z" },
+  { value: "default",    label: "Default" },
+  { value: "price_asc",  label: "Price: low to high" },
+  { value: "price_desc", label: "Price: high to low" },
+  { value: "name_asc",   label: "Name: A – Z" },
 ];
 
 export default function ApplicantHome() {
   const [reviewers, setReviewers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading]     = useState(true);
+  const [maxPrice, setMaxPrice]   = useState(200);
+  const [sortBy, setSortBy]       = useState("default");
 
-  const [query, setQuery]       = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const [sortBy, setSortBy]     = useState("default");
+  const highestPrice = useMemo(
+    () => Math.max(200, ...reviewers.map((r) => r.price ?? 0)),
+    [reviewers]
+  );
 
   useEffect(() => {
     let active = true;
@@ -36,120 +30,115 @@ export default function ApplicantHome() {
       .eq("is_listed", true)
       .then(({ data }) => {
         if (!active) return;
-        setReviewers(data ?? []);
+        const list = data ?? [];
+        setReviewers(list);
+        setMaxPrice(Math.max(200, ...list.map((r) => r.price ?? 0)));
         setLoading(false);
       });
     return () => { active = false; };
   }, []);
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    let list = reviewers.filter((r) => {
-      if (q) {
-        const haystack = [r.full_name, r.college, r.major, r.bio]
-          .filter(Boolean).join(" ").toLowerCase();
-        if (!haystack.includes(q)) return false;
-      }
-      if (maxPrice !== "" && r.price != null && r.price > Number(maxPrice)) return false;
-      return true;
-    });
-
+    let list = reviewers.filter((r) =>
+      r.price == null || r.price <= maxPrice
+    );
     if (sortBy === "price_asc")  list = [...list].sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));
     if (sortBy === "price_desc") list = [...list].sort((a, b) => (b.price ?? -Infinity) - (a.price ?? -Infinity));
     if (sortBy === "name_asc")   list = [...list].sort((a, b) => (a.full_name ?? "").localeCompare(b.full_name ?? ""));
-
     return list;
-  }, [reviewers, query, maxPrice, sortBy]);
+  }, [reviewers, maxPrice, sortBy]);
 
-  const hasFilters = query !== "" || maxPrice !== "" || sortBy !== "default";
+  const isFiltered = sortBy !== "default" || maxPrice < highestPrice;
 
-  function clearFilters() {
-    setQuery("");
-    setMaxPrice("");
+  function resetFilters() {
+    setMaxPrice(highestPrice);
     setSortBy("default");
   }
 
   return (
-    <section className="page page-wide">
-      <h1>Find a reviewer</h1>
+    <div className="find-reviewers-layout page-wide">
 
-      {/* Search + filter bar */}
-      <div className="reviewer-search-bar">
-        <div className="reviewer-search-input-wrap">
-          <SearchIcon />
-          <input
-            type="text"
-            className="reviewer-search-input"
-            placeholder="Search by name, college, or major…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          {query && (
-            <button type="button" className="reviewer-search-clear" onClick={() => setQuery("")} aria-label="Clear search">✕</button>
+      {/* Left sidebar */}
+      <aside className="find-reviewers-sidebar">
+        <div className="frs-header">
+          <span className="frs-title">Filter</span>
+          {isFiltered && (
+            <button type="button" className="frs-reset" onClick={resetFilters}>Reset</button>
           )}
         </div>
 
-        <div className="reviewer-filters">
-          <label className="reviewer-filter-field">
-            <span>Max price</span>
-            <div className="reviewer-price-wrap">
-              <span className="reviewer-price-symbol">$</span>
-              <input
-                type="number"
-                min="0"
-                placeholder="Any"
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(e.target.value)}
-                className="reviewer-price-input"
-              />
-            </div>
-          </label>
+        <div className="frs-group">
+          <label className="frs-label">Max price</label>
+          <div className="frs-slider-row">
+            <input
+              type="range"
+              min={0}
+              max={highestPrice}
+              step={5}
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(Number(e.target.value))}
+              className="frs-slider"
+            />
+          </div>
+          <span className="frs-slider-val">
+            {maxPrice >= highestPrice ? "Any price" : `Up to $${maxPrice}`}
+          </span>
+        </div>
 
-          <label className="reviewer-filter-field">
-            <span>Sort by</span>
-            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="reviewer-sort-select">
-              {SORT_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
-          </label>
+        <div className="frs-group">
+          <label className="frs-label">Sort by</label>
+          <div className="frs-radio-list">
+            {SORT_OPTIONS.map((o) => (
+              <label key={o.value} className="frs-radio-item">
+                <input
+                  type="radio"
+                  name="sort"
+                  value={o.value}
+                  checked={sortBy === o.value}
+                  onChange={() => setSortBy(o.value)}
+                />
+                <span>{o.label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      </aside>
 
-          {hasFilters && (
-            <button type="button" className="reviewer-clear-btn" onClick={clearFilters}>
-              Clear all
-            </button>
+      {/* Main content */}
+      <main className="find-reviewers-main">
+        <div className="find-reviewers-heading">
+          <h1>Find Reviewers</h1>
+          {!loading && (
+            <span className="frs-count">{filtered.length} reviewer{filtered.length !== 1 ? "s" : ""}</span>
           )}
         </div>
-      </div>
 
-      {loading && <p>Loading reviewers…</p>}
+        {loading && <p className="muted">Loading reviewers…</p>}
 
-      {!loading && filtered.length === 0 && (
-        <p className="muted reviewer-empty">
-          {hasFilters ? "No reviewers match your filters." : "No reviewers have posted yet. Check back soon."}
-        </p>
-      )}
+        {!loading && filtered.length === 0 && (
+          <p className="muted" style={{ marginTop: "2rem" }}>
+            No reviewers match your filters.
+          </p>
+        )}
 
-      {!loading && filtered.length > 0 && (
-        <p className="reviewer-count muted">{filtered.length} reviewer{filtered.length !== 1 ? "s" : ""}</p>
-      )}
+        <div className="cards">
+          {filtered.map((r) => (
+            <Link className="card reviewer-card" to={`/reviewers/${r.id}`} key={r.id}>
+              <div className="reviewer-card-photo">
+                <Avatar url={r.avatar_url} name={r.full_name} size={120} />
+              </div>
+              <div className="reviewer-card-body">
+                <h2>{r.full_name || "Reviewer"}</h2>
+                <p className="muted">
+                  {[r.college, r.major].filter(Boolean).join(" · ") || "—"}
+                </p>
+                {r.price != null && <p className="price">${r.price} / essay</p>}
+              </div>
+            </Link>
+          ))}
+        </div>
+      </main>
 
-      <div className="cards">
-        {filtered.map((r) => (
-          <Link className="card reviewer-card" to={`/reviewers/${r.id}`} key={r.id}>
-            <div className="reviewer-card-photo">
-              <Avatar url={r.avatar_url} name={r.full_name} size={120} />
-            </div>
-            <div className="reviewer-card-body">
-              <h2>{r.full_name || "Reviewer"}</h2>
-              <p className="muted">
-                {[r.college, r.major].filter(Boolean).join(" · ") || "—"}
-              </p>
-              {r.price != null && <p className="price">${r.price} / essay</p>}
-            </div>
-          </Link>
-        ))}
-      </div>
-    </section>
+    </div>
   );
 }
