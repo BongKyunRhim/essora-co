@@ -1868,6 +1868,10 @@ button:disabled {
   padding-bottom: 1.5rem;
   margin-bottom: 2.5rem;
   border-bottom: 1px solid #e8e8e8;
+  margin-left: -3rem;
+  margin-right: -2.25rem;
+  padding-left: 3rem;
+  padding-right: 2.25rem;
 }
 
 .settings-section-title {
@@ -2049,6 +2053,10 @@ button:disabled {
   padding-bottom: 2rem;
   margin-bottom: 2rem;
   border-bottom: 1px solid #e8e8e8;
+  margin-left: -3rem;
+  margin-right: -2.25rem;
+  padding-left: 3rem;
+  padding-right: 2.25rem;
 }
 
 .settings-block:last-child {
@@ -2666,8 +2674,9 @@ button:disabled {
     border-left: none;
   }
 
-  /* Section header divider bleeds to screen edges */
-  .settings-section-header {
+  /* Section header + account blocks bleed to screen edges */
+  .settings-section-header,
+  .settings-block {
     margin-left: -1.25rem;
     margin-right: -1.25rem;
     padding-left: 1.25rem;
