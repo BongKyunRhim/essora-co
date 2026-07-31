@@ -1060,9 +1060,13 @@ button:disabled {
 }
 
 /* ---- Request a Review page ---- */
+.app-main:has(.request-review-page) {
+  padding: 3rem 5rem;
+}
+
 .request-review-page {
   width: 100%;
-  max-width: 860px;
+  max-width: 960px;
 }
 
 .request-review-layout {
