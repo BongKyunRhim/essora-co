@@ -38,7 +38,7 @@ export default function ReviewerDetail() {
   }
 
   return (
-    <section className="reviewer-detail page-wide">
+    <section className="reviewer-detail">
       <Link to="/applicant" className="back-link">← Back to Reviewers</Link>
 
       <div className="reviewer-detail-layout">

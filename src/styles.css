@@ -928,9 +928,15 @@ button:disabled {
 }
 
 /* Reviewer detail page */
+.app-main:has(.reviewer-detail) {
+  padding-left: 0;
+  padding-right: 0;
+  align-items: stretch;
+}
+
 .reviewer-detail {
-  padding-top: 2rem;
-  padding-bottom: 3rem;
+  width: 100%;
+  padding: 2rem 3rem 3rem;
 }
 
 .back-link {
