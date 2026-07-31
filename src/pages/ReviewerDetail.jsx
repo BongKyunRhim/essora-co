@@ -43,54 +43,44 @@ export default function ReviewerDetail() {
     <section className="reviewer-detail">
       <Link to="/applicant" className="back-link">← Back to Reviewers</Link>
 
-      <div className="reviewer-detail-layout">
-
-        {/* Left: profile info */}
-        <div className="reviewer-detail-left">
-          <div className="rdl-avatar-wrap">
-            <Avatar url={reviewer.avatar_url} name={reviewer.full_name} size={200} />
-          </div>
-
-          <div className="rdl-identity">
-            <h1 className="rdl-name">{reviewer.full_name || "Reviewer"}</h1>
-            {school && <p className="rdl-school">{school}</p>}
+      <div className="rdl-header">
+        <Avatar url={reviewer.avatar_url} name={reviewer.full_name} size={100} />
+        <div className="rdl-header-info">
+          <h1 className="rdl-name">{reviewer.full_name || "Reviewer"}</h1>
+          {school && <p className="rdl-school">{school}</p>}
+          <div className="rdl-meta-row">
             {reviewer.age != null && (
               <span className="rdl-age-tag">Age {reviewer.age}</span>
             )}
-          </div>
-
-          {reviewer.price != null && (
-            <div className="rdl-price-card">
-              <span className="rdl-price-label">Review fee</span>
-              <div className="rdl-price-value">
+            {reviewer.price != null && (
+              <span className="rdl-price-inline">
                 ${reviewer.price}<span className="rdl-price-unit"> / essay</span>
-              </div>
-            </div>
-          )}
-
-          {profile?.role === "applicant" && (
-            justRequested ? (
-              <p className="notice">Request sent! The reviewer will be in touch.</p>
-            ) : (
-              <button
-                type="button"
-                className="rdl-request-btn"
-                onClick={() => navigate(`/reviewers/${id}/request`)}
-              >
-                Request a Review
-              </button>
-            )
-          )}
-        </div>
-
-        {/* Right: about */}
-        <div className="reviewer-detail-right">
-          <div className="reviewer-about-box">
-            <h2>About</h2>
-            <p>{reviewer.long_bio || reviewer.bio || "This reviewer hasn't added a bio yet."}</p>
+              </span>
+            )}
           </div>
         </div>
+        {profile?.role === "applicant" && (
+          justRequested ? (
+            <p className="notice">Request sent! The reviewer will be in touch.</p>
+          ) : (
+            <button
+              type="button"
+              className="rdl-request-btn"
+              onClick={() => navigate(`/reviewers/${id}/request`)}
+            >
+              Request a Review
+            </button>
+          )
+        )}
+      </div>
 
+      <div className="rdl-divider" />
+
+      <div className="rdl-about-section">
+        <h2 className="rdl-section-label">About</h2>
+        <p className="rdl-bio">
+          {reviewer.long_bio || reviewer.bio || "This reviewer hasn't added a bio yet."}
+        </p>
       </div>
     </section>
   );
