@@ -4,6 +4,13 @@ import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import Avatar from "../components/Avatar.jsx";
 
+const TURNAROUND_OPTIONS = [
+  { value: "asap",     label: "ASAP" },
+  { value: "1-3days",  label: "1–3 days" },
+  { value: "1week",    label: "Within a week" },
+  { value: "flexible", label: "Flexible" },
+];
+
 export default function RequestReview() {
   const { id } = useParams();
   const { user } = useAuth();
@@ -12,10 +19,14 @@ export default function RequestReview() {
   const [reviewer, setReviewer] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const [essayFile, setEssayFile] = useState(null);
-  const [essayType, setEssayType] = useState("");
-  const [notes, setNotes] = useState("");
-  const [status, setStatus] = useState("");
+  const [essayFile, setEssayFile]   = useState(null);
+  const [essayType, setEssayType]   = useState("");
+  const [notes, setNotes]           = useState("");
+  const [schoolName, setSchoolName] = useState("");
+  const [deadline, setDeadline]     = useState("");
+  const [turnaround, setTurnaround] = useState("");
+  const [dragging, setDragging]     = useState(false);
+  const [status, setStatus]         = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -30,11 +41,16 @@ export default function RequestReview() {
       });
   }, [id]);
 
-  function handleFile(e) {
-    const file = e.target.files?.[0];
+  function pickFile(file) {
     if (!file) return;
     setEssayFile(file);
     setStatus("");
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    setDragging(false);
+    pickFile(e.dataTransfer.files?.[0]);
   }
 
   async function handleSubmit(e) {
@@ -57,11 +73,14 @@ export default function RequestReview() {
     setStatus("Sending request…");
     const { error } = await supabase.from("requests").insert({
       applicant_id: user.id,
-      reviewer_id: id,
-      essay_url: urlData.publicUrl,
-      essay_name: essayFile.name,
-      essay_type: essayType || null,
-      notes: notes || null,
+      reviewer_id:  id,
+      essay_url:    urlData.publicUrl,
+      essay_name:   essayFile.name,
+      essay_type:   essayType   || null,
+      notes:        notes       || null,
+      school_name:  schoolName  || null,
+      deadline:     deadline    || null,
+      turnaround:   turnaround  || null,
     });
 
     setSubmitting(false);
@@ -73,67 +92,170 @@ export default function RequestReview() {
   if (loading) return <p className="page">Loading…</p>;
   if (!reviewer) return <p className="page">Reviewer not found. <Link to="/applicant">Back to reviewers</Link></p>;
 
+  const school = [reviewer.college, reviewer.major].filter(Boolean).join(" · ");
+
   return (
-    <section className="page request-review-page">
-      <p><Link to={`/reviewers/${id}`}>← Back to {reviewer.full_name || "reviewer"}</Link></p>
+    <section className="request-review-page">
+      <Link to={`/reviewers/${id}`} className="back-link">← Back to {reviewer.full_name || "reviewer"}</Link>
 
-      <div className="request-review-header">
-        <Avatar url={reviewer.avatar_url} name={reviewer.full_name} size={56} />
-        <div>
-          <h1>Request a review</h1>
-          <p className="muted">
-            from {reviewer.full_name}
-            {reviewer.price != null ? ` · $${reviewer.price} per essay` : ""}
-          </p>
-        </div>
-      </div>
+      <div className="request-review-layout">
 
-      <form className="form request-review-form" onSubmit={handleSubmit}>
-        <div className="field">
-          <span className="field-label">Upload your essay <span className="field-hint-inline">(PDF, Word, or plain text)</span></span>
-          {essayFile ? (
-            <div className="essay-file-chosen">
-              <span className="essay-file-name">{essayFile.name}</span>
-              <button type="button" className="link-btn" onClick={() => setEssayFile(null)}>Remove</button>
+        {/* Sidebar */}
+        <aside className="rrl-sidebar">
+          <div className="rrl-reviewer-card">
+            <Avatar url={reviewer.avatar_url} name={reviewer.full_name} size={72} />
+            <div className="rrl-reviewer-info">
+              <p className="rrl-reviewer-name">{reviewer.full_name || "Reviewer"}</p>
+              {school && <p className="rrl-reviewer-school">{school}</p>}
             </div>
-          ) : (
-            <label className="essay-upload-btn">
-              Choose file
-              <input type="file" accept=".pdf,.doc,.docx,.txt" onChange={handleFile} hidden />
+          </div>
+
+          {reviewer.price != null && (
+            <div className="rrl-price-row">
+              <span className="rrl-price-label">Review fee</span>
+              <span className="rrl-price-value">
+                ${reviewer.price}<span className="rrl-price-unit"> / essay</span>
+              </span>
+            </div>
+          )}
+
+          <p className="rrl-security-note">
+            Your essay is shared securely with this reviewer only.
+          </p>
+        </aside>
+
+        {/* Form */}
+        <form className="rrl-form" onSubmit={handleSubmit}>
+          <h1 className="rrl-form-title">Request a Review</h1>
+
+          {/* Section 1 — Essay */}
+          <div className="rrl-section">
+            <h2 className="rrl-section-label">Your Essay</h2>
+
+            <div
+              className={`rrl-dropzone${dragging ? " rrl-dropzone--drag" : ""}${essayFile ? " rrl-dropzone--chosen" : ""}`}
+              onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+              onDragLeave={() => setDragging(false)}
+              onDrop={handleDrop}
+            >
+              {essayFile ? (
+                <div className="rrl-file-chosen">
+                  <svg className="rrl-file-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                  </svg>
+                  <div className="rrl-file-meta">
+                    <span className="rrl-file-name">{essayFile.name}</span>
+                    <span className="rrl-file-size">{(essayFile.size / 1024).toFixed(0)} KB</span>
+                  </div>
+                  <button type="button" className="rrl-file-remove" onClick={() => setEssayFile(null)}>Remove</button>
+                </div>
+              ) : (
+                <label className="rrl-dropzone-inner">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polyline points="16 16 12 12 8 16"/>
+                    <line x1="12" y1="12" x2="12" y2="21"/>
+                    <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+                  </svg>
+                  <span className="rrl-dropzone-text">
+                    Drop your essay here, or <span className="rrl-dropzone-browse">browse</span>
+                  </span>
+                  <span className="rrl-dropzone-hint">PDF, Word, or plain text</span>
+                  <input type="file" accept=".pdf,.doc,.docx,.txt" onChange={(e) => pickFile(e.target.files?.[0])} hidden />
+                </label>
+              )}
+            </div>
+
+            <label className="rrl-field">
+              <span className="rrl-field-label">Essay type <span className="rrl-optional">(optional)</span></span>
+              <select value={essayType} onChange={(e) => setEssayType(e.target.value)}>
+                <option value="">Select a type</option>
+                <option value="personal_statement">Common App Personal Statement</option>
+                <option value="supplemental">Supplemental Essay</option>
+                <option value="scholarship">Scholarship Essay</option>
+                <option value="other">Other</option>
+              </select>
             </label>
-          )}
-        </div>
+          </div>
 
-        <label className="field">
-          <span>Essay type <span className="field-hint-inline">(optional)</span></span>
-          <select value={essayType} onChange={(e) => setEssayType(e.target.value)}>
-            <option value="">Select a type</option>
-            <option value="personal_statement">Common App Personal Statement</option>
-            <option value="supplemental">Supplemental Essay</option>
-            <option value="scholarship">Scholarship Essay</option>
-            <option value="other">Other</option>
-          </select>
-        </label>
+          {/* Section 2 — Details */}
+          <div className="rrl-section">
+            <h2 className="rrl-section-label">Details</h2>
 
-        <label className="field">
-          <span>What would you like the reviewer to focus on? <span className="field-hint-inline">(optional)</span></span>
-          <textarea
-            rows={5}
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            placeholder="e.g. Does my story feel authentic? Is the structure clear? Are there any sections that feel weak or unclear?"
-          />
-        </label>
+            <label className="rrl-field">
+              <span className="rrl-field-label">Which school is this for? <span className="rrl-optional">(optional)</span></span>
+              <input
+                type="text"
+                placeholder="e.g. Harvard University"
+                value={schoolName}
+                onChange={(e) => setSchoolName(e.target.value)}
+              />
+            </label>
 
-        <div className="request-review-footer">
-          <button type="submit" disabled={submitting}>
-            {submitting ? "Sending…" : "Send request"}
-          </button>
-          {status && (
-            <p className={`notice${status.startsWith("Error") ? " error" : ""}`}>{status}</p>
-          )}
-        </div>
-      </form>
+            <label className="rrl-field">
+              <span className="rrl-field-label">Application deadline <span className="rrl-optional">(optional)</span></span>
+              <input
+                type="date"
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
+              />
+            </label>
+
+            <div className="rrl-field">
+              <span className="rrl-field-label">How soon do you need feedback? <span className="rrl-optional">(optional)</span></span>
+              <div className="rrl-chip-group">
+                {TURNAROUND_OPTIONS.map((o) => (
+                  <label
+                    key={o.value}
+                    className={`rrl-chip${turnaround === o.value ? " rrl-chip--active" : ""}`}
+                  >
+                    <input
+                      type="radio"
+                      name="turnaround"
+                      value={o.value}
+                      checked={turnaround === o.value}
+                      onChange={() => setTurnaround(o.value)}
+                      hidden
+                    />
+                    {o.label}
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Section 3 — Message */}
+          <div className="rrl-section">
+            <h2 className="rrl-section-label">Message to Reviewer</h2>
+
+            <div className="rrl-field">
+              <span className="rrl-field-label">What should the reviewer focus on? <span className="rrl-optional">(optional)</span></span>
+              <textarea
+                rows={5}
+                maxLength={600}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="e.g. Does my story feel authentic? Is the structure clear? Are there any sections that feel weak or unclear?"
+              />
+              <span className="rrl-char-count">{notes.length} / 600</span>
+            </div>
+          </div>
+
+          {/* Submit */}
+          <div className="rrl-submit-row">
+            <button type="submit" className="rrl-submit-btn" disabled={submitting}>
+              {submitting ? "Sending…" : "Send Request"}
+            </button>
+            {status && (
+              <p className={`notice${status.startsWith("Error") ? " error" : ""}`}>{status}</p>
+            )}
+          </div>
+        </form>
+
+      </div>
     </section>
   );
 }
