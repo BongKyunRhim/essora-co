@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
+import extractEssayText from "../lib/extractEssayText.js";
 
 
 export default function RequestReview() {
@@ -12,7 +13,10 @@ export default function RequestReview() {
   const [reviewer, setReviewer] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [essayText, setEssayText]   = useState("");
   const [essayFile, setEssayFile]   = useState(null);
+  const [extracting, setExtracting] = useState(false);
+  const [fileNotice, setFileNotice] = useState("");   // "Text extracted from …" or error
   const [essayType, setEssayType]   = useState("");
   const [notes, setNotes]           = useState("");
   const [dragging, setDragging]     = useState(false);
@@ -31,10 +35,22 @@ export default function RequestReview() {
       });
   }, [id]);
 
-  function pickFile(file) {
+  const wordCount = essayText.trim() ? essayText.trim().split(/\s+/).length : 0;
+
+  async function pickFile(file) {
     if (!file) return;
-    setEssayFile(file);
-    setStatus("");
+    setFileNotice("");
+    setExtracting(true);
+    try {
+      const text = await extractEssayText(file);
+      setEssayText(text);
+      setEssayFile(file);
+      setFileNotice(`Text pulled from ${file.name} — look it over below and edit anything that came through oddly.`);
+    } catch (err) {
+      setEssayFile(null);
+      setFileNotice(`Error: ${err.message}`);
+    }
+    setExtracting(false);
   }
 
   function handleDrop(e) {
@@ -45,22 +61,25 @@ export default function RequestReview() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!essayFile)  { setStatus("Error: Please upload your essay."); return; }
-    if (!essayType)  { setStatus("Error: Please select an essay type."); return; }
-    if (!notes.trim()) { setStatus("Error: Please fill in the details for your reviewer."); return; }
+    if (!essayText.trim()) { setStatus("Error: Please paste or upload your essay."); return; }
+    if (!essayType)        { setStatus("Error: Please select an essay type."); return; }
+    if (!notes.trim())     { setStatus("Error: Please fill in the details for your reviewer."); return; }
 
     setSubmitting(true);
-    setStatus("Uploading essay…");
 
-    const ext = essayFile.name.split(".").pop();
-    const path = `${user.id}/${Date.now()}.${ext}`;
-    const { error: uploadError } = await supabase.storage
-      .from("essays")
-      .upload(path, essayFile, { upsert: false });
-
-    if (uploadError) { setStatus("Error: " + uploadError.message); setSubmitting(false); return; }
-
-    const { data: urlData } = supabase.storage.from("essays").getPublicUrl(path);
+    // If a file was uploaded, keep the original in storage so the
+    // reviewer can download it — the extracted text is what gets reviewed.
+    let fileUrl = null;
+    if (essayFile) {
+      setStatus("Uploading essay…");
+      const ext = essayFile.name.split(".").pop();
+      const path = `${user.id}/${Date.now()}.${ext}`;
+      const { error: uploadError } = await supabase.storage
+        .from("essays")
+        .upload(path, essayFile, { upsert: false });
+      if (uploadError) { setStatus("Error: " + uploadError.message); setSubmitting(false); return; }
+      fileUrl = supabase.storage.from("essays").getPublicUrl(path).data.publicUrl;
+    }
 
     setStatus("Submitting essay…");
     // No accept/decline step — a listed reviewer receives submissions
@@ -69,10 +88,11 @@ export default function RequestReview() {
       applicant_id:  user.id,
       reviewer_id:   id,
       status:        "accepted",
-      essay_url:     urlData.publicUrl,
-      essay_name:    essayFile.name,
+      essay_text:    essayText.trim(),
+      essay_url:     fileUrl,
+      essay_name:    essayFile?.name ?? null,
       essay_type:    essayType,
-      notes:         notes       || null,
+      notes:         notes || null,
     });
 
     setSubmitting(false);
@@ -98,42 +118,56 @@ export default function RequestReview() {
           <div className="rrl-section">
             <h2 className="rrl-section-label">Your Essay</h2>
 
+            <div className="rrl-field">
+              <span className="rrl-field-label">
+                Paste your essay
+                {wordCount > 0 && <span className="rrl-word-count"> · {wordCount} words</span>}
+              </span>
+              <textarea
+                className="rrl-essay-input"
+                rows={14}
+                value={essayText}
+                onChange={(e) => setEssayText(e.target.value)}
+                placeholder="Paste the full text of your essay here…"
+              />
+            </div>
+
             <div
-              className={`rrl-dropzone${dragging ? " rrl-dropzone--drag" : ""}${essayFile ? " rrl-dropzone--chosen" : ""}`}
+              className={`rrl-dropzone rrl-dropzone--slim${dragging ? " rrl-dropzone--drag" : ""}${essayFile ? " rrl-dropzone--chosen" : ""}`}
               onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
               onDragLeave={() => setDragging(false)}
               onDrop={handleDrop}
             >
               {essayFile ? (
                 <div className="rrl-file-chosen">
-                  <svg className="rrl-file-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <svg className="rrl-file-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                     <polyline points="14 2 14 8 20 8"/>
-                    <line x1="16" y1="13" x2="8" y2="13"/>
-                    <line x1="16" y1="17" x2="8" y2="17"/>
-                    <polyline points="10 9 9 9 8 9"/>
                   </svg>
                   <div className="rrl-file-meta">
                     <span className="rrl-file-name">{essayFile.name}</span>
                     <span className="rrl-file-size">{(essayFile.size / 1024).toFixed(0)} KB</span>
                   </div>
-                  <button type="button" className="rrl-file-remove" onClick={() => setEssayFile(null)}>Remove</button>
+                  <button type="button" className="rrl-file-remove" onClick={() => { setEssayFile(null); setFileNotice(""); }}>Remove</button>
                 </div>
               ) : (
-                <label className="rrl-dropzone-inner">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <polyline points="16 16 12 12 8 16"/>
-                    <line x1="12" y1="12" x2="12" y2="21"/>
-                    <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
-                  </svg>
+                <label className="rrl-dropzone-inner rrl-dropzone-inner--slim">
                   <span className="rrl-dropzone-text">
-                    Drop your essay here, or <span className="rrl-dropzone-browse">browse</span>
+                    {extracting
+                      ? "Reading your file…"
+                      : <>Or drop a file here to fill the box for you — <span className="rrl-dropzone-browse">browse</span></>}
                   </span>
-                  <span className="rrl-dropzone-hint">PDF, Word, or plain text</span>
-                  <input type="file" accept=".pdf,.doc,.docx,.txt" onChange={(e) => pickFile(e.target.files?.[0])} hidden />
+                  <span className="rrl-dropzone-hint">.docx, .pdf, or .txt</span>
+                  <input type="file" accept=".pdf,.docx,.txt" onChange={(e) => { pickFile(e.target.files?.[0]); e.target.value = ""; }} hidden disabled={extracting} />
                 </label>
               )}
             </div>
+
+            {fileNotice && (
+              <p className={`notice${fileNotice.startsWith("Error") ? " error" : ""}`} style={{ marginTop: 0 }}>
+                {fileNotice.replace(/^Error: /, "")}
+              </p>
+            )}
 
             <label className="rrl-field">
               <span className="rrl-field-label">Essay type</span>
@@ -165,7 +199,7 @@ export default function RequestReview() {
 
           {/* Submit */}
           <div className="rrl-submit-row">
-            <button type="submit" className="rrl-submit-btn" disabled={submitting}>
+            <button type="submit" className="rrl-submit-btn" disabled={submitting || extracting}>
               {submitting ? "Submitting…" : "Submit Essay"}
             </button>
             {status && (

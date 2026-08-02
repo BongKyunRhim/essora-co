@@ -270,7 +270,7 @@ export default function RequestDetail() {
       </div>
 
       {/* ---- Review workspace ---- */}
-      {request.essay_url && (
+      {(request.essay_text || request.essay_url) && (
         <>
           <div className="rdp-divider" />
 
@@ -288,6 +288,7 @@ export default function RequestDetail() {
                 <EssayViewer
                   url={request.essay_url}
                   name={request.essay_name}
+                  text={request.essay_text}
                   highlights={suggestions}
                   activeId={activeId}
                   readOnly={submitted}

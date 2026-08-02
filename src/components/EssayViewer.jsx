@@ -11,6 +11,13 @@ function fileKind(name = "", url = "") {
   return "other";
 }
 
+function resolveKind(text, name, url) {
+  // Submissions store extracted essay text — always selectable, no parsing.
+  // The file-based kinds only remain for submissions from before that change.
+  if (text) return "text";
+  return fileKind(name, url);
+}
+
 /*
  * Renders the applicant's essay inline (PDF via pdf.js with a selectable text
  * layer, plain text directly) and turns text selections into review
@@ -20,13 +27,14 @@ function fileKind(name = "", url = "") {
 export default function EssayViewer({
   url,
   name,
+  text,
   highlights,
   activeId,
   readOnly,
   onCreate,
   onHighlightClick,
 }) {
-  const kind = fileKind(name, url);
+  const kind = resolveKind(text, name, url);
   const wrapperRef = useRef(null);
   const docRef = useRef(null);
   const renderSeq = useRef(0);
@@ -39,7 +47,7 @@ export default function EssayViewer({
   const [width, setWidth] = useState(0);
   const [txtContent, setTxtContent] = useState("");
   const [loadError, setLoadError] = useState("");
-  const [loading, setLoading] = useState(kind !== "other");
+  const [loading, setLoading] = useState(kind === "pdf" || kind === "txt");
   const [hasText, setHasText] = useState(true);
 
   // Pending selection → "Add suggestion" chip → composer
@@ -296,6 +304,13 @@ export default function EssayViewer({
             <div className="ev-highlight-layer">{renderHighlights(n)}</div>
           </div>
         ))}
+
+      {kind === "text" && (
+        <div className="ev-page ev-page--txt" data-essay-page={1}>
+          <pre className="ev-txt">{text}</pre>
+          <div className="ev-highlight-layer">{renderHighlights(1)}</div>
+        </div>
+      )}
 
       {kind === "txt" && !loading && !loadError && (
         <div className="ev-page ev-page--txt" data-essay-page={1}>
