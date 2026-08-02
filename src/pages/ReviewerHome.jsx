@@ -309,7 +309,7 @@ export default function ReviewerHome() {
                         onClick={() => setForm((f) => ({ ...f, is_listed: false }))}
                       >
                         <span className="availability-label">Not accepting reviews</span>
-                        <span className="availability-desc">Your profile is hidden and applicants cannot send you new requests.</span>
+                        <span className="availability-desc">Your profile is hidden and applicants cannot submit essays to you.</span>
                       </button>
                     </div>
                   </div>
@@ -330,9 +330,9 @@ export default function ReviewerHome() {
           <>
             <div className="settings-section-header">
               <h2 className="settings-section-title">My Activity</h2>
-              <p className="settings-section-desc">Your review history and completed requests.</p>
+              <p className="settings-section-desc">Your review history and completed reviews.</p>
             </div>
-            <p className="muted">No activity yet. Once you accept review requests they'll appear here.</p>
+            <p className="muted">No activity yet. Essays submitted to you will appear here once you review them.</p>
           </>
         )}
 

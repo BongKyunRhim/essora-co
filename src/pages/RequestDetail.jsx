@@ -113,13 +113,6 @@ export default function RequestDetail() {
     return () => clearTimeout(saveTimer.current);
   }, [suggestions, ratings, finalComment]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  async function updateStatus(status) {
-    setUpdating(true);
-    await supabase.from("requests").update({ status }).eq("id", id);
-    setRequest((r) => ({ ...r, status }));
-    setUpdating(false);
-  }
-
   function addSuggestion(draft) {
     const s = {
       id: `s-${Date.now()}-${Math.floor(Math.random() * 1e6)}`,
@@ -178,16 +171,17 @@ export default function RequestDetail() {
 
   if (loading) return <p className="page">Loading…</p>;
   if (!request) return (
-    <p className="page">Request not found. <Link to="/notifications">Back to requests</Link></p>
+    <p className="page">Submission not found. <Link to="/notifications">Back to submissions</Link></p>
   );
 
   const school = [applicant?.college, applicant?.major].filter(Boolean).join(" · ")
     || applicant?.high_school;
-  const inWorkspace = request.status === "accepted" || request.status === "completed";
+  // Submissions go straight into review — every submission opens the workspace.
+  const statusLabel = request.status === "completed" ? "completed" : "in review";
 
   return (
     <section className="request-detail-page">
-      <Link to="/notifications" className="back-link">← Back to requests</Link>
+      <Link to="/notifications" className="back-link">← Back to submissions</Link>
 
       {submitted && (
         <div className="rw-submitted-banner">
@@ -205,8 +199,8 @@ export default function RequestDetail() {
             <span className="rdl-age-tag">Grade {applicant.age}</span>
           )}
         </div>
-        <span className={`rdp-status-tag rdp-status-tag--${request.status}`}>
-          {request.status}
+        <span className={`rdp-status-tag rdp-status-tag--${request.status === "completed" ? "completed" : "accepted"}`}>
+          {statusLabel}
         </span>
       </div>
 
@@ -273,25 +267,10 @@ export default function RequestDetail() {
           </div>
         )}
 
-        {/* Pending: accept / decline */}
-        {request.status === "pending" && (
-          <div className="rdp-actions">
-            <button type="button" disabled={updating} onClick={() => updateStatus("accepted")}>
-              Accept request
-            </button>
-            <button type="button" className="linklike" disabled={updating} onClick={() => updateStatus("declined")}>
-              Decline
-            </button>
-          </div>
-        )}
-
-        {request.status === "declined" && (
-          <p className="notice">You declined this request.</p>
-        )}
       </div>
 
       {/* ---- Review workspace ---- */}
-      {inWorkspace && request.essay_url && (
+      {request.essay_url && (
         <>
           <div className="rdp-divider" />
 

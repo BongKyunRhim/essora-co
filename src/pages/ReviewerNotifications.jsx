@@ -4,7 +4,10 @@ import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import Avatar from "../components/Avatar.jsx";
 
-const STATUS_LABEL = { pending: "Pending", accepted: "Accepted", declined: "Declined", completed: "Completed" };
+// Submissions go straight into review — pending/accepted both mean "to review".
+// (pending + declined only linger on rows from before the accept step was removed)
+const STATUS_LABEL = { pending: "To review", accepted: "To review", declined: "Declined", completed: "Completed" };
+const STATUS_CLASS = { pending: "accepted", accepted: "accepted", declined: "declined", completed: "completed" };
 
 export default function ReviewerNotifications() {
   const { user } = useAuth();
@@ -38,10 +41,10 @@ export default function ReviewerNotifications() {
 
   return (
     <section className="reviewer-notifications-page">
-      <h1 className="rn-title">Review Requests</h1>
+      <h1 className="rn-title">Essay Submissions</h1>
 
       {items.length === 0 && (
-        <p className="muted" style={{ marginTop: "2rem" }}>No requests yet.</p>
+        <p className="muted" style={{ marginTop: "2rem" }}>No submissions yet.</p>
       )}
 
       <ul className="rn-list">
@@ -66,7 +69,7 @@ export default function ReviewerNotifications() {
                   })}
                 </p>
               </div>
-              <span className={`rn-status rn-status--${r.status}`}>
+              <span className={`rn-status rn-status--${STATUS_CLASS[r.status] ?? r.status}`}>
                 {STATUS_LABEL[r.status] ?? r.status}
               </span>
             </Link>

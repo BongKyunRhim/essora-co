@@ -66,12 +66,14 @@ export default function App() {
   useEffect(() => {
     if (!user || profile?.role !== "reviewer") return;
 
+    // Essays waiting on a review — submissions land as 'accepted' directly
+    // ('pending' only covers rows from before the accept step was removed).
     const fetchCount = () =>
       supabase
         .from("requests")
         .select("id", { count: "exact", head: true })
         .eq("reviewer_id", user.id)
-        .eq("status", "pending")
+        .in("status", ["pending", "accepted"])
         .then(({ count }) => setPendingCount(count ?? 0));
 
     fetchCount();

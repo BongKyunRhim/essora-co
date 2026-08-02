@@ -61,14 +61,14 @@ export default function ReviewerDetail() {
         </div>
         {profile?.role === "applicant" && (
           justRequested ? (
-            <p className="notice">Request sent! The reviewer will be in touch.</p>
+            <p className="notice">Essay submitted! {reviewer.full_name || "Your reviewer"} will start reviewing it.</p>
           ) : (
             <button
               type="button"
               className="rdl-request-btn"
               onClick={() => navigate(`/reviewers/${id}/request`)}
             >
-              Request a Review
+              Submit Your Essay
             </button>
           )
         )}

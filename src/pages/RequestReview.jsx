@@ -62,10 +62,13 @@ export default function RequestReview() {
 
     const { data: urlData } = supabase.storage.from("essays").getPublicUrl(path);
 
-    setStatus("Sending request…");
+    setStatus("Submitting essay…");
+    // No accept/decline step — a listed reviewer receives submissions
+    // directly, so the essay goes straight into review.
     const { error } = await supabase.from("requests").insert({
       applicant_id:  user.id,
       reviewer_id:   id,
+      status:        "accepted",
       essay_url:     urlData.publicUrl,
       essay_name:    essayFile.name,
       essay_type:    essayType,
@@ -89,7 +92,7 @@ export default function RequestReview() {
 
         {/* Form */}
         <form className="rrl-form" onSubmit={handleSubmit}>
-          <h1 className="rrl-form-title">Request a Review</h1>
+          <h1 className="rrl-form-title">Submit Your Essay</h1>
 
           {/* Section 1 — Essay */}
           <div className="rrl-section">
@@ -163,7 +166,7 @@ export default function RequestReview() {
           {/* Submit */}
           <div className="rrl-submit-row">
             <button type="submit" className="rrl-submit-btn" disabled={submitting}>
-              {submitting ? "Sending…" : "Send Request"}
+              {submitting ? "Submitting…" : "Submit Essay"}
             </button>
             {status && (
               <p className={`notice${status.startsWith("Error") ? " error" : ""}`}>{status}</p>
