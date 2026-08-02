@@ -1522,6 +1522,523 @@ button:disabled {
   gap: 1.5rem;
 }
 
+.rdp-status-tag--completed { background: #e8efff; color: #1d4ed8; }
+.rn-status--completed      { background: #e8efff; color: #1d4ed8; }
+
+/* ==== Review workspace (reviewer grades the essay inline) ==== */
+
+.rw-submitted-banner {
+  margin: 1.25rem 0 0;
+  padding: 0.85rem 1.25rem;
+  border: 1px solid #b7dfc2;
+  border-radius: var(--radius-sm);
+  background: #e6f4ea;
+  color: #1e6b3b;
+  font-size: 0.92rem;
+}
+
+.rw-applicant-card {
+  margin-top: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-width: 680px;
+}
+
+.rw-applicant-bio {
+  font-size: 0.97rem;
+  color: #333;
+  line-height: 1.7;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.rw-applicant-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.rw-applicant-meta .rdp-meta-key { min-width: 120px; }
+
+/* Two columns: essay left, suggestions right */
+.rw-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.rw-essay-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.rw-hint {
+  font-size: 0.82rem;
+  color: #999;
+  margin: 0;
+}
+
+/* ---- Essay viewer ---- */
+.ev-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.ev-status {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.ev-page {
+  position: relative;
+  width: 100%;
+  border: 1px solid #e2e2e2;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.ev-page canvas {
+  display: block;
+  width: 100%;
+}
+
+/* Minimal pdf.js text layer (selectable, invisible text over the canvas).
+   The page div gets --scale-factor set from JS, which pdf.js spans rely on. */
+.textLayer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 1;
+  line-height: 1;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  forced-color-adjust: none;
+  transform-origin: 0 0;
+  text-align: initial;
+  z-index: 2;
+}
+
+.textLayer :is(span, br) {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.textLayer .markedContent { display: contents; }
+
+.textLayer ::selection {
+  background: rgba(37, 99, 235, 0.28);
+}
+
+/* Plain-text essays */
+.ev-page--txt { padding: 2rem 2.25rem; }
+
+.ev-txt {
+  font-family: var(--font-body);
+  font-size: 0.97rem;
+  line-height: 1.8;
+  color: #222;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+}
+
+/* Saved highlights over the essay */
+.ev-highlight-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.ev-highlight {
+  position: absolute;
+  background: rgba(250, 204, 21, 0.38);
+  border: none;
+  border-radius: 2px;
+  padding: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: none;
+  transition: background 0.15s;
+}
+
+.ev-highlight:hover { background: rgba(250, 204, 21, 0.55); }
+
+.ev-highlight--active {
+  background: rgba(37, 99, 235, 0.28);
+  outline: 1.5px solid rgba(37, 99, 235, 0.7);
+}
+
+.ev-highlight--active:hover { background: rgba(37, 99, 235, 0.38); }
+
+/* Floating "+ Add suggestion" chip near the selection */
+.ev-add-chip {
+  position: absolute;
+  z-index: 20;
+  transform: translateX(-100%);
+  padding: 0.45rem 0.9rem;
+  border: none;
+  border-radius: 999px;
+  background: #000;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+}
+
+.ev-add-chip:hover { background: #222; }
+
+/* Suggestion composer */
+.ev-composer {
+  position: absolute;
+  z-index: 21;
+  right: 0;
+  width: min(360px, 100%);
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: var(--radius);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.16);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ev-composer-quote {
+  font-size: 0.82rem;
+  font-style: italic;
+  color: #666;
+  margin: 0;
+  max-height: 4.5em;
+  overflow: hidden;
+  border-left: 3px solid #facc15;
+  padding-left: 0.6rem;
+}
+
+.ev-composer textarea,
+.rw-manual-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  resize: vertical;
+}
+
+.ev-composer-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ev-composer-save {
+  padding: 0.5rem 1.1rem;
+  font-size: 0.85rem;
+}
+
+/* Fallback card (Word docs, load errors) */
+.ev-fallback {
+  border: 1px dashed #ccc;
+  border-radius: var(--radius);
+  background: #fafafa;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  align-items: flex-start;
+}
+
+.ev-fallback-title {
+  font-weight: 600;
+  margin: 0;
+}
+
+.ev-fallback-text {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0 0 0.5rem;
+}
+
+/* ---- Suggestions panel ---- */
+.rw-suggestions {
+  position: sticky;
+  top: calc(var(--nav-h) + 1.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: calc(100vh - var(--nav-h) - 3rem);
+  overflow-y: auto;
+  padding: 1.25rem;
+  border: 1px solid #e8e8e8;
+  border-radius: var(--radius);
+  background: #fcfcfc;
+}
+
+.rw-suggestions-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.rw-count {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #b45309;
+  white-space: nowrap;
+}
+
+.rw-count--ok { color: #1e6b3b; }
+
+.rw-empty {
+  font-size: 0.87rem;
+  color: #999;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.rw-suggestion-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+}
+
+.rw-suggestion {
+  border: 1px solid #e4e4e4;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  padding: 0.8rem 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.rw-suggestion:hover { border-color: #bbb; }
+
+.rw-suggestion--active {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.rw-suggestion-top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.rw-suggestion-num {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #000;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.rw-suggestion-page {
+  font-size: 0.72rem;
+  color: #999;
+  font-weight: 600;
+}
+
+.rw-suggestion-delete {
+  margin-left: auto;
+  border: none;
+  background: none;
+  color: #bbb;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0.1rem 0.3rem;
+  box-shadow: none;
+  line-height: 1;
+}
+
+.rw-suggestion-delete:hover { color: #e02424; background: none; }
+
+.rw-suggestion-quote {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: #888;
+  margin: 0 0 0.35rem;
+  border-left: 3px solid #facc15;
+  padding-left: 0.55rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.rw-suggestion-comment {
+  font-size: 0.88rem;
+  color: #222;
+  line-height: 1.55;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.rw-manual-btn {
+  border: 1.5px dashed #bbb;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: #555;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.6rem;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.rw-manual-btn:hover { border-color: #000; color: #000; background: none; }
+
+.rw-manual-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* ---- Ratings ---- */
+.rw-ratings {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 680px;
+}
+
+.rw-rating-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.rw-rating-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.rw-rating-row:last-child { border-bottom: none; }
+
+.rw-rating-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #222;
+}
+
+.rw-stars {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.rw-star {
+  border: none;
+  background: none;
+  padding: 0.15rem;
+  cursor: pointer;
+  color: #d8d8d8;
+  box-shadow: none;
+  line-height: 1;
+  transition: color 0.12s, transform 0.12s;
+}
+
+.rw-star:hover { background: none; transform: scale(1.15); }
+
+.rw-star--on { color: #f59e0b; }
+
+.rw-star:disabled {
+  cursor: default;
+  transform: none;
+  opacity: 1;
+}
+
+.rw-star-value {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #666;
+  min-width: 2.4em;
+  margin-left: 0.35rem;
+}
+
+/* ---- Final comment + submit ---- */
+.rw-final {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 680px;
+  margin-top: 2.5rem;
+}
+
+.rw-final textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.85rem 1rem;
+  border: 1px solid #000;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.rw-final textarea[readonly] {
+  border-color: #ddd;
+  background: #fafafa;
+  color: #444;
+}
+
+.rw-submit-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.rw-submit-side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.rw-missing {
+  font-size: 0.85rem;
+  color: #b45309;
+  margin: 0;
+}
+
+.rw-saved {
+  font-size: 0.82rem;
+  color: #1e6b3b;
+  margin: 0;
+}
+
 /* ---- Landing page ---- */
 .landing {
   width: 100%;
@@ -2447,6 +2964,18 @@ button:disabled {
     flex-wrap: wrap;
     gap: 0.5rem;
   }
+
+  /* Review workspace stacks: essay above suggestions */
+  .rw-workspace {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .rw-suggestions {
+    position: static;
+    max-height: none;
+    overflow-y: visible;
+  }
 }
 
 /* ---- Responsive: phone ---- */
@@ -2750,6 +3279,33 @@ button:disabled {
   }
 
   .rrl-submit-btn { width: 100%; }
+
+  /* Review workspace on phones */
+  .rw-essay-head {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .ev-page--txt { padding: 1.25rem 1rem; }
+
+  /* Composer becomes a fixed bottom sheet so the keyboard doesn't hide it */
+  .ev-composer {
+    position: fixed;
+    top: auto !important;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    width: auto;
+    z-index: 300;
+  }
+
+  .rw-rating-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .rw-submit-row button { width: 100%; }
 
   /* Inner pages: notifications adapt */
   ._placeholder {

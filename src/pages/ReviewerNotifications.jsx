@@ -4,7 +4,7 @@ import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import Avatar from "../components/Avatar.jsx";
 
-const STATUS_LABEL = { pending: "Pending", accepted: "Accepted", declined: "Declined" };
+const STATUS_LABEL = { pending: "Pending", accepted: "Accepted", declined: "Declined", completed: "Completed" };
 
 export default function ReviewerNotifications() {
   const { user } = useAuth();
