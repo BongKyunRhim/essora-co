@@ -40,6 +40,7 @@ export default function EssayViewer({
   const [txtContent, setTxtContent] = useState("");
   const [loadError, setLoadError] = useState("");
   const [loading, setLoading] = useState(kind !== "other");
+  const [hasText, setHasText] = useState(true);
 
   // Pending selection → "Add suggestion" chip → composer
   const [pending, setPending] = useState(null); // { page, quote, rects, anchor }
@@ -103,6 +104,7 @@ export default function EssayViewer({
 
     (async () => {
       const dims = {};
+      let spanCount = 0;
       for (let n = 1; n <= numPages; n++) {
         if (destroyed || seq !== renderSeq.current) return;
         try {
@@ -140,12 +142,14 @@ export default function EssayViewer({
             viewport,
           });
           await textLayer.render();
+          spanCount += textDiv.childElementCount;
         } catch (err) {
           if (err?.name !== "RenderingCancelledException") console.error(err);
         }
       }
       if (!destroyed && seq === renderSeq.current) {
         setPageDims(dims);
+        setHasText(spanCount > 0);
         setLoading(false);
       }
     })();
@@ -261,6 +265,13 @@ export default function EssayViewer({
   return (
     <div className="ev-wrapper" ref={wrapperRef}>
       {loading && <p className="ev-status">Loading essay…</p>}
+      {kind === "pdf" && !loading && !loadError && !hasText && !readOnly && (
+        <p className="ev-notext">
+          This PDF doesn't contain selectable text — it was likely scanned or
+          exported as images. You can still review it below and add your
+          suggestions with <strong>+ Add a general suggestion</strong> in the panel.
+        </p>
+      )}
       {loadError && (
         <div className="ev-fallback">
           <p className="ev-fallback-title">Couldn't display the essay</p>

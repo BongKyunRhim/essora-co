@@ -366,55 +366,53 @@ export default function RequestDetail() {
             </aside>
           </div>
 
-          <div className="rdp-divider" />
-
-          {/* Ratings */}
-          <div className="rw-ratings">
-            <h2 className="rdp-section-label">Rate this Essay</h2>
-            <div className="rw-rating-grid">
-              {RATING_CATEGORIES.map((c) => (
-                <div key={c.key} className="rw-rating-row">
-                  <span className="rw-rating-label">{c.label}</span>
-                  <StarRow
-                    value={ratings[c.key]}
-                    readOnly={submitted}
-                    onChange={(v) => setRatings((r) => ({ ...r, [c.key]: v }))}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Final comment */}
-          <div className="rw-final">
-            <h2 className="rdp-section-label">Final Comments</h2>
-            <textarea
-              rows={5}
-              maxLength={2000}
-              value={finalComment}
-              readOnly={submitted}
-              onChange={(e) => setFinalComment(e.target.value)}
-              placeholder="Wrap up your review — overall impressions, the essay's biggest strength, and the one thing to focus on next."
-            />
-          </div>
-
-          {/* Submit */}
-          {!submitted && (
-            <div className="rw-submit-row">
-              <button type="button" disabled={updating || missing.length > 0} onClick={submitReview}>
-                Submit Review
-              </button>
-              <div className="rw-submit-side">
-                {missing.length > 0 && (
-                  <p className="rw-missing">Still needed: {missing.join(", ")}.</p>
-                )}
-                {saveState === "saved" && (
-                  <p className="rw-saved">Draft saved automatically.</p>
-                )}
-                {submitError && <p className="notice error">{submitError}</p>}
+          {/* Ratings + final comments + submit, unified in one card */}
+          <div className="rw-review-card">
+            <div className="rw-ratings">
+              <h2 className="rdp-section-label">Rate this Essay</h2>
+              <div className="rw-rating-grid">
+                {RATING_CATEGORIES.map((c) => (
+                  <div key={c.key} className="rw-rating-row">
+                    <span className="rw-rating-label">{c.label}</span>
+                    <StarRow
+                      value={ratings[c.key]}
+                      readOnly={submitted}
+                      onChange={(v) => setRatings((r) => ({ ...r, [c.key]: v }))}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
-          )}
+
+            <div className="rw-final">
+              <h2 className="rdp-section-label">Final Comments</h2>
+              <textarea
+                rows={5}
+                maxLength={2000}
+                value={finalComment}
+                readOnly={submitted}
+                onChange={(e) => setFinalComment(e.target.value)}
+                placeholder="Wrap up your review — overall impressions, the essay's biggest strength, and the one thing to focus on next."
+              />
+            </div>
+
+            {!submitted && (
+              <div className="rw-submit-row">
+                <button type="button" disabled={updating || missing.length > 0} onClick={submitReview}>
+                  Submit Review
+                </button>
+                <div className="rw-submit-side">
+                  {missing.length > 0 && (
+                    <p className="rw-missing">Still needed: {missing.join(", ")}.</p>
+                  )}
+                  {saveState === "saved" && (
+                    <p className="rw-saved">Draft saved automatically.</p>
+                  )}
+                  {submitError && <p className="notice error">{submitError}</p>}
+                </div>
+              </div>
+            )}
+          </div>
         </>
       )}
     </section>
