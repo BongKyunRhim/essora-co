@@ -163,9 +163,11 @@ export default function ApplicantFeedback() {
           <h1 className="rdp-name">Feedback from {reviewer?.full_name || "your reviewer"}</h1>
           {school && <p className="rdp-school">{school}</p>}
           {request.essay_type && (
-            <span className="rdl-age-tag rdl-age-tag--block">
-              {ESSAY_TYPE_LABELS[request.essay_type] ?? request.essay_type}
-            </span>
+            <div className="rdp-tag-row">
+              <span className="rdl-age-tag">
+                {ESSAY_TYPE_LABELS[request.essay_type] ?? request.essay_type}
+              </span>
+            </div>
           )}
         </div>
         <span className="rdp-status-tag rdp-status-tag--completed">completed</span>

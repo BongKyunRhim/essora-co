@@ -2016,8 +2016,7 @@ button:disabled {
   margin: 0.25rem 0 0;
 }
 
-.rdl-age-tag--block {
-  display: block;
+.rdp-tag-row {
   margin-top: 0.35rem;
 }
 
