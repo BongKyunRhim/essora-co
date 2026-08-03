@@ -388,6 +388,46 @@ a {
   border: none;
 }
 
+/* ---- University autocomplete ---- */
+.uni-wrap {
+  position: relative;
+}
+
+.uni-wrap input {
+  width: 100%;
+}
+
+.uni-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  list-style: none;
+  margin: 0;
+  padding: 0.3rem 0;
+  z-index: 200;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.uni-option {
+  padding: 0.55rem 0.85rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: var(--ink);
+  transition: background 0.1s;
+}
+
+.uni-option--hl,
+.uni-option:hover {
+  background: var(--slate-soft);
+  color: var(--navy-ink);
+}
+
 .field > span:not(.field-error-msg):not(.field-hint),
 .field legend {
   font-size: 0.72rem;

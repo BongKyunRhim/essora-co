@@ -3,6 +3,7 @@ import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import Avatar from "../components/Avatar.jsx";
 import AvatarCropper from "../components/AvatarCropper.jsx";
+import UniversityInput from "../components/UniversityInput.jsx";
 
 function StarSvg({ filled, size = 16 }) {
   return (
@@ -420,7 +421,10 @@ export default function ReviewerHome() {
                   <div className="settings-grid">
                     <label className="field">
                       <span>College / University</span>
-                      <input type="text" name="college" value={form.college} onChange={handleChange} placeholder="e.g. Stanford University" />
+                      <UniversityInput
+                        value={form.college}
+                        onChange={(v) => setForm((p) => ({ ...p, college: v }))}
+                      />
                     </label>
                     <label className="field">
                       <span>Major</span>
