@@ -1800,6 +1800,50 @@ button:disabled {
   color: var(--navy);
 }
 
+/* ── Stripe Connect ────────────────────────────────────────── */
+.btn-stripe-connect {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.25rem;
+  background: #635bff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-stripe-connect:hover:not(:disabled) { background: #4e49d4; }
+.btn-stripe-connect:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.stripe-connected-row { display: flex; flex-direction: column; gap: 0; }
+
+.stripe-connected-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+@media (prefers-color-scheme: dark) {
+  .btn-stripe-connect { background: #7b76ff; }
+  .btn-stripe-connect:hover:not(:disabled) { background: #635bff; }
+  .stripe-connected-badge { background: #1b3e1c; color: #81c784; }
+}
+:root[data-theme="dark"] .btn-stripe-connect { background: #7b76ff; }
+:root[data-theme="dark"] .btn-stripe-connect:hover:not(:disabled) { background: #635bff; }
+:root[data-theme="dark"] .stripe-connected-badge { background: #1b3e1c; color: #81c784; }
+:root[data-theme="light"] .btn-stripe-connect { background: #635bff; }
+:root[data-theme="light"] .stripe-connected-badge { background: #e8f5e9; color: #2e7d32; }
+
 /* ---- Form ---- */
 .rrl-form {
   display: flex;

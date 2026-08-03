@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import Avatar from "../components/Avatar.jsx";
@@ -127,6 +128,7 @@ function EyeIcon({ open }) {
 
 export default function ReviewerHome() {
   const { user, profile, refreshProfile, signOut, isRecovery, clearRecovery, isEmailChanged, clearEmailChanged } = useAuth();
+  const [searchParams] = useSearchParams();
   const [activeSection, setActiveSection] = useState("Public Profile");
   const [form, setForm] = useState({
     full_name: profile?.full_name ?? "",
@@ -160,6 +162,10 @@ export default function ReviewerHome() {
   const [deleteStep, setDeleteStep] = useState(0);
   const [deleteStatus, setDeleteStatus] = useState("");
 
+  // Stripe Connect
+  const [stripeConnecting, setStripeConnecting] = useState(false);
+  const [stripeMsg, setStripeMsg] = useState("");
+
   const [myRatings, setMyRatings] = useState([]);
   const [ratingsLoading, setRatingsLoading] = useState(true);
   const [completedReqs, setCompletedReqs] = useState([]);
@@ -171,6 +177,32 @@ export default function ReviewerHome() {
   useEffect(() => {
     if (isEmailChanged) setActiveSection("Account & Privacy");
   }, [isEmailChanged]);
+
+  useEffect(() => {
+    const param = searchParams.get("stripe");
+    if (!param) return;
+    setActiveSection("Account & Privacy");
+    if (param === "connected") {
+      setStripeMsg("Verifying connection…");
+      supabase.auth.getSession().then(({ data }) => {
+        const token = data?.session?.access_token;
+        if (!token) { setStripeMsg("Error: Not authenticated."); return; }
+        fetch("/api/verify-stripe-connect", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        }).then((r) => r.json()).then((json) => {
+          if (json.onboarded) {
+            setStripeMsg("Stripe connected! You'll now receive automatic payouts.");
+            refreshProfile();
+          } else {
+            setStripeMsg("Stripe setup incomplete — please complete all required steps.");
+          }
+        }).catch(() => setStripeMsg("Error: Could not verify Stripe connection."));
+      });
+    } else if (param === "refresh") {
+      setStripeMsg("Stripe setup timed out. Click below to try again.");
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!profile) return;
@@ -346,6 +378,26 @@ export default function ReviewerHome() {
     const { error } = await supabase.rpc("delete_user");
     if (error) { setDeleteStatus("Error: " + error.message); return; }
     await supabase.auth.signOut();
+  }
+
+  async function handleStripeConnect() {
+    setStripeConnecting(true);
+    setStripeMsg("");
+    const { data: { session } } = await supabase.auth.getSession();
+    const res = await fetch("/api/connect-stripe-account", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.access_token}`,
+      },
+    });
+    const json = await res.json();
+    if (!res.ok) {
+      setStripeMsg("Error: " + json.error);
+      setStripeConnecting(false);
+      return;
+    }
+    window.location.href = json.url;
   }
 
   return (
@@ -687,6 +739,43 @@ export default function ReviewerHome() {
                   </div>
                 </div>
               </form>
+            </div>
+
+            {/* Stripe Connect */}
+            <div className="settings-block">
+              <h3 className="settings-block-title">Payout account</h3>
+              <p className="settings-block-desc">
+                Connect your bank via Stripe to receive automatic payouts when you complete a review.
+              </p>
+              {profile?.stripe_onboarded ? (
+                <div className="stripe-connected-row">
+                  <span className="stripe-connected-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                    Stripe connected
+                  </span>
+                  <p className="settings-block-desc" style={{ marginTop: "0.5rem" }}>
+                    Payouts are active — you'll receive payment automatically when each review is submitted.
+                  </p>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  className="btn-stripe-connect"
+                  disabled={stripeConnecting}
+                  onClick={handleStripeConnect}
+                >
+                  {stripeConnecting
+                    ? "Redirecting…"
+                    : profile?.stripe_account_id
+                    ? "Complete Stripe setup"
+                    : "Connect Stripe"}
+                </button>
+              )}
+              {stripeMsg && (
+                <p className={`notice${stripeMsg.startsWith("Error") ? " error" : ""}`} style={{ marginTop: "0.75rem" }}>
+                  {stripeMsg}
+                </p>
+              )}
             </div>
 
             {/* Danger zone */}

@@ -167,6 +167,18 @@ export default function RequestDetail() {
     setSubmitted(true);
     setUpdating(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // Fire-and-forget payout — if reviewer hasn't connected Stripe it skips silently
+    supabase.auth.getSession().then(({ data }) => {
+      const token = data?.session?.access_token;
+      if (token) {
+        fetch("/api/payout-reviewer", {
+          method:  "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ request_id: id }),
+        }).catch(() => {});
+      }
+    });
   }
 
   if (loading) return <p className="page">Loading…</p>;
