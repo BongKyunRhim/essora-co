@@ -175,13 +175,21 @@ export default function ApplicantFeedback() {
 
       {/* Essay with the reviewer's highlights + their suggestions beside it */}
       <div className="rw-workspace">
-        <div className="rw-essay-col">
-          <div className="rw-essay-head">
-            <h2 className="rdp-section-label">Your Essay</h2>
-            <p className="rw-hint">
-              Highlighted passages have a suggestion attached — click one to see it.
-            </p>
-          </div>
+        <div className="rw-essay-head">
+          <h2 className="rdp-section-label">Your Essay</h2>
+          <p className="rw-hint">
+            Highlighted passages have a suggestion attached — click one to see it.
+          </p>
+        </div>
+
+        <div className="rw-suggestions-head">
+          <h2 className="rdp-section-label">Suggestions</h2>
+          <span className="rw-count rw-count--ok">
+            {suggestions.length} total
+          </span>
+        </div>
+
+        <div className="rw-essay-body">
           <Suspense fallback={<p className="ev-status">Loading essay…</p>}>
             <EssayViewer
               url={request.essay_url}
@@ -196,13 +204,6 @@ export default function ApplicantFeedback() {
         </div>
 
         <aside className="rw-suggestions">
-          <div className="rw-suggestions-head">
-            <h2 className="rdp-section-label">Suggestions</h2>
-            <span className="rw-count rw-count--ok">
-              {suggestions.length} total
-            </span>
-          </div>
-
           {suggestions.length === 0 && (
             <p className="rw-empty">No individual suggestions were left on this essay.</p>
           )}

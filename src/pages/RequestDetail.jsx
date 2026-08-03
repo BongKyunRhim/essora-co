@@ -275,15 +275,23 @@ export default function RequestDetail() {
           <div className="rdp-divider" />
 
           <div className="rw-workspace">
-            <div className="rw-essay-col">
-              <div className="rw-essay-head">
-                <h2 className="rdp-section-label">The Essay</h2>
-                {!submitted && (
-                  <p className="rw-hint">
-                    Highlight any passage in the essay to attach a suggestion to it.
-                  </p>
-                )}
-              </div>
+            <div className="rw-essay-head">
+              <h2 className="rdp-section-label">The Essay</h2>
+              {!submitted && (
+                <p className="rw-hint">
+                  Highlight any passage in the essay to attach a suggestion to it.
+                </p>
+              )}
+            </div>
+
+            <div className="rw-suggestions-head">
+              <h2 className="rdp-section-label">Suggestions</h2>
+              <span className={`rw-count${suggestions.length >= MIN_SUGGESTIONS ? " rw-count--ok" : ""}`}>
+                {suggestions.length} / {MIN_SUGGESTIONS} minimum
+              </span>
+            </div>
+
+            <div className="rw-essay-body">
               <Suspense fallback={<p className="ev-status">Loading essay…</p>}>
                 <EssayViewer
                   url={request.essay_url}
@@ -300,13 +308,6 @@ export default function RequestDetail() {
 
             {/* Suggestions panel */}
             <aside className="rw-suggestions">
-              <div className="rw-suggestions-head">
-                <h2 className="rdp-section-label">Suggestions</h2>
-                <span className={`rw-count${suggestions.length >= MIN_SUGGESTIONS ? " rw-count--ok" : ""}`}>
-                  {suggestions.length} / {MIN_SUGGESTIONS} minimum
-                </span>
-              </div>
-
               {suggestions.length === 0 && (
                 <p className="rw-empty">
                   No suggestions yet. Select text in the essay to add your first one.

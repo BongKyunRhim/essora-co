@@ -2151,16 +2151,24 @@ button:disabled {
 .rw-workspace {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 340px;
-  gap: 2.5rem;
+  grid-template-areas:
+    "essay-head sugg-head"
+    "essay-body sugg-body";
+  column-gap: 2.5rem;
+  row-gap: 1rem;
   align-items: start;
 }
 
 .rw-essay-head {
+  grid-area: essay-head;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1rem;
+}
+
+.rw-essay-body {
+  grid-area: essay-body;
 }
 
 .rw-hint {
@@ -2381,7 +2389,16 @@ button:disabled {
 }
 
 /* ---- Suggestions panel ---- */
+.rw-suggestions-head {
+  grid-area: sugg-head;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
 .rw-suggestions {
+  grid-area: sugg-body;
   position: sticky;
   top: calc(var(--nav-h) + 1.5rem);
   display: flex;
@@ -2393,13 +2410,6 @@ button:disabled {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--surface);
-}
-
-.rw-suggestions-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.75rem;
 }
 
 .rw-count {
@@ -3622,6 +3632,11 @@ button:disabled {
   /* Review workspace stacks: essay above suggestions */
   .rw-workspace {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "essay-head"
+      "essay-body"
+      "sugg-head"
+      "sugg-body";
     gap: 2rem;
   }
 
