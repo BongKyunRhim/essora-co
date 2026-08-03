@@ -161,14 +161,12 @@ export default function ApplicantFeedback() {
         <Avatar url={reviewer?.avatar_url} name={reviewer?.full_name} size={72} />
         <div className="rdp-header-info">
           <h1 className="rdp-name">Feedback from {reviewer?.full_name || "your reviewer"}</h1>
-          <div className="rdp-school-row">
-            {school && <p className="rdp-school">{school}</p>}
-            {request.essay_type && (
-              <span className="rdl-age-tag">
-                {ESSAY_TYPE_LABELS[request.essay_type] ?? request.essay_type}
-              </span>
-            )}
-          </div>
+          {school && <p className="rdp-school">{school}</p>}
+          {request.essay_type && (
+            <span className="rdl-age-tag rdl-age-tag--block">
+              {ESSAY_TYPE_LABELS[request.essay_type] ?? request.essay_type}
+            </span>
+          )}
         </div>
         <span className="rdp-status-tag rdp-status-tag--completed">completed</span>
       </div>
