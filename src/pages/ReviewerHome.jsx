@@ -1,8 +1,40 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import Avatar from "../components/Avatar.jsx";
 import AvatarCropper from "../components/AvatarCropper.jsx";
+
+function StarSvg({ filled, size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  );
+}
+
+function Star({ fill, size = 16 }) {
+  return (
+    <span className="rr-star-wrap" style={{ width: size, height: size }}>
+      <span className="rr-star-base"><StarSvg filled={false} size={size} /></span>
+      {fill > 0 && (
+        <span className="rr-star-fill" style={{ width: `${fill * 100}%` }}>
+          <StarSvg filled size={size} />
+        </span>
+      )}
+    </span>
+  );
+}
+
+function StarRow({ value, size = 16 }) {
+  const shown = Math.round(value * 2) / 2;
+  return (
+    <span className="rr-stars" aria-label={`${value} out of 5 stars`}>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <Star key={n} fill={Math.max(0, Math.min(1, shown - (n - 1)))} size={size} />
+      ))}
+    </span>
+  );
+}
 
 const SECTIONS = ["Public Profile", "My Activity", "Account & Privacy"];
 
@@ -55,6 +87,9 @@ export default function ReviewerHome() {
   const [deleteStep, setDeleteStep] = useState(0);
   const [deleteStatus, setDeleteStatus] = useState("");
 
+  const [myRatings, setMyRatings] = useState([]);
+  const [ratingsLoading, setRatingsLoading] = useState(true);
+
   useEffect(() => {
     if (isRecovery) setActiveSection("Account & Privacy");
   }, [isRecovery]);
@@ -62,6 +97,27 @@ export default function ReviewerHome() {
   useEffect(() => {
     if (isEmailChanged) setActiveSection("Account & Privacy");
   }, [isEmailChanged]);
+
+  useEffect(() => {
+    if (!profile) return;
+    let active = true;
+    supabase
+      .from("reviewer_ratings")
+      .select("*")
+      .eq("reviewer_id", profile.id)
+      .order("created_at", { ascending: false })
+      .then(({ data }) => {
+        if (!active) return;
+        setMyRatings(data ?? []);
+        setRatingsLoading(false);
+      });
+    return () => { active = false; };
+  }, [profile?.id]);
+
+  const ratingsAvg = useMemo(
+    () => myRatings.length ? myRatings.reduce((s, r) => s + r.stars, 0) / myRatings.length : null,
+    [myRatings]
+  );
 
   if (!profile) return <p className="page">Loading…</p>;
 
@@ -329,10 +385,45 @@ export default function ReviewerHome() {
         {activeSection === "My Activity" && (
           <>
             <div className="settings-section-header">
-              <h2 className="settings-section-title">My Activity</h2>
-              <p className="settings-section-desc">Your review history and completed reviews.</p>
+              <h2 className="settings-section-title">My Ratings</h2>
+              <p className="settings-section-desc">Feedback applicants have left on your reviews.</p>
             </div>
-            <p className="muted">No activity yet. Essays submitted to you will appear here once you review them.</p>
+
+            {ratingsLoading && <p className="muted">Loading ratings…</p>}
+
+            {!ratingsLoading && myRatings.length === 0 && (
+              <p className="muted">No ratings yet — they'll appear here once an applicant rates your work.</p>
+            )}
+
+            {!ratingsLoading && myRatings.length > 0 && (
+              <>
+                <div className="rr-summary" style={{ marginBottom: "1.75rem" }}>
+                  <span className="rr-avg">{ratingsAvg.toFixed(1)}</span>
+                  <div className="rr-summary-side">
+                    <StarRow value={ratingsAvg} size={18} />
+                    <span className="rr-count">
+                      {myRatings.length} rating{myRatings.length === 1 ? "" : "s"} from past applicants
+                    </span>
+                  </div>
+                </div>
+
+                <ul className="rr-list">
+                  {myRatings.map((r) => (
+                    <li key={r.id} className="rr-card">
+                      <StarRow value={r.stars} size={15} />
+                      {r.comment && <p className="rr-card-comment">{r.comment}</p>}
+                      <p className="rr-card-foot">
+                        {r.applicant_name || "An applicant"}
+                        {" · "}
+                        {new Date(r.created_at).toLocaleDateString("en-US", {
+                          month: "short", year: "numeric",
+                        })}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </>
         )}
 
