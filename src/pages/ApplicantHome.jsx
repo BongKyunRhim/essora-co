@@ -23,8 +23,17 @@ function FilterIcon() {
   );
 }
 
+function StarIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  );
+}
+
 export default function ApplicantHome() {
   const [reviewers, setReviewers] = useState([]);
+  const [ratingsById, setRatingsById] = useState({});
   const [loading, setLoading]     = useState(true);
   const [maxPrice, setMaxPrice]   = useState(200);
   const [sortBy, setSortBy]       = useState("default");
@@ -38,18 +47,29 @@ export default function ApplicantHome() {
 
   useEffect(() => {
     let active = true;
-    supabase
-      .from("profiles")
-      .select("*")
-      .eq("role", "reviewer")
-      .eq("is_listed", true)
-      .then(({ data }) => {
-        if (!active) return;
-        const list = data ?? [];
-        setReviewers(list);
-        setMaxPrice(Math.max(200, ...list.map((r) => r.price ?? 0)));
-        setLoading(false);
+    Promise.all([
+      supabase
+        .from("profiles")
+        .select("*")
+        .eq("role", "reviewer")
+        .eq("is_listed", true),
+      supabase.from("reviewer_ratings").select("reviewer_id, stars"),
+    ]).then(([{ data }, { data: rats }]) => {
+      if (!active) return;
+      const list = data ?? [];
+      setReviewers(list);
+      setMaxPrice(Math.max(200, ...list.map((r) => r.price ?? 0)));
+
+      // Aggregate stars per reviewer for the card badges
+      const agg = {};
+      (rats ?? []).forEach(({ reviewer_id, stars }) => {
+        (agg[reviewer_id] ??= { sum: 0, count: 0 });
+        agg[reviewer_id].sum += stars;
+        agg[reviewer_id].count += 1;
       });
+      setRatingsById(agg);
+      setLoading(false);
+    });
     return () => { active = false; };
   }, []);
 
@@ -188,6 +208,13 @@ export default function ApplicantHome() {
                 <p className="muted">
                   {[r.college, r.major].filter(Boolean).join(" · ") || "—"}
                 </p>
+                {ratingsById[r.id] && (
+                  <p className="reviewer-card-rating">
+                    <StarIcon />
+                    {(ratingsById[r.id].sum / ratingsById[r.id].count).toFixed(1)}
+                    <span className="reviewer-card-rating-count">({ratingsById[r.id].count})</span>
+                  </p>
+                )}
                 {r.price != null && <p className="price">${r.price} / essay</p>}
               </div>
             </Link>

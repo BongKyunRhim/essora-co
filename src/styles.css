@@ -1072,6 +1072,27 @@ button:disabled {
   background: var(--slate-soft);
 }
 
+/* Star average on the reviewer card */
+.reviewer-card-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #111;
+  margin: 0;
+}
+
+.reviewer-card-rating svg {
+  color: #f5b301;
+  flex-shrink: 0;
+}
+
+.reviewer-card-rating-count {
+  font-weight: 400;
+  color: #999;
+}
+
 /* Reviewer detail page */
 .app-main:has(.reviewer-detail) {
   padding: 1.5rem 0 0;
