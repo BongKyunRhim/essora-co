@@ -87,24 +87,8 @@ a {
   transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Landing page: transparent until scrolled */
-.app-header.landing-nav {
-  background: transparent;
-  border-bottom-color: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  box-shadow: none;
-}
-
-/* Once scrolled, the landing nav matches the app-wide nav: frosted glass,
-   hairline border, and the same soft shadow */
-.app-header.landing-nav.scrolled {
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom-color: var(--line);
-  box-shadow: var(--shadow-sm);
-}
+/* The landing page nav is no longer transparent at the top — every page,
+   including the landing hero, gets the same frosted bar with border + shadow. */
 
 .app-header .brand {
   display: flex;
