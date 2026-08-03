@@ -1227,16 +1227,34 @@ button:disabled {
   display: inline-flex;
   align-items: center;
   gap: 1px;
-  color: #f5b301;
   line-height: 1;
 }
 
-.rr-stars .rr-star-off {
-  color: #d8d8d8;
+/* Fractional star: gray base with a gold overlay clipped to the fill width */
+.rr-star-wrap {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
 }
 
-.rr-stars span {
-  display: inline-flex;
+.rr-star-base,
+.rr-star-fill {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+}
+
+.rr-star-base { color: #d8d8d8; }
+
+.rr-star-fill {
+  color: #f5b301;
+  overflow: hidden;
+}
+
+.rr-star-fill svg,
+.rr-star-base svg {
+  flex-shrink: 0;
 }
 
 /* Summary block: big average beside the stars + count */

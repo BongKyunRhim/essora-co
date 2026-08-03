@@ -12,13 +12,28 @@ function StarSvg({ filled, size = 16 }) {
   );
 }
 
+/* One star that can be partially filled: a gray outline star with a gold
+   star clipped to the fill percentage layered on top. */
+function Star({ fill, size = 16 }) {
+  return (
+    <span className="rr-star-wrap" style={{ width: size, height: size }}>
+      <span className="rr-star-base"><StarSvg filled={false} size={size} /></span>
+      {fill > 0 && (
+        <span className="rr-star-fill" style={{ width: `${fill * 100}%` }}>
+          <StarSvg filled size={size} />
+        </span>
+      )}
+    </span>
+  );
+}
+
 function StarRow({ value, size = 16 }) {
+  // Snap to halves so 4.5 reads as four-and-a-half stars
+  const shown = Math.round(value * 2) / 2;
   return (
     <span className="rr-stars" aria-label={`${value} out of 5 stars`}>
       {[1, 2, 3, 4, 5].map((n) => (
-        <span key={n} className={n <= Math.round(value) ? "" : "rr-star-off"}>
-          <StarSvg filled={n <= Math.round(value)} size={size} />
-        </span>
+        <Star key={n} fill={Math.max(0, Math.min(1, shown - (n - 1)))} size={size} />
       ))}
     </span>
   );
