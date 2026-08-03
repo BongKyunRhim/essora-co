@@ -1343,6 +1343,73 @@ button:disabled {
   margin: 0.65rem 0 0;
 }
 
+/* ── My Activity grid (ReviewerHome) ─────────────────────────── */
+.ma-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.ma-col-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 1.1rem;
+}
+
+.ma-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(78px, 1fr));
+  gap: 0.65rem;
+  margin-bottom: 1.75rem;
+}
+
+.ma-stat-tile {
+  background: var(--slate-soft);
+  border-radius: 10px;
+  padding: 0.85rem 0.9rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.ma-stat-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--navy-ink);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.ma-stat-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.ma-chart-block {
+  margin-bottom: 1.5rem;
+}
+
+.ma-chart-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--slate);
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 860px) {
+  .ma-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ── Past Feedback section (Account.jsx) ─────────────────────────── */
 .pf-list {
   display: flex;

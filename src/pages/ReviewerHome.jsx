@@ -36,6 +36,78 @@ function StarRow({ value, size = 16 }) {
   );
 }
 
+/* ── Analytics helpers ───────────────────────────────────────── */
+
+function BarChart({ data, formatVal, fillColor = "#1e3355" }) {
+  const max = Math.max(...data.map((d) => d.value), 1);
+  const PL = 30, PR = 6, PT = 18, PB = 28;
+  const W = 280, H = 140;
+  const cW = W - PL - PR, cH = H - PT - PB;
+  const gap = cW / data.length;
+  const bW = Math.max(8, gap * 0.52);
+  const ticks = [0, Math.round(max / 2), max];
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: "block", overflow: "visible" }} aria-hidden="true">
+      {ticks.map((v) => {
+        const y = PT + cH * (1 - v / max);
+        return (
+          <g key={v}>
+            <line x1={PL} y1={y} x2={W - PR} y2={y} stroke="#e4e7ec" strokeWidth="1" />
+            <text x={PL - 5} y={y + 3.5} textAnchor="end" fontSize="8.5" fill="#6d7480" fontFamily="Inter,Arial,sans-serif">
+              {formatVal ? formatVal(v) : v}
+            </text>
+          </g>
+        );
+      })}
+      {data.map((d, i) => {
+        const bH = Math.max(d.value > 0 ? 3 : 0, (d.value / max) * cH);
+        const x = PL + gap * i + (gap - bW) / 2;
+        const y = PT + cH - bH;
+        return (
+          <g key={i}>
+            <rect x={x} y={y} width={bW} height={bH} fill={fillColor} rx="3" opacity={d.value > 0 ? 1 : 0.18} />
+            {d.value > 0 && (
+              <text x={x + bW / 2} y={y - 5} textAnchor="middle" fontSize="8.5" fill="#152540" fontWeight="600" fontFamily="Inter,Arial,sans-serif">
+                {formatVal ? formatVal(d.value) : d.value}
+              </text>
+            )}
+            <text x={x + bW / 2} y={H - PB + 14} textAnchor="middle" fontSize="8.5" fill="#6d7480" fontFamily="Inter,Arial,sans-serif">
+              {d.label}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+function StatTile({ label, value }) {
+  return (
+    <div className="ma-stat-tile">
+      <span className="ma-stat-value">{value}</span>
+      <span className="ma-stat-label">{label}</span>
+    </div>
+  );
+}
+
+function getMonthKey(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function lastSixMonths() {
+  const now = new Date();
+  return Array.from({ length: 6 }, (_, i) => {
+    const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
+    return {
+      key: getMonthKey(d),
+      label: d.toLocaleDateString("en-US", { month: "short" }),
+      count: 0,
+      earnings: 0,
+    };
+  });
+}
+
 const SECTIONS = ["Public Profile", "My Activity", "Account & Privacy"];
 
 function EyeIcon({ open }) {
@@ -89,6 +161,7 @@ export default function ReviewerHome() {
 
   const [myRatings, setMyRatings] = useState([]);
   const [ratingsLoading, setRatingsLoading] = useState(true);
+  const [completedReqs, setCompletedReqs] = useState([]);
 
   useEffect(() => {
     if (isRecovery) setActiveSection("Account & Privacy");
@@ -101,22 +174,45 @@ export default function ReviewerHome() {
   useEffect(() => {
     if (!profile) return;
     let active = true;
-    supabase
-      .from("reviewer_ratings")
-      .select("*")
-      .eq("reviewer_id", profile.id)
-      .order("created_at", { ascending: false })
-      .then(({ data }) => {
-        if (!active) return;
-        setMyRatings(data ?? []);
-        setRatingsLoading(false);
-      });
+    Promise.all([
+      supabase
+        .from("reviewer_ratings")
+        .select("*")
+        .eq("reviewer_id", profile.id)
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("requests")
+        .select("id, created_at")
+        .eq("reviewer_id", profile.id)
+        .eq("status", "completed"),
+    ]).then(([{ data: rats }, { data: reqs }]) => {
+      if (!active) return;
+      setMyRatings(rats ?? []);
+      setCompletedReqs(reqs ?? []);
+      setRatingsLoading(false);
+    });
     return () => { active = false; };
   }, [profile?.id]);
 
   const ratingsAvg = useMemo(
     () => myRatings.length ? myRatings.reduce((s, r) => s + r.stars, 0) / myRatings.length : null,
     [myRatings]
+  );
+
+  const monthlyStats = useMemo(() => {
+    const months = lastSixMonths();
+    const price = profile?.price ?? 0;
+    completedReqs.forEach((req) => {
+      const key = getMonthKey(new Date(req.created_at));
+      const slot = months.find((m) => m.key === key);
+      if (slot) { slot.count += 1; slot.earnings += price; }
+    });
+    return months;
+  }, [completedReqs, profile?.price]);
+
+  const totalEarned = useMemo(
+    () => completedReqs.length * (profile?.price ?? 0),
+    [completedReqs.length, profile?.price]
   );
 
   if (!profile) return <p className="page">Loading…</p>;
@@ -385,45 +481,84 @@ export default function ReviewerHome() {
         {activeSection === "My Activity" && (
           <>
             <div className="settings-section-header">
-              <h2 className="settings-section-title">My Ratings</h2>
-              <p className="settings-section-desc">Feedback applicants have left on your reviews.</p>
+              <h2 className="settings-section-title">My Activity</h2>
+              <p className="settings-section-desc">Your review stats and applicant ratings at a glance.</p>
             </div>
 
-            {ratingsLoading && <p className="muted">Loading ratings…</p>}
+            <div className="ma-grid">
 
-            {!ratingsLoading && myRatings.length === 0 && (
-              <p className="muted">No ratings yet — they'll appear here once an applicant rates your work.</p>
-            )}
+              {/* ── Left: ratings ── */}
+              <div className="ma-col">
+                <p className="ma-col-title">Ratings</p>
+                {ratingsLoading ? (
+                  <p className="muted">Loading…</p>
+                ) : myRatings.length === 0 ? (
+                  <p className="muted" style={{ fontSize: "0.875rem" }}>No ratings yet — they'll appear here once an applicant rates your work.</p>
+                ) : (
+                  <>
+                    <div className="rr-summary" style={{ marginBottom: "1.5rem" }}>
+                      <span className="rr-avg">{ratingsAvg.toFixed(1)}</span>
+                      <div className="rr-summary-side">
+                        <StarRow value={ratingsAvg} size={18} />
+                        <span className="rr-count">
+                          {myRatings.length} rating{myRatings.length === 1 ? "" : "s"} from past applicants
+                        </span>
+                      </div>
+                    </div>
+                    <ul className="rr-list">
+                      {myRatings.map((r) => (
+                        <li key={r.id} className="rr-card">
+                          <StarRow value={r.stars} size={15} />
+                          {r.comment && <p className="rr-card-comment">{r.comment}</p>}
+                          <p className="rr-card-foot">
+                            {r.applicant_name || "An applicant"}
+                            {" · "}
+                            {new Date(r.created_at).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </div>
 
-            {!ratingsLoading && myRatings.length > 0 && (
-              <>
-                <div className="rr-summary" style={{ marginBottom: "1.75rem" }}>
-                  <span className="rr-avg">{ratingsAvg.toFixed(1)}</span>
-                  <div className="rr-summary-side">
-                    <StarRow value={ratingsAvg} size={18} />
-                    <span className="rr-count">
-                      {myRatings.length} rating{myRatings.length === 1 ? "" : "s"} from past applicants
-                    </span>
-                  </div>
+              {/* ── Right: analytics ── */}
+              <div className="ma-col">
+                <p className="ma-col-title">Analytics</p>
+
+                {/* Stat tiles */}
+                <div className="ma-stats-row">
+                  <StatTile label="Reviews done" value={completedReqs.length} />
+                  {profile?.price > 0 && (
+                    <StatTile label="Total earned" value={`$${totalEarned}`} />
+                  )}
+                  {ratingsAvg != null && (
+                    <StatTile label="Avg rating" value={`${ratingsAvg.toFixed(1)} ★`} />
+                  )}
                 </div>
 
-                <ul className="rr-list">
-                  {myRatings.map((r) => (
-                    <li key={r.id} className="rr-card">
-                      <StarRow value={r.stars} size={15} />
-                      {r.comment && <p className="rr-card-comment">{r.comment}</p>}
-                      <p className="rr-card-foot">
-                        {r.applicant_name || "An applicant"}
-                        {" · "}
-                        {new Date(r.created_at).toLocaleDateString("en-US", {
-                          month: "short", year: "numeric",
-                        })}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
+                {/* Chart 1: Reviews per month */}
+                <div className="ma-chart-block">
+                  <p className="ma-chart-title">Reviews per month</p>
+                  <BarChart
+                    data={monthlyStats.map((m) => ({ label: m.label, value: m.count }))}
+                  />
+                </div>
+
+                {/* Chart 2: Earnings per month (only if price is set) */}
+                {profile?.price > 0 && (
+                  <div className="ma-chart-block">
+                    <p className="ma-chart-title">Earnings per month</p>
+                    <BarChart
+                      data={monthlyStats.map((m) => ({ label: m.label, value: m.earnings }))}
+                      formatVal={(v) => `$${v}`}
+                      fillColor="#8fa6c6"
+                    />
+                  </div>
+                )}
+              </div>
+
+            </div>
           </>
         )}
 
