@@ -1,8 +1,53 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import Avatar from "../components/Avatar.jsx";
 import AvatarCropper from "../components/AvatarCropper.jsx";
+
+const ESSAY_TYPE_LABELS = {
+  personal_statement: "Common App / Personal Statement",
+  supplemental:       "Supplemental Essay",
+  scholarship:        "Scholarship Essay",
+  other:              "Other",
+};
+
+const RATING_CATEGORIES = [
+  { key: "grammar",      label: "Grammar & Mechanics" },
+  { key: "clarity",      label: "Clarity & Flow" },
+  { key: "storytelling", label: "Storytelling" },
+  { key: "voice",        label: "Voice & Authenticity" },
+  { key: "impact",       label: "Overall Impact" },
+];
+
+function StarSvg({ filled, size = 14 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  );
+}
+
+function StarRow({ value, size = 14 }) {
+  const filled = Math.round((value ?? 0) * 2) / 2;
+  return (
+    <span className="rr-stars" aria-label={`${value} out of 5`}>
+      {[1, 2, 3, 4, 5].map((n) => {
+        const fill = Math.max(0, Math.min(1, filled - (n - 1)));
+        return (
+          <span key={n} className="rr-star-wrap" style={{ width: size, height: size }}>
+            <span className="rr-star-base"><StarSvg filled={false} size={size} /></span>
+            {fill > 0 && (
+              <span className="rr-star-fill" style={{ width: `${fill * 100}%` }}>
+                <StarSvg filled size={size} />
+              </span>
+            )}
+          </span>
+        );
+      })}
+    </span>
+  );
+}
 
 const SECTIONS = ["Profile Settings", "Past Feedback", "Account & Privacy"];
 
@@ -50,6 +95,9 @@ export default function Account() {
   const [deleteStep, setDeleteStep] = useState(0); // 0 idle, 1 confirm
   const [deleteStatus, setDeleteStatus] = useState("");
 
+  const [pastFeedback, setPastFeedback] = useState([]);
+  const [feedbackLoading, setFeedbackLoading] = useState(true);
+
   useEffect(() => {
     if (isRecovery) setActiveSection("Account & Privacy");
   }, [isRecovery]);
@@ -57,6 +105,46 @@ export default function Account() {
   useEffect(() => {
     if (isEmailChanged) setActiveSection("Account & Privacy");
   }, [isEmailChanged]);
+
+  useEffect(() => {
+    if (!profile) return;
+    let active = true;
+    (async () => {
+      const { data: reqs } = await supabase
+        .from("requests")
+        .select("*")
+        .eq("applicant_id", profile.id)
+        .eq("status", "completed")
+        .order("updated_at", { ascending: false });
+
+      if (!active || !reqs?.length) { setFeedbackLoading(false); return; }
+
+      const reviewerIds = [...new Set(reqs.map((r) => r.reviewer_id))];
+      const requestIds  = reqs.map((r) => r.id);
+
+      const [{ data: reviews }, { data: reviewers }] = await Promise.all([
+        supabase.from("reviews").select("*").in("request_id", requestIds).eq("submitted", true),
+        supabase.from("profiles").select("id, full_name, avatar_url, college, major").in("id", reviewerIds),
+      ]);
+
+      if (!active) return;
+
+      const reviewByReqId  = Object.fromEntries((reviews  ?? []).map((r) => [r.request_id, r]));
+      const reviewerById   = Object.fromEntries((reviewers ?? []).map((r) => [r.id, r]));
+
+      setPastFeedback(
+        reqs
+          .filter((req) => reviewByReqId[req.id])
+          .map((req) => ({
+            request:  req,
+            review:   reviewByReqId[req.id],
+            reviewer: reviewerById[req.reviewer_id] ?? null,
+          }))
+      );
+      setFeedbackLoading(false);
+    })();
+    return () => { active = false; };
+  }, [profile?.id]);
 
   if (!profile) return <p className="page">Loading…</p>;
 
@@ -326,7 +414,68 @@ export default function Account() {
               <h2 className="settings-section-title">Past Feedback</h2>
               <p className="settings-section-desc">Reviews you've received on your essays.</p>
             </div>
-            <p className="muted">Your feedback history will appear here once a reviewer responds to your request.</p>
+
+            {feedbackLoading && <p className="muted">Loading feedback…</p>}
+
+            {!feedbackLoading && pastFeedback.length === 0 && (
+              <p className="muted">No completed reviews yet — feedback will appear here once a reviewer submits their review.</p>
+            )}
+
+            <div className="pf-list">
+              {pastFeedback.map(({ request, review, reviewer }) => {
+                const cats = RATING_CATEGORIES.map((c) => review.ratings?.[c.key]).filter(Boolean);
+                const avg  = cats.length ? cats.reduce((s, v) => s + v, 0) / cats.length : null;
+                const school = [reviewer?.college, reviewer?.major].filter(Boolean).join(" · ");
+                return (
+                  <div key={request.id} className="pf-card">
+                    <div className="pf-card-top">
+                      <div className="pf-reviewer-row">
+                        <Avatar url={reviewer?.avatar_url} name={reviewer?.full_name} size={40} />
+                        <div className="pf-reviewer-info">
+                          <span className="pf-reviewer-name">{reviewer?.full_name || "Reviewer"}</span>
+                          {school && <span className="pf-reviewer-school">{school}</span>}
+                        </div>
+                      </div>
+                      <div className="pf-card-meta">
+                        {request.essay_type && (
+                          <span className="rdl-age-tag">
+                            {ESSAY_TYPE_LABELS[request.essay_type] ?? request.essay_type}
+                          </span>
+                        )}
+                        <span className="pf-date">
+                          {new Date(request.updated_at ?? request.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                        </span>
+                      </div>
+                    </div>
+
+                    {avg != null && (
+                      <div className="pf-stars-row">
+                        <StarRow value={avg} size={14} />
+                        <span className="pf-avg">{avg.toFixed(1)} avg</span>
+                      </div>
+                    )}
+
+                    <div className="pf-ratings-grid">
+                      {RATING_CATEGORIES.map((c) => review.ratings?.[c.key] != null && (
+                        <div key={c.key} className="pf-rating-row">
+                          <span className="pf-rating-label">{c.label}</span>
+                          <StarRow value={review.ratings[c.key]} size={12} />
+                          <span className="pf-rating-val">{review.ratings[c.key]}/5</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {review.final_comment && (
+                      <p className="pf-comment">{review.final_comment}</p>
+                    )}
+
+                    <Link to={`/feedback/${request.id}`} className="pf-link">
+                      View full feedback →
+                    </Link>
+                  </div>
+                );
+              })}
+            </div>
           </>
         )}
 

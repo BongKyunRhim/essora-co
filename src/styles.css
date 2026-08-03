@@ -1343,6 +1343,124 @@ button:disabled {
   margin: 0.65rem 0 0;
 }
 
+/* ── Past Feedback section (Account.jsx) ─────────────────────────── */
+.pf-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.pf-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.25rem 1.4rem;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.pf-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.pf-reviewer-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pf-reviewer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.pf-reviewer-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--navy-ink);
+}
+
+.pf-reviewer-school {
+  font-size: 0.8rem;
+  color: var(--slate);
+}
+
+.pf-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.pf-date {
+  font-size: 0.8rem;
+  color: var(--slate);
+}
+
+.pf-stars-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pf-avg {
+  font-size: 0.82rem;
+  color: var(--slate);
+}
+
+.pf-ratings-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pf-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.pf-rating-label {
+  font-size: 0.8rem;
+  color: var(--slate);
+  min-width: 160px;
+}
+
+.pf-rating-val {
+  font-size: 0.78rem;
+  color: var(--slate);
+  min-width: 28px;
+}
+
+.pf-comment {
+  font-size: 0.875rem;
+  color: var(--navy-ink);
+  line-height: 1.6;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pf-link {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--navy);
+  text-decoration: none;
+  align-self: flex-start;
+}
+
+.pf-link:hover {
+  text-decoration: underline;
+}
+
 /* Rating form on the feedback page */
 .rr-rate-hint {
   font-size: 0.87rem;
