@@ -22,14 +22,20 @@ const RATING_CATEGORIES = [
   { key: "impact",       label: "Overall Impact" },
 ];
 
+function StarSvg({ filled, size = 22 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  );
+}
+
 function StarDisplay({ value }) {
   return (
     <div className="rw-stars">
       {[1, 2, 3, 4, 5].map((n) => (
         <span key={n} className={`rw-star${n <= (value || 0) ? " rw-star--on" : ""}`}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill={n <= (value || 0) ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-          </svg>
+          <StarSvg filled={n <= (value || 0)} />
         </span>
       ))}
       <span className="rw-star-value">{value ? `${value}/5` : "—"}</span>
@@ -37,14 +43,40 @@ function StarDisplay({ value }) {
   );
 }
 
+function StarInput({ value, onChange }) {
+  return (
+    <div className="rw-stars" role="radiogroup" aria-label="Your rating">
+      {[1, 2, 3, 4, 5].map((n) => (
+        <button
+          key={n}
+          type="button"
+          className={`rw-star rr-star-lg${n <= (value || 0) ? " rw-star--on" : ""}`}
+          onClick={() => onChange(n)}
+          aria-label={`${n} out of 5`}
+        >
+          <StarSvg filled={n <= (value || 0)} size={30} />
+        </button>
+      ))}
+      <span className="rw-star-value">{value ? `${value}/5` : ""}</span>
+    </div>
+  );
+}
+
 export default function ApplicantFeedback() {
   const { id } = useParams();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [request, setRequest]   = useState(null);
   const [review, setReview]     = useState(null);
   const [reviewer, setReviewer] = useState(null);
   const [loading, setLoading]   = useState(true);
   const [activeId, setActiveId] = useState(null);
+
+  // The applicant's rating of the reviewer
+  const [myStars, setMyStars]         = useState(0);
+  const [myComment, setMyComment]     = useState("");
+  const [hasRated, setHasRated]       = useState(false);
+  const [savingRating, setSavingRating] = useState(false);
+  const [ratingMsg, setRatingMsg]     = useState("");
 
   useEffect(() => {
     let active = true;
@@ -54,13 +86,19 @@ export default function ApplicantFeedback() {
       if (!active || !req || req.applicant_id !== user.id) { setLoading(false); return; }
       setRequest(req);
 
-      const [{ data: rev }, { data: prof }] = await Promise.all([
+      const [{ data: rev }, { data: prof }, { data: rating }] = await Promise.all([
         supabase.from("reviews").select("*").eq("request_id", id).maybeSingle(),
         supabase.from("profiles").select("*").eq("id", req.reviewer_id).single(),
+        supabase.from("reviewer_ratings").select("*").eq("request_id", id).maybeSingle(),
       ]);
       if (!active) return;
       setReview(rev);
       setReviewer(prof);
+      if (rating) {
+        setMyStars(rating.stars);
+        setMyComment(rating.comment ?? "");
+        setHasRated(true);
+      }
       setLoading(false);
 
       // Clear the "new feedback" state so the bell badge goes away.
@@ -78,6 +116,24 @@ export default function ApplicantFeedback() {
       document.querySelector(`[data-hl-id="${s.id}"]`)
         ?.scrollIntoView({ behavior: "smooth", block: "center" });
     }
+  }
+
+  async function submitRating() {
+    if (!myStars) return;
+    setSavingRating(true);
+    setRatingMsg("");
+    const { error } = await supabase.from("reviewer_ratings").upsert({
+      request_id:     request.id,
+      reviewer_id:    request.reviewer_id,
+      applicant_id:   user.id,
+      applicant_name: profile?.full_name ?? null,
+      stars:          myStars,
+      comment:        myComment.trim() || null,
+    }, { onConflict: "request_id" });
+    setSavingRating(false);
+    if (error) { setRatingMsg("Error: " + error.message); return; }
+    setHasRated(true);
+    setRatingMsg(`Thanks! Your rating is now on ${reviewer?.full_name || "your reviewer"}'s profile.`);
   }
 
   if (loading) return <p className="page">Loading…</p>;
@@ -190,6 +246,35 @@ export default function ApplicantFeedback() {
             <p className="rdp-notes">{review.final_comment}</p>
           </div>
         )}
+      </div>
+
+      {/* Rate the reviewer */}
+      <div className="rw-review-card rr-rate-card">
+        <div className="rw-ratings">
+          <h2 className="rdp-section-label">Rate {reviewer?.full_name || "your reviewer"}</h2>
+          <p className="rr-rate-hint">
+            How was the feedback? Your rating and comment appear on{" "}
+            {reviewer?.full_name ? `${reviewer.full_name}'s` : "your reviewer's"} public profile.
+          </p>
+          <StarInput value={myStars} onChange={setMyStars} />
+          <textarea
+            rows={3}
+            maxLength={500}
+            value={myComment}
+            onChange={(e) => setMyComment(e.target.value)}
+            placeholder="What stood out about this review? (optional)"
+          />
+          <div className="rw-submit-row">
+            <button type="button" disabled={savingRating || !myStars} onClick={submitRating}>
+              {savingRating ? "Saving…" : hasRated ? "Update Rating" : "Submit Rating"}
+            </button>
+            {ratingMsg && (
+              <p className={`notice${ratingMsg.startsWith("Error") ? " error" : " rw-saved"}`} style={{ margin: 0 }}>
+                {ratingMsg.replace(/^Error: /, "")}
+              </p>
+            )}
+          </div>
+        </div>
       </div>
     </section>
   );

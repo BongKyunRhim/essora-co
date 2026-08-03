@@ -4,27 +4,48 @@ import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import Avatar from "../components/Avatar.jsx";
 
+function StarSvg({ filled, size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  );
+}
+
+function StarRow({ value, size = 16 }) {
+  return (
+    <span className="rr-stars" aria-label={`${value} out of 5 stars`}>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <span key={n} className={n <= Math.round(value) ? "" : "rr-star-off"}>
+          <StarSvg filled={n <= Math.round(value)} size={size} />
+        </span>
+      ))}
+    </span>
+  );
+}
+
 export default function ReviewerDetail() {
   const { id } = useParams();
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [reviewer, setReviewer] = useState(null);
+  const [ratings, setRatings] = useState([]);
   const [loading, setLoading] = useState(true);
   const justRequested = location.state?.requested === true;
 
   useEffect(() => {
     let active = true;
-    supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", id)
-      .single()
-      .then(({ data }) => {
-        if (!active) return;
-        setReviewer(data ?? null);
-        setLoading(false);
-      });
+    Promise.all([
+      supabase.from("profiles").select("*").eq("id", id).single(),
+      supabase.from("reviewer_ratings").select("*").eq("reviewer_id", id)
+        .order("created_at", { ascending: false }),
+    ]).then(([{ data }, { data: rats }]) => {
+      if (!active) return;
+      setReviewer(data ?? null);
+      setRatings(rats ?? []);
+      setLoading(false);
+    });
     return () => { active = false; };
   }, [id]);
 
@@ -38,6 +59,9 @@ export default function ReviewerDetail() {
   }
 
   const school = [reviewer.college, reviewer.major].filter(Boolean).join(" · ");
+  const avg = ratings.length
+    ? ratings.reduce((sum, r) => sum + r.stars, 0) / ratings.length
+    : null;
 
   return (
     <section className="reviewer-detail">
@@ -49,6 +73,13 @@ export default function ReviewerDetail() {
           <h1 className="rdl-name">{reviewer.full_name || "Reviewer"}</h1>
           {school && <p className="rdl-school">{school}</p>}
           <div className="rdl-meta-row">
+            {avg != null && (
+              <span className="rdl-rating-inline">
+                <StarRow value={avg} />
+                {avg.toFixed(1)}
+                <span className="rdl-rating-count">({ratings.length})</span>
+              </span>
+            )}
             {reviewer.age != null && (
               <span className="rdl-age-tag">Age {reviewer.age}</span>
             )}
@@ -82,6 +113,42 @@ export default function ReviewerDetail() {
           {reviewer.long_bio || reviewer.bio || "This reviewer hasn't added a bio yet."}
         </p>
       </div>
+
+      {ratings.length > 0 && (
+        <>
+          <div className="rdl-divider" />
+
+          <div className="rdl-ratings-section">
+            <h2 className="rdl-section-label">Ratings</h2>
+
+            <div className="rr-summary">
+              <span className="rr-avg">{avg.toFixed(1)}</span>
+              <div className="rr-summary-side">
+                <StarRow value={avg} size={18} />
+                <span className="rr-count">
+                  {ratings.length} rating{ratings.length === 1 ? "" : "s"} from past applicants
+                </span>
+              </div>
+            </div>
+
+            <ul className="rr-list">
+              {ratings.map((r) => (
+                <li key={r.id} className="rr-card">
+                  <StarRow value={r.stars} size={15} />
+                  {r.comment && <p className="rr-card-comment">{r.comment}</p>}
+                  <p className="rr-card-foot">
+                    {r.applicant_name || "An applicant"}
+                    {" · "}
+                    {new Date(r.created_at).toLocaleDateString("en-US", {
+                      month: "short", year: "numeric",
+                    })}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
     </section>
   );
 }

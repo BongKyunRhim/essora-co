@@ -1185,6 +1185,108 @@ button:disabled {
   line-height: 1.75;
 }
 
+/* ---- Reviewer ratings (public profile) ---- */
+
+/* Compact "★★★★★ 4.8 (12)" in the profile header meta row */
+.rdl-rating-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #111;
+}
+
+.rdl-rating-count {
+  font-weight: 400;
+  color: #999;
+}
+
+.rr-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  color: #f5b301;
+  line-height: 1;
+}
+
+.rr-stars .rr-star-off {
+  color: #d8d8d8;
+}
+
+.rr-stars span {
+  display: inline-flex;
+}
+
+/* Summary block: big average beside the stars + count */
+.rr-summary {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.rr-avg {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.rr-summary-side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.rr-count {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+/* Individual rating cards */
+.rr-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-width: 680px;
+  margin: 0;
+  padding: 0;
+}
+
+.rr-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+  padding: 1.1rem 1.25rem;
+}
+
+.rr-card-comment {
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.65;
+  margin: 0.55rem 0 0;
+  white-space: pre-wrap;
+}
+
+.rr-card-foot {
+  font-size: 0.78rem;
+  color: #999;
+  margin: 0.65rem 0 0;
+}
+
+/* Rating form on the feedback page */
+.rr-rate-hint {
+  font-size: 0.87rem;
+  color: #666;
+  margin: -0.25rem 0 0;
+}
+
+.rr-star-lg {
+  padding: 0.1rem;
+}
+
 @media (max-width: 640px) {
   .reviewer-detail { padding: 1rem 1.25rem 3rem; }
   .rdl-divider { margin: 2rem -1.25rem; }
