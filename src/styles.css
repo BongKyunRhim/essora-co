@@ -1,4 +1,4 @@
-/* Warm editorial system: ivory paper, ink text, forest-green accent. */
+/* Brand system: black, white, and the compass logo's navy + slate blue. */
 
 * {
   margin: 0;
@@ -2106,7 +2106,7 @@ button:disabled {
 
 .rw-star:hover { background: none; transform: scale(1.15); }
 
-.rw-star--on { color: var(--navy); }
+.rw-star--on { color: #f5b301; }
 
 .rw-star:disabled {
   cursor: default;
