@@ -13,6 +13,8 @@ import ApplicantHome from "../pages/ApplicantHome.jsx";
 import Account from "../pages/Account.jsx";
 import ReviewerDetail from "../pages/ReviewerDetail.jsx";
 import ReviewerNotifications from "../pages/ReviewerNotifications.jsx";
+import ApplicantNotifications from "../pages/ApplicantNotifications.jsx";
+import ApplicantFeedback from "../pages/ApplicantFeedback.jsx";
 import RequestReview from "../pages/RequestReview.jsx";
 import RequestDetail from "../pages/RequestDetail.jsx";
 import Landing from "../pages/Landing.jsx";
@@ -35,6 +37,13 @@ function BellIcon() {
 
 function Home() {
   return <Landing />;
+}
+
+// One bell, two inboxes — reviewers see submissions, applicants see feedback.
+function NotificationsPage() {
+  const { profile } = useAuth();
+  if (!profile) return <p className="page">Loading…</p>;
+  return profile.role === "reviewer" ? <ReviewerNotifications /> : <ApplicantNotifications />;
 }
 
 export default function App() {
@@ -64,25 +73,29 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (!user || profile?.role !== "reviewer") return;
+    if (!user || !profile?.role) return;
+    const isReviewer = profile.role === "reviewer";
 
-    // Essays waiting on a review — submissions land as 'accepted' directly
-    // ('pending' only covers rows from before the accept step was removed).
-    const fetchCount = () =>
-      supabase
+    // Reviewers: essays waiting on a review — submissions land as 'accepted'
+    // directly ('pending' only covers rows from before the accept step was
+    // removed). Applicants: finished reviews they haven't opened yet.
+    const fetchCount = () => {
+      let q = supabase
         .from("requests")
-        .select("id", { count: "exact", head: true })
-        .eq("reviewer_id", user.id)
-        .in("status", ["pending", "accepted"])
-        .then(({ count }) => setPendingCount(count ?? 0));
+        .select("id", { count: "exact", head: true });
+      q = isReviewer
+        ? q.eq("reviewer_id", user.id).in("status", ["pending", "accepted"])
+        : q.eq("applicant_id", user.id).eq("status", "completed").eq("applicant_seen", false);
+      q.then(({ count }) => setPendingCount(count ?? 0));
+    };
 
     fetchCount();
 
     const channel = supabase
-      .channel("reviewer-pending")
+      .channel("nav-bell")
       .on("postgres_changes", {
         event: "*", schema: "public", table: "requests",
-        filter: `reviewer_id=eq.${user.id}`,
+        filter: `${isReviewer ? "reviewer_id" : "applicant_id"}=eq.${user.id}`,
       }, fetchCount)
       .subscribe();
 
@@ -121,8 +134,8 @@ export default function App() {
                 </Link>
               )}
 
-              {/* Notification bell — shown for reviewers */}
-              {profile?.role === "reviewer" && (
+              {/* Notification bell — submissions for reviewers, feedback for applicants */}
+              {profile?.role && (
                 <Link to="/notifications" className="nav-icon-btn" onClick={closeMenu} aria-label="Notifications">
                   <BellIcon />
                   {pendingCount > 0 && (
@@ -196,8 +209,9 @@ export default function App() {
           <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
           <Route path="/reviewers/:id" element={<ProtectedRoute><ReviewerDetail /></ProtectedRoute>} />
           <Route path="/reviewers/:id/request" element={<ProtectedRoute><RequestReview /></ProtectedRoute>} />
-          <Route path="/notifications" element={<ProtectedRoute><ReviewerNotifications /></ProtectedRoute>} />
+          <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
           <Route path="/requests/:id" element={<ProtectedRoute><RequestDetail /></ProtectedRoute>} />
+          <Route path="/feedback/:id" element={<ProtectedRoute><ApplicantFeedback /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </main>

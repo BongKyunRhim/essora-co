@@ -1502,6 +1502,19 @@ button:disabled {
 .rn-status--accepted { background: var(--slate-soft); color: var(--navy); }
 .rn-status--declined { background: #fce8e8; color: #b91c1c; }
 
+/* Unopened feedback (applicant side): navy dot beside the reviewer's name */
+.rn-item--new .rn-item-name::after {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--navy);
+  margin-left: 0.45rem;
+  vertical-align: middle;
+  animation: pop-in 0.25s cubic-bezier(0.5, 1.6, 0.4, 1);
+}
+
 /* Dismiss button on past submissions */
 .rn-list-item {
   position: relative;
