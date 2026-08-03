@@ -383,21 +383,36 @@ export default function ReviewerHome() {
   async function handleStripeConnect() {
     setStripeConnecting(true);
     setStripeMsg("");
-    const { data: { session } } = await supabase.auth.getSession();
-    const res = await fetch("/api/connect-stripe-account", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session.access_token}`,
-      },
-    });
-    const json = await res.json();
-    if (!res.ok) {
-      setStripeMsg("Error: " + json.error);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        setStripeMsg("Error: Not signed in. Please refresh and try again.");
+        setStripeConnecting(false);
+        return;
+      }
+      const res = await fetch("/api/connect-stripe-account", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setStripeMsg("Error: " + (json.error || `Server error (${res.status})`));
+        setStripeConnecting(false);
+        return;
+      }
+      if (!json.url) {
+        setStripeMsg("Error: No redirect URL returned. Check that Stripe keys are set in Vercel.");
+        setStripeConnecting(false);
+        return;
+      }
+      window.location.href = json.url;
+    } catch (err) {
+      setStripeMsg("Error: " + (err.message || "Could not connect to Stripe."));
       setStripeConnecting(false);
-      return;
     }
-    window.location.href = json.url;
   }
 
   return (
@@ -435,6 +450,11 @@ export default function ReviewerHome() {
               <div>
                 <strong>Set up payouts to get paid for your reviews.</strong>
                 <span> Connect your bank account via Stripe — it only takes a few minutes.</span>
+                {stripeMsg && (
+                  <p className={`notice${stripeMsg.startsWith("Error") ? " error" : ""}`} style={{ marginTop: "0.4rem", marginBottom: 0 }}>
+                    {stripeMsg}
+                  </p>
+                )}
               </div>
             </div>
             <button
