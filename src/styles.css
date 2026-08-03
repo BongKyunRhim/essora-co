@@ -1101,9 +1101,12 @@ button:disabled {
   margin: 0;
 }
 
-.reviewer-card-rating svg {
-  color: #f5b301;
-  flex-shrink: 0;
+.reviewer-card-rating .rr-stars {
+  gap: 1px;
+}
+
+.reviewer-card-rating-num {
+  font-weight: 600;
 }
 
 .reviewer-card-rating-count {

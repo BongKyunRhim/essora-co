@@ -23,11 +23,35 @@ function FilterIcon() {
   );
 }
 
-function StarIcon() {
+function StarSvg({ filled, size = 14 }) {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
     </svg>
+  );
+}
+
+function Star({ fill, size = 14 }) {
+  return (
+    <span className="rr-star-wrap" style={{ width: size, height: size }}>
+      <span className="rr-star-base"><StarSvg filled={false} size={size} /></span>
+      {fill > 0 && (
+        <span className="rr-star-fill" style={{ width: `${fill * 100}%` }}>
+          <StarSvg filled size={size} />
+        </span>
+      )}
+    </span>
+  );
+}
+
+function StarRow({ value, size = 14 }) {
+  const shown = Math.round(value * 2) / 2;
+  return (
+    <span className="rr-stars" aria-label={`${value} out of 5 stars`}>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <Star key={n} fill={Math.max(0, Math.min(1, shown - (n - 1)))} size={size} />
+      ))}
+    </span>
   );
 }
 
@@ -210,8 +234,10 @@ export default function ApplicantHome() {
                 </p>
                 {ratingsById[r.id] ? (
                   <p className="reviewer-card-rating">
-                    <StarIcon />
-                    {(ratingsById[r.id].sum / ratingsById[r.id].count).toFixed(1)}
+                    <StarRow value={ratingsById[r.id].sum / ratingsById[r.id].count} size={13} />
+                    <span className="reviewer-card-rating-num">
+                      {(ratingsById[r.id].sum / ratingsById[r.id].count).toFixed(1)}
+                    </span>
                     <span className="reviewer-card-rating-count">({ratingsById[r.id].count})</span>
                   </p>
                 ) : (
