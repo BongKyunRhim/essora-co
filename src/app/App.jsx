@@ -131,7 +131,7 @@ export default function App() {
               {/* Find reviewers — shown for applicants */}
               {profile?.role === "applicant" && (
                 <Link to="/applicant" onClick={closeMenu}>
-                  Find reviewers
+                  Find Reviewers
                 </Link>
               )}
 
