@@ -427,6 +427,27 @@ export default function ReviewerHome() {
       </aside>
 
       <main className="settings-main">
+        {/* Stripe payout prompt — shown until reviewer connects */}
+        {!profile?.stripe_onboarded && (
+          <div className="stripe-setup-banner">
+            <div className="stripe-setup-banner-body">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <div>
+                <strong>Set up payouts to get paid for your reviews.</strong>
+                <span> Connect your bank account via Stripe — it only takes a few minutes.</span>
+              </div>
+            </div>
+            <button
+              type="button"
+              className="btn-stripe-connect"
+              disabled={stripeConnecting}
+              onClick={handleStripeConnect}
+            >
+              {stripeConnecting ? "Redirecting…" : profile?.stripe_account_id ? "Complete setup" : "Connect Stripe"}
+            </button>
+          </div>
+        )}
+
         {activeSection === "Public Profile" && (
           <>
             <div className="settings-section-header">

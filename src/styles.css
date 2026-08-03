@@ -1800,6 +1800,40 @@ button:disabled {
   color: var(--navy);
 }
 
+/* ── Stripe setup banner ───────────────────────────────────── */
+.stripe-setup-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: #f0f0ff;
+  border: 1px solid #c7c4ff;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+}
+.stripe-setup-banner-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  color: #3730a3;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  flex: 1;
+  min-width: 0;
+}
+.stripe-setup-banner-body svg { flex-shrink: 0; margin-top: 2px; }
+
+@media (prefers-color-scheme: dark) {
+  .stripe-setup-banner { background: #1e1b4b; border-color: #4338ca; }
+  .stripe-setup-banner-body { color: #a5b4fc; }
+}
+:root[data-theme="dark"] .stripe-setup-banner { background: #1e1b4b; border-color: #4338ca; }
+:root[data-theme="dark"] .stripe-setup-banner-body { color: #a5b4fc; }
+:root[data-theme="light"] .stripe-setup-banner { background: #f0f0ff; border-color: #c7c4ff; }
+:root[data-theme="light"] .stripe-setup-banner-body { color: #3730a3; }
+
 /* ── Stripe Connect ────────────────────────────────────────── */
 .btn-stripe-connect {
   display: inline-flex;

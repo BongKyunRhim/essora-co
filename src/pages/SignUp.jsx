@@ -76,7 +76,7 @@ export default function SignUp() {
       return;
     }
     if (data.session) {
-      navigate("/dashboard");
+      navigate(form.role === "reviewer" ? "/reviewer" : "/dashboard");
     } else {
       setNotice("Account created. Check your email to confirm, then log in.");
     }
