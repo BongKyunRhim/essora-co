@@ -8,6 +8,9 @@ import Avatar from "../components/Avatar.jsx";
 const STATUS_LABEL = { pending: "In review", accepted: "In review", declined: "Declined", completed: "Feedback ready" };
 const STATUS_CLASS = { pending: "pending", accepted: "pending", declined: "declined", completed: "accepted" };
 
+// Only past/finished submissions can be removed — never ones still in review.
+const DISMISSIBLE = new Set(["completed", "declined"]);
+
 export default function ApplicantNotifications() {
   const { user } = useAuth();
   const [items, setItems]     = useState([]);
@@ -18,6 +21,7 @@ export default function ApplicantNotifications() {
       .from("requests")
       .select("*")
       .eq("applicant_id", user.id)
+      .eq("applicant_dismissed", false)
       .order("created_at", { ascending: false });
 
     const ids = [...new Set((reqs ?? []).map((r) => r.reviewer_id))];
@@ -36,6 +40,12 @@ export default function ApplicantNotifications() {
 
   useEffect(() => { load(); }, [load]);
 
+  async function dismiss(id) {
+    // Optimistic remove so the UI responds instantly.
+    setItems((prev) => prev.filter((r) => r.id !== id));
+    await supabase.from("requests").update({ applicant_dismissed: true }).eq("id", id);
+  }
+
   if (loading) return <p className="page">Loading…</p>;
 
   return (
@@ -53,11 +63,12 @@ export default function ApplicantNotifications() {
         {items.map((r) => {
           const done = r.status === "completed";
           const isNew = done && !r.applicant_seen;
+          const dismissible = DISMISSIBLE.has(r.status);
           // Finished reviews open the feedback; everything else goes back
           // to the reviewer's profile page.
           const href = done ? `/feedback/${r.id}` : `/reviewers/${r.reviewer_id}`;
           return (
-            <li key={r.id} className="rn-list-item">
+            <li key={r.id} className={`rn-list-item${dismissible ? " rn-list-item--dismissible" : ""}`}>
               <Link to={href} className={`rn-item${isNew ? " rn-item--new" : ""}`}>
                 <Avatar
                   url={r.reviewer?.avatar_url}
@@ -81,6 +92,16 @@ export default function ApplicantNotifications() {
                   {STATUS_LABEL[r.status] ?? r.status}
                 </span>
               </Link>
+              {dismissible && (
+                <button
+                  type="button"
+                  className="rn-dismiss-btn"
+                  onClick={() => dismiss(r.id)}
+                  aria-label="Remove notification"
+                >
+                  ×
+                </button>
+              )}
             </li>
           );
         })}

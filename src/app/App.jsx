@@ -85,7 +85,8 @@ export default function App() {
         .select("id", { count: "exact", head: true });
       q = isReviewer
         ? q.eq("reviewer_id", user.id).in("status", ["pending", "accepted"])
-        : q.eq("applicant_id", user.id).eq("status", "completed").eq("applicant_seen", false);
+        : q.eq("applicant_id", user.id).eq("status", "completed")
+           .eq("applicant_seen", false).eq("applicant_dismissed", false);
       q.then(({ count }) => setPendingCount(count ?? 0));
     };
 
