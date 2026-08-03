@@ -115,7 +115,7 @@ export default function Account() {
         .select("*")
         .eq("applicant_id", profile.id)
         .eq("status", "completed")
-        .order("updated_at", { ascending: false });
+        .order("created_at", { ascending: false });
 
       if (!active || !reqs?.length) { setFeedbackLoading(false); return; }
 
@@ -443,7 +443,7 @@ export default function Account() {
                           </span>
                         )}
                         <span className="pf-date">
-                          {new Date(request.updated_at ?? request.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                          {new Date(request.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                         </span>
                       </div>
                     </div>
