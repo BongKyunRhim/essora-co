@@ -208,11 +208,15 @@ export default function ApplicantHome() {
                 <p className="muted">
                   {[r.college, r.major].filter(Boolean).join(" · ") || "—"}
                 </p>
-                {ratingsById[r.id] && (
+                {ratingsById[r.id] ? (
                   <p className="reviewer-card-rating">
                     <StarIcon />
                     {(ratingsById[r.id].sum / ratingsById[r.id].count).toFixed(1)}
                     <span className="reviewer-card-rating-count">({ratingsById[r.id].count})</span>
+                  </p>
+                ) : (
+                  <p className="reviewer-card-rating reviewer-card-rating--empty">
+                    No ratings yet
                   </p>
                 )}
                 {r.price != null && <p className="price">${r.price} / essay</p>}

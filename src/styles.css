@@ -623,6 +623,8 @@ button:not([class]):hover {
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  /* Every row gets the same height, so all cards match regardless of content */
+  grid-auto-rows: 1fr;
   gap: 1rem;
 }
 
@@ -1048,13 +1050,29 @@ button:disabled {
   flex: 1;
 }
 
+/* Name and school clamp to one line each so every card body lines up */
 .reviewer-card-body h2 {
   font-size: 1rem;
   margin-bottom: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .reviewer-card-body p {
   margin-bottom: 0;
+}
+
+.reviewer-card-body .muted {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0;
+}
+
+/* Price pins to the card's bottom edge */
+.reviewer-card-body .price {
+  margin-top: auto;
 }
 
 .reviewer-card {
@@ -1091,6 +1109,13 @@ button:disabled {
 .reviewer-card-rating-count {
   font-weight: 400;
   color: #999;
+}
+
+/* Placeholder keeps unrated cards the same height as rated ones */
+.reviewer-card-rating--empty {
+  font-weight: 400;
+  color: #bbb;
+  font-size: 0.8rem;
 }
 
 /* Reviewer detail page */
