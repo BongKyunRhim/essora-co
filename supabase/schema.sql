@@ -39,12 +39,17 @@ security definer
 set search_path = public
 as $$
 begin
-  insert into public.profiles (id, email, full_name, role)
+  insert into public.profiles (id, email, full_name, role, is_listed)
   values (
     new.id,
     new.email,
     coalesce(new.raw_user_meta_data ->> 'full_name', ''),
-    coalesce(new.raw_user_meta_data ->> 'role', 'applicant')
+    coalesce(new.raw_user_meta_data ->> 'role', 'applicant'),
+    case
+      when coalesce(new.raw_user_meta_data ->> 'role', 'applicant') = 'reviewer'
+      then false
+      else true
+    end
   );
   return new;
 end;
