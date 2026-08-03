@@ -461,7 +461,19 @@ button {
   transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
 }
 
-button:hover {
+/* Darken on hover only for default (classless) buttons — buttons with their
+   own class (pills, ghost buttons, icon buttons) style their own hover and
+   must not inherit the solid navy fill. */
+button:not([class]):hover {
+  background: var(--navy-ink);
+  border-color: var(--navy-ink);
+  color: #fff;
+}
+
+/* Classed buttons that are still solid-navy primaries keep the same hover */
+.rdl-request-btn:hover,
+.rrl-submit-btn:hover,
+.ev-composer-save:hover {
   background: var(--navy-ink);
   border-color: var(--navy-ink);
   color: #fff;
