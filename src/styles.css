@@ -185,6 +185,8 @@ a {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   z-index: 200;
   overflow: hidden;
+  transform-origin: top right;
+  animation: pop-in 0.16s ease;
 }
 
 .nav-profile-name {
@@ -268,6 +270,7 @@ a {
   align-items: center;
   justify-content: center;
   line-height: 1;
+  animation: pop-in 0.25s cubic-bezier(0.5, 1.6, 0.4, 1);
 }
 
 
@@ -458,7 +461,35 @@ button {
   color: #fff;
   font-size: 1rem;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s,
+    transform 0.15s ease, scale 0.15s ease;
+}
+
+/* Every button gives tactile press feedback */
+button:not(:disabled):active {
+  scale: 0.96;
+}
+
+/* ---- Shared motion ---- */
+@keyframes rise-in {
+  from { opacity: 0; translate: 0 12px; }
+  to   { opacity: 1; translate: 0 0; }
+}
+
+@keyframes drop-in {
+  from { opacity: 0; translate: 0 -8px; }
+  to   { opacity: 1; translate: 0 0; }
+}
+
+@keyframes pop-in {
+  from { opacity: 0; scale: 0.85; }
+  to   { opacity: 1; scale: 1; }
+}
+
+@keyframes star-pop {
+  0%   { scale: 1; }
+  45%  { scale: 1.35; }
+  100% { scale: 1; }
 }
 
 /* Darken on hover only for default (classless) buttons — buttons with their
@@ -468,6 +499,8 @@ button:not([class]):hover {
   background: var(--navy-ink);
   border-color: var(--navy-ink);
   color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(21, 37, 64, 0.28);
 }
 
 /* Classed buttons that are still solid-navy primaries keep the same hover */
@@ -477,6 +510,8 @@ button:not([class]):hover {
   background: var(--navy-ink);
   border-color: var(--navy-ink);
   color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(21, 37, 64, 0.28);
 }
 
 /* Visible keyboard focus everywhere, consistent with the navy accent */
@@ -931,13 +966,14 @@ button:disabled {
   font-weight: 500;
   cursor: pointer;
   color: #333;
-  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  transition: border-color 0.15s, background 0.15s, color 0.15s, transform 0.15s ease;
   white-space: nowrap;
 }
 
 .filter-btn:hover {
   border-color: #888;
   color: #000;
+  transform: translateY(-1px);
 }
 
 .filter-btn--active {
@@ -1431,10 +1467,12 @@ button:disabled {
   text-decoration: none;
   color: inherit;
   background: #fff;
-  transition: background 0.15s, border-color 0.15s;
+  transition: background 0.15s, border-color 0.15s, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 .rn-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
   background: var(--surface-soft);
   border-color: var(--slate);
 }
@@ -1503,12 +1541,13 @@ button:disabled {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  transition: color 0.15s, background 0.15s;
+  transition: color 0.15s, background 0.15s, transform 0.2s ease;
 }
 
 .rn-dismiss-btn:hover {
   color: #e05050;
   background: #fdeaea;
+  transform: translateY(-50%) rotate(90deg);
 }
 
 /* ---- Request detail page ---- */
@@ -1835,6 +1874,7 @@ button:disabled {
   cursor: pointer;
   box-shadow: 0 4px 16px rgba(21, 37, 64, 0.35);
   white-space: nowrap;
+  animation: pop-in 0.18s cubic-bezier(0.5, 1.6, 0.4, 1);
 }
 
 .ev-add-chip:hover { background: var(--navy-ink); }
@@ -1844,6 +1884,7 @@ button:disabled {
   position: absolute;
   z-index: 21;
   right: 0;
+  animation: rise-in 0.2s ease;
   width: min(360px, 100%);
   background: #fff;
   border: 1px solid #ddd;
@@ -2118,7 +2159,10 @@ button:disabled {
 
 .rw-star:hover { background: none; transform: scale(1.15); }
 
-.rw-star--on { color: #f5b301; }
+.rw-star--on {
+  color: #f5b301;
+  animation: star-pop 0.3s ease;
+}
 
 .rw-star:disabled {
   cursor: default;
@@ -2235,6 +2279,7 @@ button:disabled {
   max-width: 1120px;
   position: relative;
   z-index: 1;
+  animation: rise-in 0.6s ease both;
 }
 
 .hero-text h1 {
@@ -2269,6 +2314,7 @@ button:disabled {
   gap: 1.25rem;
   position: relative;
   z-index: 1;
+  animation: rise-in 0.6s ease 0.15s both;
 }
 
 .btn {
@@ -3195,6 +3241,7 @@ button:disabled {
   }
   .app-nav.open {
     display: flex;
+    animation: drop-in 0.2s ease;
   }
   .app-nav a,
   .app-nav .linklike {
@@ -3534,5 +3581,16 @@ button:disabled {
   }
   .btn {
     text-align: center;
+  }
+}
+
+/* ---- Reduced motion: keep the UI instant for users who ask for it ---- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
