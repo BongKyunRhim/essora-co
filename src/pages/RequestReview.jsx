@@ -1,14 +1,21 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../app/AuthContext.jsx";
 import { supabase } from "../lib/supabase.js";
 import extractEssayText from "../lib/extractEssayText.js";
 
+const ESSAY_TYPE_LABELS = {
+  personal_statement: "Common App / Personal Statement",
+  supplemental:       "Supplemental Essay",
+  scholarship:        "Scholarship Essay",
+  other:              "Other",
+};
 
 export default function RequestReview() {
   const { id } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const [reviewer, setReviewer] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,11 +23,15 @@ export default function RequestReview() {
   const [essayText, setEssayText]   = useState("");
   const [essayFile, setEssayFile]   = useState(null);
   const [extracting, setExtracting] = useState(false);
-  const [fileNotice, setFileNotice] = useState("");   // "Text extracted from …" or error
+  const [fileNotice, setFileNotice] = useState("");
   const [essayType, setEssayType]   = useState("");
   const [notes, setNotes]           = useState("");
   const [dragging, setDragging]     = useState(false);
-  const [status, setStatus]         = useState("");
+  const [status, setStatus]         = useState(
+    searchParams.get("cancelled") === "1"
+      ? "Payment was cancelled — your essay hasn't been submitted yet."
+      : ""
+  );
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -67,9 +78,9 @@ export default function RequestReview() {
 
     setSubmitting(true);
 
-    // If a file was uploaded, keep the original in storage so the
-    // reviewer can download it — the extracted text is what gets reviewed.
+    // Upload file if provided
     let fileUrl = null;
+    let fileName = null;
     if (essayFile) {
       setStatus("Uploading essay…");
       const ext = essayFile.name.split(".").pop();
@@ -79,30 +90,61 @@ export default function RequestReview() {
         .upload(path, essayFile, { upsert: false });
       if (uploadError) { setStatus("Error: " + uploadError.message); setSubmitting(false); return; }
       fileUrl = supabase.storage.from("essays").getPublicUrl(path).data.publicUrl;
+      fileName = essayFile.name;
     }
 
-    setStatus("Submitting essay…");
-    // No accept/decline step — a listed reviewer receives submissions
-    // directly, so the essay goes straight into review.
-    const { error } = await supabase.from("requests").insert({
-      applicant_id:  user.id,
-      reviewer_id:   id,
-      status:        "accepted",
-      essay_text:    essayText.trim(),
-      essay_url:     fileUrl,
-      essay_name:    essayFile?.name ?? null,
-      essay_type:    essayType,
-      notes:         notes || null,
+    setStatus("Creating your submission…");
+    // Insert request as unpaid — payment step comes next
+    const { data: req, error: insertErr } = await supabase
+      .from("requests")
+      .insert({
+        applicant_id:   user.id,
+        reviewer_id:    id,
+        status:         "accepted",
+        payment_status: "unpaid",
+        essay_text:     essayText.trim(),
+        essay_url:      fileUrl,
+        essay_name:     fileName,
+        essay_type:     essayType,
+        notes:          notes || null,
+      })
+      .select()
+      .single();
+
+    if (insertErr) { setStatus("Error: " + insertErr.message); setSubmitting(false); return; }
+
+    // Ask Vercel function to create a Stripe Checkout session
+    setStatus("Redirecting to payment…");
+    const { data: session } = await supabase.auth.getSession();
+    const token = session?.session?.access_token;
+
+    const resp = await fetch("/api/create-checkout-session", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({
+        request_id:    req.id,
+        reviewer_id:   id,
+        price_cents:   (reviewer.price ?? 0) * 100,
+        reviewer_name: reviewer.full_name ?? "Reviewer",
+        essay_type:    ESSAY_TYPE_LABELS[essayType] ?? essayType,
+      }),
     });
 
-    setSubmitting(false);
-    if (error) { setStatus("Error: " + error.message); return; }
+    const json = await resp.json();
+    if (!resp.ok || !json.url) {
+      setStatus("Error: " + (json.error ?? "Failed to start payment."));
+      setSubmitting(false);
+      return;
+    }
 
-    navigate(`/reviewers/${id}`, { state: { requested: true } });
+    // Hard-navigate to Stripe hosted checkout
+    window.location.href = json.url;
   }
 
   if (loading) return <p className="page">Loading…</p>;
   if (!reviewer) return <p className="page">Reviewer not found. <Link to="/applicant">Back to reviewers</Link></p>;
+
+  const price = reviewer.price ?? 0;
 
   return (
     <section className="request-review-page">
@@ -200,13 +242,33 @@ export default function RequestReview() {
           {/* Submit */}
           <div className="rrl-submit-row">
             <button type="submit" className="rrl-submit-btn" disabled={submitting || extracting}>
-              {submitting ? "Submitting…" : "Submit Essay"}
+              {submitting ? status.replace(/^Error: /, "") || "Processing…" : `Pay $${price} & Submit`}
             </button>
             {status && (
-              <p className={`notice${status.startsWith("Error") ? " error" : ""}`}>{status}</p>
+              <p className={`notice${status.startsWith("Error") ? " error" : ""}`}>
+                {status.replace(/^Error: /, "")}
+              </p>
             )}
           </div>
         </form>
+
+        {/* Price summary sidebar */}
+        <aside className="rrl-price-card">
+          <p className="rrl-price-label">Review fee</p>
+          <p className="rrl-price-amount">${price}</p>
+          <p className="rrl-price-note">
+            Charged once via Stripe. Your essay will be visible to{" "}
+            {reviewer.full_name || "the reviewer"} immediately after payment.
+          </p>
+          <div className="rrl-price-divider" />
+          <p className="rrl-price-secure">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Secure payment via Stripe
+          </p>
+        </aside>
 
       </div>
     </section>

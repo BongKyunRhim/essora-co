@@ -1683,6 +1683,121 @@ button:disabled {
 
 .request-review-layout {
   margin-top: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+/* ---- Price summary card ---- */
+.rrl-price-card {
+  position: sticky;
+  top: calc(var(--nav-h) + 1.5rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.rrl-price-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  margin: 0;
+}
+
+.rrl-price-amount {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--navy-ink);
+  margin: 0.1rem 0 0.5rem;
+  line-height: 1;
+}
+
+.rrl-price-note {
+  font-size: 0.83rem;
+  color: var(--ink-soft);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.rrl-price-divider {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 0.75rem 0 0.5rem;
+}
+
+.rrl-price-secure {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* ---- Payment success page ---- */
+.ps-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.ps-box {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 380px;
+}
+
+.ps-check {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #dcfce7;
+  color: #16a34a;
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ps-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--line);
+  border-top-color: var(--navy);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.ps-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--navy-ink);
+  margin: 0;
+}
+
+.ps-msg {
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.ps-link {
+  font-weight: 600;
+  color: var(--navy);
 }
 
 /* ---- Form ---- */
@@ -3993,6 +4108,15 @@ button:disabled {
   }
 
   .rrl-submit-btn { width: 100%; }
+
+  .request-review-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .rrl-price-card {
+    position: static;
+    order: -1;
+  }
 
   /* Review workspace on phones */
   .rw-essay-head {

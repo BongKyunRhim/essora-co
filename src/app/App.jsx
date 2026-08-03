@@ -17,6 +17,7 @@ import ApplicantNotifications from "../pages/ApplicantNotifications.jsx";
 import ApplicantFeedback from "../pages/ApplicantFeedback.jsx";
 import RequestReview from "../pages/RequestReview.jsx";
 import RequestDetail from "../pages/RequestDetail.jsx";
+import PaymentSuccess from "../pages/PaymentSuccess.jsx";
 import Landing from "../pages/Landing.jsx";
 
 function ProtectedRoute({ children }) {
@@ -84,7 +85,7 @@ export default function App() {
         .from("requests")
         .select("id", { count: "exact", head: true });
       q = isReviewer
-        ? q.eq("reviewer_id", user.id).in("status", ["pending", "accepted"])
+        ? q.eq("reviewer_id", user.id).in("status", ["pending", "accepted"]).eq("payment_status", "paid")
         : q.eq("applicant_id", user.id).eq("status", "completed")
            .eq("applicant_seen", false).eq("applicant_dismissed", false);
       q.then(({ count }) => setPendingCount(count ?? 0));
@@ -213,6 +214,7 @@ export default function App() {
           <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
           <Route path="/requests/:id" element={<ProtectedRoute><RequestDetail /></ProtectedRoute>} />
           <Route path="/feedback/:id" element={<ProtectedRoute><ApplicantFeedback /></ProtectedRoute>} />
+          <Route path="/payment-success" element={<ProtectedRoute><PaymentSuccess /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </main>

@@ -23,6 +23,7 @@ export default function ReviewerNotifications() {
       .select("*")
       .eq("reviewer_id", user.id)
       .eq("reviewer_dismissed", false)
+      .eq("payment_status", "paid")
       .order("created_at", { ascending: false });
 
     const ids = [...new Set((reqs ?? []).map((r) => r.applicant_id))];
