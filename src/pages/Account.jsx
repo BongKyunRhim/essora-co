@@ -428,15 +428,17 @@ export default function Account() {
                 const school = [reviewer?.college, reviewer?.major].filter(Boolean).join(" · ");
                 return (
                   <div key={request.id} className="pf-card">
-                    <div className="pf-card-top">
+
+                    {/* Reviewer header band */}
+                    <div className="pf-card-head">
                       <div className="pf-reviewer-row">
-                        <Avatar url={reviewer?.avatar_url} name={reviewer?.full_name} size={40} />
+                        <Avatar url={reviewer?.avatar_url} name={reviewer?.full_name} size={36} />
                         <div className="pf-reviewer-info">
                           <span className="pf-reviewer-name">{reviewer?.full_name || "Reviewer"}</span>
                           {school && <span className="pf-reviewer-school">{school}</span>}
                         </div>
                       </div>
-                      <div className="pf-card-meta">
+                      <div className="pf-head-right">
                         {request.essay_type && (
                           <span className="rdl-age-tag">
                             {ESSAY_TYPE_LABELS[request.essay_type] ?? request.essay_type}
@@ -448,30 +450,48 @@ export default function Account() {
                       </div>
                     </div>
 
-                    {avg != null && (
-                      <div className="pf-stars-row">
-                        <StarRow value={avg} size={14} />
-                        <span className="pf-avg">{avg.toFixed(1)} avg</span>
-                      </div>
-                    )}
+                    {/* Body */}
+                    <div className="pf-card-body">
 
-                    <div className="pf-ratings-grid">
-                      {RATING_CATEGORIES.map((c) => review.ratings?.[c.key] != null && (
-                        <div key={c.key} className="pf-rating-row">
-                          <span className="pf-rating-label">{c.label}</span>
-                          <StarRow value={review.ratings[c.key]} size={12} />
-                          <span className="pf-rating-val">{review.ratings[c.key]}/5</span>
+                      {/* Overall score */}
+                      {avg != null && (
+                        <div className="pf-score-row">
+                          <span className="pf-score-num">{avg.toFixed(1)}</span>
+                          <StarRow value={avg} size={15} />
+                          <span className="pf-score-label">overall</span>
                         </div>
-                      ))}
+                      )}
+
+                      {/* Per-category progress bars */}
+                      <div className="pf-bars">
+                        {RATING_CATEGORIES.map((c) => {
+                          const val = review.ratings?.[c.key];
+                          if (val == null) return null;
+                          return (
+                            <div key={c.key} className="pf-bar-row">
+                              <span className="pf-bar-label">{c.label}</span>
+                              <div className="pf-bar-track">
+                                <div className="pf-bar-fill" style={{ width: `${(val / 5) * 100}%` }} />
+                              </div>
+                              <span className="pf-bar-val">{val}/5</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Final comment */}
+                      {review.final_comment && (
+                        <p className="pf-comment">"{review.final_comment}"</p>
+                      )}
+
+                      {/* Footer */}
+                      <div className="pf-card-foot">
+                        <Link to={`/feedback/${request.id}`} className="pf-view-link">
+                          View full feedback →
+                        </Link>
+                      </div>
                     </div>
 
-                    {review.final_comment && (
-                      <p className="pf-comment">{review.final_comment}</p>
-                    )}
-
-                    <Link to={`/feedback/${request.id}`} className="pf-link">
-                      View full feedback →
-                    </Link>
                   </div>
                 );
               })}
