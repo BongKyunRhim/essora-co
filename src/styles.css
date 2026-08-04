@@ -1731,15 +1731,16 @@ button:disabled {
 
 /* ---- Price summary sidebar ---- */
 .rrl-price-col {
-  /* Full-height panel that matches the form's height */
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
+  /* Transparent tall container — gives the sticky card room to scroll */
+  align-self: stretch;
 }
 
 .rrl-price-card {
   position: sticky;
   top: calc(var(--nav-h) + 1.5rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   padding: 1.5rem 1.25rem;
   display: flex;
   flex-direction: column;
