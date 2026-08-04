@@ -4530,18 +4530,19 @@ button:disabled {
 .rn-title {
   text-align: center;
   font-size: clamp(1.5rem, 4.5vw, 2rem);
-  /* the nav sits 3rem above the title, so mirror it below for a
-     vertically centered title band */
-  padding-bottom: 2.9rem;
+  /* pull the title up into the page gutter and keep the gap below equal,
+     so the band is tight and the title stays vertically centered */
+  margin-top: -1rem;
+  padding-bottom: 1.75rem;
   border-bottom: 1px solid var(--line);
   margin-bottom: 2.25rem;
 }
 
 /* Find Reviewers: its wrapper has no .app-main padding, so re-create the
-   same 3rem top offset the other pages get, and match the divider gap */
+   same 2rem top offset the other title pages get, and match the divider gap */
 .find-reviewers-heading {
-  margin-top: 3rem;
-  padding: 0 2rem 2.9rem;
+  margin-top: 2rem;
+  padding: 0 2rem 1.75rem;
 }
 
 /* Submit Your Essay: centered title at the same size as the other pages */
