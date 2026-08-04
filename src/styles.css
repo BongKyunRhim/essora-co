@@ -4603,6 +4603,22 @@ button:disabled {
   font-size: clamp(1.5rem, 4.5vw, 2rem);
 }
 
+/* Settings on desktop: kill the page's top padding so the sidebar/main
+   divider (settings-main's left border) reaches the nav bar, then move the
+   spacing into the columns themselves — slightly tighter than before so
+   the section title sits a touch higher */
+@media (min-width: 641px) {
+  .app-main:has(.settings-layout) {
+    padding-top: 0;
+  }
+  .settings-sidebar {
+    padding-top: 3.25rem;
+  }
+  .settings-main {
+    padding-top: 3.25rem;
+  }
+}
+
 /* Settings sidebar on phones: horizontal pill tabs — no identity card,
    and the icon must stay legible on the navy active pill */
 @media (max-width: 640px) {
