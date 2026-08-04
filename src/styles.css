@@ -796,11 +796,11 @@ button:disabled {
   padding-bottom: 3rem;
 }
 
-/* Overlay behind open drawer */
+/* Overlay behind open drawer (leaves the nav bar clear, like the drawer) */
 .filter-drawer-overlay {
   display: none;
   position: fixed;
-  inset: 0;
+  inset: var(--nav-h) 0 0 0;
   background: rgba(0, 0, 0, 0.35);
   z-index: 150;
   cursor: pointer;
@@ -810,10 +810,11 @@ button:disabled {
   display: block;
 }
 
-/* Slide-out filter drawer */
+/* Slide-out filter drawer — starts below the fixed nav so its header
+   is never hidden behind the bar */
 .filter-drawer {
   position: fixed;
-  top: 0;
+  top: var(--nav-h);
   left: 0;
   bottom: 0;
   width: 300px;
@@ -4474,19 +4475,19 @@ button:disabled {
 }
 
 .app-main > *:not(.landing):not(.find-reviewers-layout) {
-  animation: page-enter 0.45s cubic-bezier(0.22, 0.9, 0.35, 1) both;
+  animation: page-enter 0.45s cubic-bezier(0.22, 0.9, 0.35, 1) backwards;
 }
 
 /* Find Reviewers hosts a fixed-position filter drawer, so it fades
    without any transform at all */
 .find-reviewers-layout {
-  animation: page-fade 0.45s ease both;
+  animation: page-fade 0.45s ease backwards;
 }
 
 /* Lists and card grids cascade in with a gentle stagger */
 .rn-list-item,
 .cards > * {
-  animation: page-enter 0.5s cubic-bezier(0.22, 0.9, 0.35, 1) both;
+  animation: page-enter 0.5s cubic-bezier(0.22, 0.9, 0.35, 1) backwards;
 }
 .rn-list-item:nth-child(1), .cards > *:nth-child(1) { animation-delay: 0.05s; }
 .rn-list-item:nth-child(2), .cards > *:nth-child(2) { animation-delay: 0.1s; }
