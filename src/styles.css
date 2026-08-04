@@ -1726,17 +1726,20 @@ button:disabled {
   display: grid;
   grid-template-columns: 1fr 260px;
   gap: 2.5rem;
-  align-items: start;
+  align-items: stretch;
 }
 
-/* ---- Price summary card ---- */
+/* ---- Price summary sidebar ---- */
+.rrl-price-col {
+  /* Full-height panel that matches the form's height */
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
 .rrl-price-card {
   position: sticky;
   top: calc(var(--nav-h) + 1.5rem);
-  margin-top: 1.8rem;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
   padding: 1.5rem 1.25rem;
   display: flex;
   flex-direction: column;
@@ -4336,9 +4339,12 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 
+  .rrl-price-col {
+    order: -1;
+  }
+
   .rrl-price-card {
     position: static;
-    order: -1;
   }
 
   /* Review workspace on phones */
@@ -4661,7 +4667,7 @@ button:disabled {
 
 /* Cards settle with a soft transition everywhere */
 .ss-card,
-.rrl-price-card,
+.rrl-price-col,
 .auth-card {
   transition: box-shadow 0.25s ease;
 }

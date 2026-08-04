@@ -266,22 +266,24 @@ export default function RequestReview() {
         </form>
 
         {/* Price summary sidebar */}
-        <aside className="rrl-price-card">
-          <p className="rrl-price-label">Review fee</p>
-          <p className="rrl-price-amount">${price}</p>
-          <p className="rrl-price-note">
-            Charged once via Stripe. Your essay will be visible to{" "}
-            {reviewer.full_name || "the reviewer"} immediately after payment.
-          </p>
-          <div className="rrl-price-divider" />
-          <p className="rrl-price-secure">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-            Secure payment via Stripe
-          </p>
-        </aside>
+        <div className="rrl-price-col">
+          <aside className="rrl-price-card">
+            <p className="rrl-price-label">Review fee</p>
+            <p className="rrl-price-amount">${price}</p>
+            <p className="rrl-price-note">
+              Charged once via Stripe. Your essay will be visible to{" "}
+              {reviewer.full_name || "the reviewer"} immediately after payment.
+            </p>
+            <div className="rrl-price-divider" />
+            <p className="rrl-price-secure">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              Secure payment via Stripe
+            </p>
+          </aside>
+        </div>
 
       </div>
     </section>
