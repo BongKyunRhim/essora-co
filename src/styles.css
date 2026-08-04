@@ -4408,17 +4408,17 @@ button:disabled {
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  --content-w: min(1120px, 80vw);
+  --content-w: min(1400px, 90vw);
 }
 
-/* 1 ▸ One shared content column for every page */
+/* 1 ▸ One shared content column for every page
+   (settings keeps its original full-width layout) */
 .find-reviewers-layout,
 .reviewer-detail,
 .request-review-page,
 .request-detail-page,
 .reviewer-notifications-page,
-.submission-status-page,
-.settings-layout {
+.submission-status-page {
   width: var(--content-w);
   max-width: none;
   margin-left: auto;
@@ -4440,14 +4440,7 @@ button:disabled {
   max-width: var(--content-w);
 }
 
-/* Keep the settings page's top gutter in step with every other page */
-@media (min-width: 641px) {
-  .app-main:has(.settings-layout) {
-    padding-top: 3rem;
-  }
-}
-
-/* On phones the 80% cap is too tight — let content breathe full-width
+/* On phones the 90% cap is too tight — let content breathe full-width
    (the .app-main side padding still provides the gutter) */
 @media (max-width: 800px) {
   .find-reviewers-layout,
@@ -4455,8 +4448,7 @@ button:disabled {
   .request-review-page,
   .request-detail-page,
   .reviewer-notifications-page,
-  .submission-status-page,
-  .settings-layout {
+  .submission-status-page {
     width: 100%;
   }
 }
