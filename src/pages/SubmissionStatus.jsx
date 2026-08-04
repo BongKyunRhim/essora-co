@@ -63,7 +63,7 @@ export default function SubmissionStatus() {
     <section className="submission-status-page page">
       <h1 className="rn-title">Submission Status</h1>
 
-      <Link to="/notifications" className="back-link">← Back to My Essays</Link>
+      <Link to="/notifications" className="back-link">← Back to Notifications</Link>
 
       <div className="ss-card">
         {/* Header row */}

@@ -52,7 +52,7 @@ export default function ReviewerNotifications() {
 
   return (
     <section className="reviewer-notifications-page">
-      <h1 className="rn-title">Essay Submissions</h1>
+      <h1 className="rn-title">Notifications</h1>
 
       {items.length === 0 && (
         <p className="muted" style={{ marginTop: "2rem" }}>No submissions yet.</p>
