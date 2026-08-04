@@ -3315,13 +3315,14 @@ button:disabled {
   text-align: left;
   padding: 0.6rem 0.85rem;
   border: none;
+  border-left: 3px solid transparent;
   border-radius: var(--radius-sm);
   background: none;
   color: var(--ink-soft);
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
   box-shadow: none;
 }
 
@@ -3344,6 +3345,7 @@ button:disabled {
   background: var(--slate-soft);
   color: var(--navy);
   font-weight: 600;
+  border-left-color: var(--navy);
 }
 
 .settings-nav-item.active svg {
