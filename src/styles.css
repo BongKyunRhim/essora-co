@@ -353,6 +353,7 @@ a {
   justify-content: center;
   margin-top: var(--nav-h); /* clear the fixed nav bar */
   padding: 3rem 1.5rem;
+  min-height: calc(100vh - var(--nav-h));
 }
 
 .app-footer {
