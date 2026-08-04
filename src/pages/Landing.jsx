@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../app/AuthContext.jsx";
 import {
   SearchIcon,
   UploadIcon,
@@ -44,6 +45,7 @@ const STEPS = [
 
 // The public landing page (what visitors see before signing in).
 export default function Landing() {
+  const { user } = useAuth();
   return (
     <div className="landing">
       {/* Hero: centered pitch */}
@@ -56,14 +58,16 @@ export default function Landing() {
           <p className="lead">
             Get personalized feedback from verified college students — affordable, authentic, and powered by real human insight.
           </p>
-          <div className="hero-buttons">
-            <Link className="btn" to="/signup">
-              Improve your essay
-            </Link>
-            <Link className="btn" to="/signup">
-              Become a reviewer
-            </Link>
-          </div>
+          {!user && (
+            <div className="hero-buttons">
+              <Link className="btn" to="/signup">
+                Improve your essay
+              </Link>
+              <Link className="btn" to="/signup">
+                Become a reviewer
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
