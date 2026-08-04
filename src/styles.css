@@ -4461,7 +4461,10 @@ button:disabled {
   }
 }
 
-/* 2 ▸ Page-enter motion: content fades up as each route loads */
+/* 2 ▸ Page-enter motion: content fades up as each route loads.
+   The keyframe must end on transform:none — a lingering transform would
+   turn the page into the containing block for position:fixed children
+   (e.g. the Find Reviewers filter drawer) and strand them mid-screen. */
 @keyframes page-enter {
   from {
     opacity: 0;
@@ -4469,12 +4472,23 @@ button:disabled {
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
 
-.app-main > *:not(.landing) {
+@keyframes page-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.app-main > *:not(.landing):not(.find-reviewers-layout) {
   animation: page-enter 0.45s cubic-bezier(0.22, 0.9, 0.35, 1) both;
+}
+
+/* Find Reviewers hosts a fixed-position filter drawer, so it fades
+   without any transform at all */
+.find-reviewers-layout {
+  animation: page-fade 0.45s ease both;
 }
 
 /* Lists and card grids cascade in with a gentle stagger */
