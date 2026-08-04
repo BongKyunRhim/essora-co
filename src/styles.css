@@ -4615,14 +4615,19 @@ button:disabled {
     padding-top: 0;
   }
   .settings-sidebar {
-    /* fill the visible column beside the nav and center the sidebar
-       content vertically within it */
-    height: calc(100vh - var(--nav-h));
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-top: 0;
-    padding-bottom: 0;
+    padding-top: 3.25rem;
+  }
+
+  /* Center the sidebar content horizontally within its column */
+  .settings-sidebar .settings-sidebar-title,
+  .settings-sidebar .settings-user,
+  .settings-sidebar .settings-nav {
+    width: 100%;
+    max-width: 220px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 0;
+    padding-right: 0;
   }
   .settings-main {
     padding-top: 3.25rem;
