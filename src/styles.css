@@ -1699,6 +1699,7 @@ button:disabled {
 .rrl-price-card {
   position: sticky;
   top: calc(var(--nav-h) + 1.5rem);
+  margin-top: 1.8rem;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
