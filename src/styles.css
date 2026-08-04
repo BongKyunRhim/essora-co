@@ -38,8 +38,16 @@ body {
   font-family: var(--font-body);
   color: var(--ink);
   background: var(--paper);
-  line-height: 1.5;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   overflow-x: clip; /* allow full-bleed dividers without a scrollbar; clip (not hidden) lets child overflow:auto scroll independently on mobile */
+}
+
+::selection {
+  background: var(--slate-soft);
+  color: var(--navy-ink);
 }
 
 /* Headings across the whole site use the display serif */
@@ -48,6 +56,8 @@ h2,
 h3 {
   font-family: var(--font-display);
   font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
 }
 
 /* Form controls inherit the body font (Inter) instead of the browser default */
@@ -4389,4 +4399,116 @@ button:disabled {
 @media (max-width: 600px) {
   .ss-card { padding: 1.25rem; }
   .ss-header { flex-direction: column; align-items: flex-start; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Cohesive layout system — every page shares one content column
+   (never wider than 80% of the screen), plus site-wide motion.
+   Kept at the end of the file so it wins the cascade.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --content-w: min(1120px, 80vw);
+}
+
+/* 1 ▸ One shared content column for every page */
+.find-reviewers-layout,
+.reviewer-detail,
+.request-review-page,
+.request-detail-page,
+.reviewer-notifications-page,
+.submission-status-page,
+.settings-layout {
+  width: var(--content-w);
+  max-width: none;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Same vertical rhythm everywhere: pages start at the same line */
+.reviewer-detail,
+.request-review-page,
+.request-detail-page {
+  padding-top: 0.25rem;
+}
+
+/* Landing content lines up with the same column as the app pages */
+.hero-text,
+.how-grid {
+  max-width: var(--content-w);
+}
+
+/* Keep the settings page's top gutter in step with every other page */
+@media (min-width: 641px) {
+  .app-main:has(.settings-layout) {
+    padding-top: 3rem;
+  }
+}
+
+/* On phones the 80% cap is too tight — let content breathe full-width
+   (the .app-main side padding still provides the gutter) */
+@media (max-width: 800px) {
+  .find-reviewers-layout,
+  .reviewer-detail,
+  .request-review-page,
+  .request-detail-page,
+  .reviewer-notifications-page,
+  .submission-status-page,
+  .settings-layout {
+    width: 100%;
+  }
+}
+
+/* 2 ▸ Page-enter motion: content fades up as each route loads */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.app-main > *:not(.landing) {
+  animation: page-enter 0.45s cubic-bezier(0.22, 0.9, 0.35, 1) both;
+}
+
+/* Lists and card grids cascade in with a gentle stagger */
+.rn-list-item,
+.cards > * {
+  animation: page-enter 0.5s cubic-bezier(0.22, 0.9, 0.35, 1) both;
+}
+.rn-list-item:nth-child(1), .cards > *:nth-child(1) { animation-delay: 0.05s; }
+.rn-list-item:nth-child(2), .cards > *:nth-child(2) { animation-delay: 0.1s; }
+.rn-list-item:nth-child(3), .cards > *:nth-child(3) { animation-delay: 0.15s; }
+.rn-list-item:nth-child(4), .cards > *:nth-child(4) { animation-delay: 0.2s; }
+.rn-list-item:nth-child(5), .cards > *:nth-child(5) { animation-delay: 0.25s; }
+.rn-list-item:nth-child(6), .cards > *:nth-child(6) { animation-delay: 0.3s; }
+.rn-list-item:nth-child(7), .cards > *:nth-child(7) { animation-delay: 0.35s; }
+.rn-list-item:nth-child(n + 8), .cards > *:nth-child(n + 8) { animation-delay: 0.4s; }
+
+/* 3 ▸ Micro-interactions */
+
+/* Pressed feel on the hero/CTA links (buttons already have it globally) */
+.btn:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+/* Back links slide their arrow on hover */
+.back-link {
+  transition: color 0.15s ease, transform 0.2s ease;
+}
+.back-link:hover {
+  transform: translateX(-2px);
+}
+
+/* Cards settle with a soft transition everywhere */
+.ss-card,
+.rrl-price-card,
+.auth-card {
+  transition: box-shadow 0.25s ease;
 }
