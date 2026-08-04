@@ -4628,10 +4628,8 @@ button:disabled {
     margin-right: auto;
   }
 
-  /* The title loses its old gutter padding; the identity card keeps its
-     inner padding so the avatar doesn't hit the rounded corner */
   .settings-sidebar .settings-sidebar-title {
-    padding-left: 0;
+    padding-left: 0.85rem;
     padding-right: 0;
   }
 
