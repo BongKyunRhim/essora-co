@@ -1826,25 +1826,31 @@ button:disabled {
 .stripe-setup-banner-body svg { flex-shrink: 0; margin-top: 2px; }
 
 .stripe-setup-banner--error {
-  background: #fdecea;
-  border-color: #e8a09a;
+  background: #fff;
+  border-color: #c0392b;
 }
-.stripe-setup-banner--error .stripe-setup-banner-body { color: #a93226; }
+.stripe-setup-banner--error .stripe-setup-banner-body { color: #c0392b; }
+.stripe-setup-banner--error .btn-stripe-connect {
+  background: transparent;
+  color: #c0392b;
+  border: 1.5px solid #c0392b;
+}
+.stripe-setup-banner--error .btn-stripe-connect:hover:not(:disabled) {
+  background: #c0392b;
+  color: #fff;
+  opacity: 1;
+}
 
 @media (prefers-color-scheme: dark) {
   .stripe-setup-banner { background: #1e1b4b; border-color: #4338ca; }
   .stripe-setup-banner-body { color: #a5b4fc; }
-  .stripe-setup-banner--error { background: #4a1010; border-color: #c0392b; }
+  .stripe-setup-banner--error { background: #1a0505; border-color: #c0392b; }
   .stripe-setup-banner--error .stripe-setup-banner-body { color: #f1948a; }
 }
-:root[data-theme="dark"] .stripe-setup-banner { background: #1e1b4b; border-color: #4338ca; }
-:root[data-theme="dark"] .stripe-setup-banner-body { color: #a5b4fc; }
-:root[data-theme="dark"] .stripe-setup-banner--error { background: #4a1010; border-color: #c0392b; }
+:root[data-theme="dark"] .stripe-setup-banner--error { background: #1a0505; border-color: #c0392b; }
 :root[data-theme="dark"] .stripe-setup-banner--error .stripe-setup-banner-body { color: #f1948a; }
-:root[data-theme="light"] .stripe-setup-banner { background: #f0f0ff; border-color: #c7c4ff; }
-:root[data-theme="light"] .stripe-setup-banner-body { color: #3730a3; }
-:root[data-theme="light"] .stripe-setup-banner--error { background: #fdecea; border-color: #e8a09a; }
-:root[data-theme="light"] .stripe-setup-banner--error .stripe-setup-banner-body { color: #a93226; }
+:root[data-theme="light"] .stripe-setup-banner--error { background: #fff; border-color: #c0392b; }
+:root[data-theme="light"] .stripe-setup-banner--error .stripe-setup-banner-body { color: #c0392b; }
 
 /* ── Stripe Connect ────────────────────────────────────────── */
 .btn-stripe-connect {
