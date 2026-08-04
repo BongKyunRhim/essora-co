@@ -3194,7 +3194,10 @@ button:disabled {
 
 .settings-sidebar {
   position: sticky;
-  top: calc(var(--nav-h) + 1.5rem);
+  /* must equal the sidebar's natural resting offset (nav + its 3.25rem top
+     padding) — if they differ, the column visibly jumps between sections
+     and while scrolling */
+  top: var(--nav-h);
   align-self: start;
   background: transparent;
   padding: 1.5rem 0;
