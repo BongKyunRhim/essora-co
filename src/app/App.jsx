@@ -228,6 +228,15 @@ export default function App() {
         </Routes>
       </main>
 
+      <footer className="app-footer">
+        <div className="footer-links">
+          <a href="#">About</a>
+          <a href="#">Contact</a>
+          <a href="#">Terms</a>
+          <a href="#">Privacy</a>
+        </div>
+      </footer>
+
       <SpeedInsights />
     </div>
   );

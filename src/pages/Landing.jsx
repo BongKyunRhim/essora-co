@@ -106,15 +106,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Footer (placeholder links) */}
-      <footer className="landing-footer">
-        <div className="footer-links">
-          <a href="#">About</a>
-          <a href="#">Contact</a>
-          <a href="#">Terms</a>
-          <a href="#">Privacy</a>
-        </div>
-      </footer>
     </div>
   );
 }

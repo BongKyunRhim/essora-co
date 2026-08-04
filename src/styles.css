@@ -77,6 +77,12 @@ a {
   --nav-h: 88px;
 }
 
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .app-header {
   position: fixed;
   top: 0;
@@ -343,9 +349,15 @@ a {
 /* Pages */
 .app-main {
   display: flex;
+  flex: 1;
   justify-content: center;
   margin-top: var(--nav-h); /* clear the fixed nav bar */
   padding: 3rem 1.5rem;
+}
+
+.app-footer {
+  border-top: 1px solid var(--line-strong);
+  padding: 3rem 2rem;
 }
 
 /* Landing page: hero fills behind transparent nav */
