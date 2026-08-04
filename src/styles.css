@@ -1726,7 +1726,7 @@ button:disabled {
   display: grid;
   grid-template-columns: 1fr 260px;
   gap: 2.5rem;
-  align-items: stretch;
+  align-items: start;
 }
 
 /* ---- Price summary sidebar ---- */
