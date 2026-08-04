@@ -3217,9 +3217,9 @@ button:disabled {
 .settings-user {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
+  gap: 0.75rem;
   margin: 0 0.75rem 1.25rem;
-  padding: 0.8rem;
+  padding: 0.8rem 1rem;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
@@ -4626,8 +4626,18 @@ button:disabled {
     max-width: 220px;
     margin-left: auto;
     margin-right: auto;
+  }
+
+  /* The title loses its old gutter padding; the identity card keeps its
+     inner padding so the avatar doesn't hit the rounded corner */
+  .settings-sidebar .settings-sidebar-title {
     padding-left: 0;
     padding-right: 0;
+  }
+
+  .settings-user .avatar,
+  .settings-user .avatar-placeholder {
+    flex-shrink: 0;
   }
   .settings-main {
     padding-top: 3.25rem;
