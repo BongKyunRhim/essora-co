@@ -110,7 +110,7 @@ function lastSixMonths() {
   });
 }
 
-const SECTIONS = ["Public Profile", "My Activity", "Account & Privacy"];
+const SECTIONS = ["Public Profile", "My Ratings", "Account & Privacy"];
 
 function EyeIcon({ open }) {
   return open ? (
@@ -575,10 +575,10 @@ export default function ReviewerHome() {
           </>
         )}
 
-        {activeSection === "My Activity" && (
+        {activeSection === "My Ratings" && (
           <>
             <div className="settings-section-header">
-              <h2 className="settings-section-title">My Activity</h2>
+              <h2 className="settings-section-title">My Ratings</h2>
               <p className="settings-section-desc">Your review stats and applicant ratings at a glance.</p>
             </div>
 
