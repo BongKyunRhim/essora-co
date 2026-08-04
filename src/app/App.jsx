@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Routes, Route, Navigate, Link, useLocation, useNavigate } from "react-router-dom";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { useAuth } from "./AuthContext.jsx";
@@ -67,6 +67,16 @@ export default function App() {
   }, [isEmailChanged, navigate, profile?.role]);
   const closeMenu = () => setMenuOpen(false);
   const closeProfile = () => setProfileOpen(false);
+  const profileWrapRef = useRef(null);
+
+  useEffect(() => {
+    if (!profileOpen) return;
+    const handler = (e) => {
+      if (!profileWrapRef.current?.contains(e.target)) setProfileOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [profileOpen]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -148,7 +158,7 @@ export default function App() {
               )}
 
               {/* Profile avatar dropdown — desktop only */}
-              <div className="nav-profile-wrap">
+              <div className="nav-profile-wrap" ref={profileWrapRef}>
                 <button
                   type="button"
                   className="nav-avatar-btn"
@@ -159,22 +169,19 @@ export default function App() {
                 </button>
 
                 {profileOpen && (
-                  <>
-                    <div className="nav-profile-dropdown">
-                      <p className="nav-profile-name">{profile?.full_name || "My account"}</p>
-                      <Link to={profileHref} className="nav-profile-item" onClick={() => { closeMenu(); closeProfile(); }}>
-                        Profile settings
-                      </Link>
-                      <button
-                        type="button"
-                        className="nav-profile-item nav-profile-signout"
-                        onClick={() => { closeMenu(); closeProfile(); signOut(); navigate("/"); }}
-                      >
-                        Log out
-                      </button>
-                    </div>
-                    <div className="nav-profile-overlay" onClick={closeProfile} />
-                  </>
+                  <div className="nav-profile-dropdown">
+                    <p className="nav-profile-name">{profile?.full_name || "My account"}</p>
+                    <Link to={profileHref} className="nav-profile-item" onClick={() => { closeMenu(); closeProfile(); }}>
+                      Profile settings
+                    </Link>
+                    <button
+                      type="button"
+                      className="nav-profile-item nav-profile-signout"
+                      onClick={() => { closeMenu(); closeProfile(); signOut(); navigate("/"); }}
+                    >
+                      Log out
+                    </button>
+                  </div>
                 )}
               </div>
 
