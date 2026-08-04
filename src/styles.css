@@ -4637,6 +4637,14 @@ button:disabled {
   }
 }
 
+/* Mirror the sidebar column on wide screens: content's right margin equals
+   the distance from the left screen edge to the divider */
+@media (min-width: 1100px) {
+  .settings-main {
+    padding-right: 260px;
+  }
+}
+
 /* Settings sidebar on phones: horizontal pill tabs — no identity card,
    and the icon must stay legible on the navy active pill */
 @media (max-width: 640px) {
