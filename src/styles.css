@@ -1806,9 +1806,9 @@ button:disabled {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  background: #f0f0ff;
-  border: 1px solid #c7c4ff;
-  border-radius: 10px;
+  background: #fff;
+  border: 1.5px solid #c0392b;
+  border-radius: var(--radius-sm);
   padding: 1rem 1.25rem;
   margin-bottom: 1.75rem;
   flex-wrap: wrap;
@@ -1817,7 +1817,7 @@ button:disabled {
   display: flex;
   align-items: flex-start;
   gap: 0.65rem;
-  color: #3730a3;
+  color: #c0392b;
   font-size: 0.9rem;
   line-height: 1.5;
   flex: 1;
@@ -1825,50 +1825,23 @@ button:disabled {
 }
 .stripe-setup-banner-body svg { flex-shrink: 0; margin-top: 2px; }
 
-.stripe-setup-banner--error {
-  background: #fff;
-  border-color: #c0392b;
-}
-.stripe-setup-banner--error .stripe-setup-banner-body { color: #c0392b; }
-.stripe-setup-banner--error .btn-stripe-connect {
-  background: transparent;
-  color: #c0392b;
-  border: 1.5px solid #c0392b;
-}
-.stripe-setup-banner--error .btn-stripe-connect:hover:not(:disabled) {
-  background: #c0392b;
-  color: #fff;
-  opacity: 1;
-}
-
-@media (prefers-color-scheme: dark) {
-  .stripe-setup-banner { background: #1e1b4b; border-color: #4338ca; }
-  .stripe-setup-banner-body { color: #a5b4fc; }
-  .stripe-setup-banner--error { background: #1a0505; border-color: #c0392b; }
-  .stripe-setup-banner--error .stripe-setup-banner-body { color: #f1948a; }
-}
-:root[data-theme="dark"] .stripe-setup-banner--error { background: #1a0505; border-color: #c0392b; }
-:root[data-theme="dark"] .stripe-setup-banner--error .stripe-setup-banner-body { color: #f1948a; }
-:root[data-theme="light"] .stripe-setup-banner--error { background: #fff; border-color: #c0392b; }
-:root[data-theme="light"] .stripe-setup-banner--error .stripe-setup-banner-body { color: #c0392b; }
-
 /* ── Stripe Connect ────────────────────────────────────────── */
 .btn-stripe-connect {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.55rem 1.25rem;
-  background: var(--navy);
-  color: #fff;
-  border: 1px solid var(--navy);
-  border-radius: 8px;
+  padding: 0.55rem 1.2rem;
+  background: #fff;
+  color: #c0392b;
+  border: 1.5px solid #c0392b;
+  border-radius: var(--radius-sm);
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: opacity 0.15s;
+  transition: background 0.15s, color 0.15s;
   white-space: nowrap;
 }
-.btn-stripe-connect:hover:not(:disabled) { opacity: 0.85; }
+.btn-stripe-connect:hover:not(:disabled) { background: #c0392b; color: #fff; }
 .btn-stripe-connect:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .stripe-connected-row { display: flex; flex-direction: column; gap: 0; }
