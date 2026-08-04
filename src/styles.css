@@ -1852,16 +1852,17 @@ button:disabled {
   align-items: center;
   gap: 0.5rem;
   padding: 0.55rem 1.25rem;
-  background: #635bff;
+  background: var(--navy);
   color: #fff;
-  border: none;
+  border: 1px solid var(--navy);
   border-radius: 8px;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: opacity 0.15s;
+  white-space: nowrap;
 }
-.btn-stripe-connect:hover:not(:disabled) { background: #4e49d4; }
+.btn-stripe-connect:hover:not(:disabled) { opacity: 0.85; }
 .btn-stripe-connect:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .stripe-connected-row { display: flex; flex-direction: column; gap: 0; }
@@ -1880,14 +1881,9 @@ button:disabled {
 }
 
 @media (prefers-color-scheme: dark) {
-  .btn-stripe-connect { background: #7b76ff; }
-  .btn-stripe-connect:hover:not(:disabled) { background: #635bff; }
   .stripe-connected-badge { background: #1b3e1c; color: #81c784; }
 }
-:root[data-theme="dark"] .btn-stripe-connect { background: #7b76ff; }
-:root[data-theme="dark"] .btn-stripe-connect:hover:not(:disabled) { background: #635bff; }
 :root[data-theme="dark"] .stripe-connected-badge { background: #1b3e1c; color: #81c784; }
-:root[data-theme="light"] .btn-stripe-connect { background: #635bff; }
 :root[data-theme="light"] .stripe-connected-badge { background: #e8f5e9; color: #2e7d32; }
 
 /* ---- Form ---- */
