@@ -22,6 +22,9 @@ export default function ApplicantNotifications() {
       .select("*")
       .eq("applicant_id", user.id)
       .eq("applicant_dismissed", false)
+      // Rows are created before Stripe checkout; an abandoned payment leaves
+      // an unpaid row that must never show up as "in review".
+      .neq("payment_status", "unpaid")
       .order("created_at", { ascending: false });
 
     const ids = [...new Set((reqs ?? []).map((r) => r.reviewer_id))];

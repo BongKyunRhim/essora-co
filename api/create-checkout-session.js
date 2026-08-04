@@ -50,7 +50,7 @@ export default async function handler(req, res) {
       applicant_id: user.id,
     },
     success_url: `${origin}/#/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url:  `${origin}/#/reviewers/${reviewer_id}/request?cancelled=1`,
+    cancel_url:  `${origin}/#/reviewers/${reviewer_id}/request?cancelled=1&request_id=${request_id}`,
   });
 
   // Store the session ID on the pending request row

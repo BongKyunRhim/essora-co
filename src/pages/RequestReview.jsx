@@ -46,6 +46,20 @@ export default function RequestReview() {
       });
   }, [id]);
 
+  // Cancelled checkout: remove the unpaid row created before the redirect so
+  // it can't linger in the database as a ghost submission.
+  useEffect(() => {
+    const cancelledId = searchParams.get("request_id");
+    if (searchParams.get("cancelled") !== "1" || !cancelledId) return;
+    supabase
+      .from("requests")
+      .delete()
+      .eq("id", cancelledId)
+      .eq("applicant_id", user.id)
+      .eq("payment_status", "unpaid")
+      .then(() => {});
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const wordCount = essayText.trim() ? essayText.trim().split(/\s+/).length : 0;
 
   async function pickFile(file) {
