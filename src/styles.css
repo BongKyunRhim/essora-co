@@ -3201,49 +3201,101 @@ button:disabled {
 }
 
 .settings-sidebar-title {
-  font-size: 1rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--ink);
-  margin: 0 0 0.75rem;
-  padding: 0 1.25rem 0.75rem;
-  border-bottom: 2px solid var(--navy);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 1rem;
+  padding: 0 1.25rem;
+}
+
+/* Mini identity card at the top of the sidebar */
+.settings-user {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 0.75rem 1.25rem;
+  padding: 0.8rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  min-width: 0;
+}
+
+.settings-user-meta {
+  min-width: 0;
+}
+
+.settings-user-name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.settings-user-role {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin: 0.15rem 0 0;
 }
 
 .settings-nav {
   display: flex;
   flex-direction: column;
-  padding: 0.5rem 0;
+  gap: 0.2rem;
+  padding: 0;
+  margin: 0 0.75rem;
 }
 
 .settings-nav-item {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
   width: 100%;
   text-align: left;
-  padding: 0.6rem 1.25rem;
+  padding: 0.6rem 0.85rem;
   border: none;
-  border-left: 3px solid transparent;
-  border-radius: 0;
+  border-radius: var(--radius-sm);
   background: none;
-  color: #555;
+  color: var(--ink-soft);
   font-size: 0.9rem;
-  font-weight: 400;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  transition: background 0.15s, color 0.15s;
   box-shadow: none;
 }
 
+.settings-nav-item svg {
+  flex-shrink: 0;
+  color: var(--faint);
+  transition: color 0.15s;
+}
+
 .settings-nav-item:hover {
-  background: #f0f0f0;
-  color: #000;
+  background: var(--surface-soft);
+  color: var(--ink);
+}
+
+.settings-nav-item:hover svg {
+  color: var(--ink-soft);
 }
 
 .settings-nav-item.active {
   background: var(--slate-soft);
   color: var(--navy);
   font-weight: 600;
-  border-left-color: var(--navy);
+}
+
+.settings-nav-item.active svg {
+  color: var(--navy);
 }
 
 .settings-main {
@@ -4549,4 +4601,18 @@ button:disabled {
 .rrl-form-title {
   text-align: center;
   font-size: clamp(1.5rem, 4.5vw, 2rem);
+}
+
+/* Settings sidebar on phones: horizontal pill tabs — no identity card,
+   and the icon must stay legible on the navy active pill */
+@media (max-width: 640px) {
+  .settings-user {
+    display: none;
+  }
+  .settings-nav {
+    margin: 0;
+  }
+  .settings-nav-item.active svg {
+    color: #fff;
+  }
 }
