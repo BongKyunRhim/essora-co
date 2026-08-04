@@ -1685,7 +1685,9 @@ button:disabled {
   margin-top: 2rem;
   display: grid;
   grid-template-columns: 1fr 260px;
-  gap: 2.5rem;
+  grid-template-rows: auto 1fr;
+  column-gap: 2.5rem;
+  row-gap: 1.75rem;
   align-items: start;
 }
 
