@@ -1825,14 +1825,26 @@ button:disabled {
 }
 .stripe-setup-banner-body svg { flex-shrink: 0; margin-top: 2px; }
 
+.stripe-setup-banner--error {
+  background: #fff1f1;
+  border-color: #fca5a5;
+}
+.stripe-setup-banner--error .stripe-setup-banner-body { color: #991b1b; }
+
 @media (prefers-color-scheme: dark) {
   .stripe-setup-banner { background: #1e1b4b; border-color: #4338ca; }
   .stripe-setup-banner-body { color: #a5b4fc; }
+  .stripe-setup-banner--error { background: #3b0a0a; border-color: #b91c1c; }
+  .stripe-setup-banner--error .stripe-setup-banner-body { color: #fca5a5; }
 }
 :root[data-theme="dark"] .stripe-setup-banner { background: #1e1b4b; border-color: #4338ca; }
 :root[data-theme="dark"] .stripe-setup-banner-body { color: #a5b4fc; }
+:root[data-theme="dark"] .stripe-setup-banner--error { background: #3b0a0a; border-color: #b91c1c; }
+:root[data-theme="dark"] .stripe-setup-banner--error .stripe-setup-banner-body { color: #fca5a5; }
 :root[data-theme="light"] .stripe-setup-banner { background: #f0f0ff; border-color: #c7c4ff; }
 :root[data-theme="light"] .stripe-setup-banner-body { color: #3730a3; }
+:root[data-theme="light"] .stripe-setup-banner--error { background: #fff1f1; border-color: #fca5a5; }
+:root[data-theme="light"] .stripe-setup-banner--error .stripe-setup-banner-body { color: #991b1b; }
 
 /* ── Stripe Connect ────────────────────────────────────────── */
 .btn-stripe-connect {
