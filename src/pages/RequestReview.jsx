@@ -164,15 +164,15 @@ export default function RequestReview() {
     <section className="request-review-page">
       <Link to={`/reviewers/${id}`} className="back-link">← Back to {reviewer.full_name || "reviewer"}</Link>
 
+      <h1 className="rrl-page-title">Submit Your Essay</h1>
+
       <div className="request-review-layout">
 
         {/* Form */}
         <form className="rrl-form" onSubmit={handleSubmit}>
-          <h1 className="rrl-form-title">Submit Your Essay</h1>
 
           {/* Section 1 — Essay */}
           <div className="rrl-section">
-            <h2 className="rrl-section-label">Your Essay</h2>
 
             <div className="rrl-field">
               <span className="rrl-field-label">
@@ -239,8 +239,6 @@ export default function RequestReview() {
 
           {/* Section 2 — Details */}
           <div className="rrl-section">
-            <h2 className="rrl-section-label">Details</h2>
-
             <div className="rrl-field">
               <span className="rrl-field-label">What should the reviewer focus on?</span>
               <textarea

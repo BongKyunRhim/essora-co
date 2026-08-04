@@ -1688,7 +1688,7 @@ button:disabled {
 }
 
 .request-review-layout {
-  margin-top: 2rem;
+  margin-top: 2.25rem;
   display: grid;
   grid-template-columns: 1fr 260px;
   gap: 2.5rem;
@@ -1699,9 +1699,6 @@ button:disabled {
 .rrl-price-card {
   position: sticky;
   top: calc(var(--nav-h) + 1.5rem);
-  /* the title's glyphs sit ~0.75rem below its line-box top; match that so
-     the card's top border lines up with the visible top of the title */
-  margin-top: 0.75rem;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -1881,11 +1878,14 @@ button:disabled {
   gap: 2.5rem;
 }
 
-.rrl-form-title {
+.rrl-page-title {
   font-family: var(--font-display);
-  font-size: clamp(1.4rem, 4vw, 1.8rem);
-  font-weight: 600;
-  margin: 0;
+  font-size: clamp(1.5rem, 4.5vw, 2rem);
+  font-weight: 700;
+  text-align: center;
+  margin: 1rem 0 0;
+  padding-bottom: 2.25rem;
+  border-bottom: 1px solid var(--line);
 }
 
 .rrl-section {
@@ -4642,12 +4642,6 @@ button:disabled {
 .find-reviewers-heading {
   margin-top: 2.5rem;
   padding: 0 2rem 2.25rem;
-}
-
-/* Submit Your Essay: centered title at the same size as the other pages */
-.rrl-form-title {
-  text-align: center;
-  font-size: clamp(1.5rem, 4.5vw, 2rem);
 }
 
 /* Settings on desktop: kill the page's top padding so the sidebar/main
