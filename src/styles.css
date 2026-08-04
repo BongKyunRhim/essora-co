@@ -3266,17 +3266,14 @@ button:disabled {
   padding: 0 1.25rem;
 }
 
-/* Mini identity card at the top of the sidebar */
+/* Identity block at the top of the sidebar — no card, just a clean row */
 .settings-user {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin: 0 0.75rem 1.25rem;
-  padding: 0.8rem 1rem;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-sm);
+  gap: 0.65rem;
+  margin: 0 0 1.25rem;
+  padding: 0 0.85rem 1.1rem;
+  border-bottom: 1px solid var(--line);
   min-width: 0;
 }
 
