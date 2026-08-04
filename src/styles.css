@@ -4518,3 +4518,28 @@ button:disabled {
 .auth-card {
   transition: box-shadow 0.25s ease;
 }
+
+/* 4 ▸ Centered page titles that land on the same line everywhere */
+
+/* My Essays / Essay Submissions / Submission Status: same centered
+   heading + divider treatment as Find Reviewers */
+.rn-title {
+  text-align: center;
+  font-size: clamp(1.5rem, 4.5vw, 2rem);
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 2.25rem;
+}
+
+/* Find Reviewers: its wrapper has no .app-main padding, so re-create the
+   same 3rem top offset the other pages get, and match the divider gap */
+.find-reviewers-heading {
+  margin-top: 3rem;
+  padding: 0 2rem 1.75rem;
+}
+
+/* Submit Your Essay: centered title at the same size as the other pages */
+.rrl-form-title {
+  text-align: center;
+  font-size: clamp(1.5rem, 4.5vw, 2rem);
+}

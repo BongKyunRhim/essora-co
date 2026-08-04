@@ -61,6 +61,8 @@ export default function SubmissionStatus() {
 
   return (
     <section className="submission-status-page page">
+      <h1 className="rn-title">Submission Status</h1>
+
       <Link to="/notifications" className="back-link">← Back to My Essays</Link>
 
       <div className="ss-card">
