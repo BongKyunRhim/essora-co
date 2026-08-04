@@ -2090,6 +2090,7 @@ button:disabled {
 .notif-header {
   display: flex;
   align-items: baseline;
+  justify-content: center;
   gap: 0.75rem;
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
