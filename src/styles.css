@@ -1704,6 +1704,9 @@ button:disabled {
 .rrl-price-card {
   position: sticky;
   top: calc(var(--nav-h) + 1.5rem);
+  /* the title's glyphs sit ~0.75rem below its line-box top; match that so
+     the card's top border lines up with the visible top of the title */
+  margin-top: 0.75rem;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
