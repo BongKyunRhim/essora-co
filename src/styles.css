@@ -680,7 +680,7 @@ button:not([class]):hover {
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   /* Every row gets the same height, so all cards match regardless of content */
   grid-auto-rows: 1fr;
   gap: 1rem;
@@ -1050,7 +1050,13 @@ button:disabled {
   border-color: var(--navy-ink);
 }
 
+@media (max-width: 1100px) {
+  .cards { grid-template-columns: repeat(3, 1fr); }
+}
+
 @media (max-width: 700px) {
+  .cards { grid-template-columns: repeat(2, 1fr); }
+
   .find-reviewers-layout {
     padding-top: 1.5rem;
   }
