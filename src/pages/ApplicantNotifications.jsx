@@ -64,34 +64,35 @@ export default function ApplicantNotifications() {
           const done = r.status === "completed";
           const isNew = done && !r.applicant_seen;
           const dismissible = DISMISSIBLE.has(r.status);
-          // Finished reviews open the feedback; everything else goes back
-          // to the reviewer's profile page.
-          const href = done ? `/feedback/${r.id}` : `/reviewers/${r.reviewer_id}`;
+          const href = done ? `/feedback/${r.id}` : `/submissions/${r.id}`;
+          const inner = (
+            <>
+              <Avatar
+                url={r.reviewer?.avatar_url}
+                name={r.reviewer?.full_name}
+                size={48}
+              />
+              <div className="rn-item-body">
+                <p className="rn-item-name">
+                  {r.reviewer?.full_name || "Your reviewer"}
+                </p>
+                {r.essay_type && (
+                  <p className="rn-item-sub">{r.essay_type.replace(/_/g, " ")}</p>
+                )}
+                <p className="rn-item-date">
+                  {new Date(r.created_at).toLocaleDateString("en-US", {
+                    month: "short", day: "numeric", year: "numeric",
+                  })}
+                </p>
+              </div>
+              <span className={`rn-status rn-status--${STATUS_CLASS[r.status] ?? r.status}`}>
+                {STATUS_LABEL[r.status] ?? r.status}
+              </span>
+            </>
+          );
           return (
             <li key={r.id} className={`rn-list-item${dismissible ? " rn-list-item--dismissible" : ""}`}>
-              <Link to={href} className={`rn-item${isNew ? " rn-item--new" : ""}`}>
-                <Avatar
-                  url={r.reviewer?.avatar_url}
-                  name={r.reviewer?.full_name}
-                  size={48}
-                />
-                <div className="rn-item-body">
-                  <p className="rn-item-name">
-                    {r.reviewer?.full_name || "Your reviewer"}
-                  </p>
-                  {r.essay_type && (
-                    <p className="rn-item-sub">{r.essay_type.replace(/_/g, " ")}</p>
-                  )}
-                  <p className="rn-item-date">
-                    {new Date(r.created_at).toLocaleDateString("en-US", {
-                      month: "short", day: "numeric", year: "numeric",
-                    })}
-                  </p>
-                </div>
-                <span className={`rn-status rn-status--${STATUS_CLASS[r.status] ?? r.status}`}>
-                  {STATUS_LABEL[r.status] ?? r.status}
-                </span>
-              </Link>
+              <Link to={href} className={`rn-item${isNew ? " rn-item--new" : ""}`}>{inner}</Link>
               {dismissible && (
                 <button
                   type="button"

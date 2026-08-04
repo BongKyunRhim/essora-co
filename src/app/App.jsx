@@ -18,6 +18,7 @@ import ApplicantFeedback from "../pages/ApplicantFeedback.jsx";
 import RequestReview from "../pages/RequestReview.jsx";
 import RequestDetail from "../pages/RequestDetail.jsx";
 import PaymentSuccess from "../pages/PaymentSuccess.jsx";
+import SubmissionStatus from "../pages/SubmissionStatus.jsx";
 import Landing from "../pages/Landing.jsx";
 
 function ProtectedRoute({ children }) {
@@ -214,6 +215,7 @@ export default function App() {
           <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
           <Route path="/requests/:id" element={<ProtectedRoute><RequestDetail /></ProtectedRoute>} />
           <Route path="/feedback/:id" element={<ProtectedRoute><ApplicantFeedback /></ProtectedRoute>} />
+          <Route path="/submissions/:id" element={<ProtectedRoute><SubmissionStatus /></ProtectedRoute>} />
           <Route path="/payment-success" element={<ProtectedRoute><PaymentSuccess /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
