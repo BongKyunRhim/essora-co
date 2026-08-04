@@ -3257,98 +3257,49 @@ button:disabled {
 }
 
 .settings-sidebar-title {
-  font-size: 0.72rem;
+  font-size: 1rem;
   font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin: 0 0 1rem;
-  padding: 0 1.25rem;
-}
-
-/* Identity block at the top of the sidebar — no card, just a clean row */
-.settings-user {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  margin: 0 0 1.25rem;
-  padding: 0 0.85rem 1.1rem;
-  border-bottom: 1px solid var(--line);
-  min-width: 0;
-}
-
-.settings-user-meta {
-  min-width: 0;
-}
-
-.settings-user-name {
-  font-size: 0.92rem;
-  font-weight: 600;
-  line-height: 1.25;
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.settings-user-role {
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  margin: 0.15rem 0 0;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+  margin: 0 0 0.75rem;
+  padding: 0 1.25rem 0.75rem;
+  border-bottom: 2px solid var(--navy);
 }
 
 .settings-nav {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
-  padding: 0;
-  margin: 0 0.75rem;
+  padding: 0.5rem 0;
 }
 
 .settings-nav-item {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
+  display: block;
   width: 100%;
   text-align: left;
-  padding: 0.6rem 0.85rem;
+  padding: 0.6rem 1.25rem;
   border: none;
-  border-radius: var(--radius-sm);
+  border-left: 3px solid transparent;
+  border-radius: 0;
   background: none;
-  color: var(--ink-soft);
+  color: #555;
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 400;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
   box-shadow: none;
 }
 
-.settings-nav-item svg {
-  flex-shrink: 0;
-  color: var(--faint);
-  transition: color 0.15s;
-}
-
 .settings-nav-item:hover {
-  background: var(--surface-soft);
-  color: var(--ink);
-}
-
-.settings-nav-item:hover svg {
-  color: var(--ink-soft);
+  background: #f0f0f0;
+  color: #000;
 }
 
 .settings-nav-item.active {
-  background: var(--slate-soft);
-  color: var(--navy);
+  background: #f0f0f0;
+  color: #000;
+  border-left-color: var(--navy);
   font-weight: 600;
-}
-
-.settings-nav-item.active svg {
-  color: var(--navy);
 }
 
 .settings-main {
@@ -4658,25 +4609,6 @@ button:disabled {
     padding-top: 3.25rem;
   }
 
-  /* Center the sidebar content horizontally within its column */
-  .settings-sidebar .settings-sidebar-title,
-  .settings-sidebar .settings-user,
-  .settings-sidebar .settings-nav {
-    width: 100%;
-    max-width: 220px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .settings-sidebar .settings-sidebar-title {
-    padding-left: 0.85rem;
-    padding-right: 0;
-  }
-
-  .settings-user .avatar,
-  .settings-user .avatar-placeholder {
-    flex-shrink: 0;
-  }
   .settings-main {
     padding-top: 3.25rem;
     /* the left border is the sidebar/content divider — always run it to
@@ -4686,16 +4618,3 @@ button:disabled {
 }
 
 
-/* Settings sidebar on phones: horizontal pill tabs — no identity card,
-   and the icon must stay legible on the navy active pill */
-@media (max-width: 640px) {
-  .settings-user {
-    display: none;
-  }
-  .settings-nav {
-    margin: 0;
-  }
-  .settings-nav-item.active svg {
-    color: #fff;
-  }
-}
