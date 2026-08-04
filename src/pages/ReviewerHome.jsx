@@ -112,6 +112,25 @@ function lastSixMonths() {
 
 const SECTIONS = ["Public Profile", "My Ratings", "Account & Privacy"];
 
+const SECTION_ICONS = {
+  "Public Profile": (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+  ),
+  "My Ratings": (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+    </svg>
+  ),
+  "Account & Privacy": (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+  ),
+};
+
 function EyeIcon({ open }) {
   return open ? (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -427,6 +446,13 @@ export default function ReviewerHome() {
     <div className="settings-layout">
       <aside className="settings-sidebar">
         <p className="settings-sidebar-title">Account Settings</p>
+        <div className="settings-user">
+          <Avatar url={profile?.avatar_url} name={profile?.full_name} size={38} />
+          <div className="settings-user-meta">
+            <p className="settings-user-name">{profile?.full_name || "Your account"}</p>
+            <p className="settings-user-role">Reviewer</p>
+          </div>
+        </div>
         <nav className="settings-nav">
           {SECTIONS.map((s) => (
             <button
@@ -435,7 +461,8 @@ export default function ReviewerHome() {
               className={`settings-nav-item${activeSection === s ? " active" : ""}`}
               onClick={() => setActiveSection(s)}
             >
-              {s}
+              {SECTION_ICONS[s]}
+              <span>{s}</span>
             </button>
           ))}
         </nav>
