@@ -162,9 +162,10 @@ export default function RequestReview() {
 
   return (
     <section className="request-review-page">
-      <Link to={`/reviewers/${id}`} className="back-link">← Back to {reviewer.full_name || "reviewer"}</Link>
-
-      <h1 className="rrl-page-title">Submit Your Essay</h1>
+      <div className="rrl-page-header">
+        <Link to={`/reviewers/${id}`} className="back-link">← Back to {reviewer.full_name || "reviewer"}</Link>
+        <h1 className="rrl-page-title">Submit Your Essay</h1>
+      </div>
 
       <div className="request-review-layout">
 

@@ -1678,13 +1678,28 @@ button:disabled {
 
 /* ---- Request a Review page ---- */
 .app-main:has(.request-review-page) {
-  padding: 1.5rem 0 0;
+  padding: 0;
   align-items: stretch;
 }
 
 .request-review-page {
   width: 100%;
-  padding: 1.25rem 3rem 4rem;
+  padding: 0 3rem 4rem;
+}
+
+.rrl-page-header {
+  position: relative;
+  text-align: center;
+  margin-top: 2.5rem;
+  padding-bottom: 2.25rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 2.25rem;
+}
+
+.rrl-page-header .back-link {
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .request-review-layout {
@@ -1883,10 +1898,7 @@ button:disabled {
   font-family: var(--font-display);
   font-size: clamp(1.5rem, 4.5vw, 2rem);
   font-weight: 700;
-  text-align: center;
-  margin: 0 0 2.25rem;
-  padding-bottom: 2.25rem;
-  border-bottom: 1px solid var(--line);
+  margin: 0;
 }
 
 .rrl-section {
@@ -4289,7 +4301,7 @@ button:disabled {
   }
 
   /* Request pages: narrow padding + correct divider bleed */
-  .request-review-page { padding: 1rem 1.25rem 3rem; }
+  .request-review-page { padding: 0 1.25rem 3rem; }
 
   .request-detail-page { padding: 1rem 1.25rem 3rem; }
   .rdp-divider { margin-top: 2rem; margin-bottom: 2rem; }
