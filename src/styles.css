@@ -4438,9 +4438,9 @@ button:disabled {
   padding-top: 0.25rem;
 }
 
-/* Landing content lines up with the same column as the app pages */
-.hero-text,
-.how-grid {
+/* Landing hero lines up with the same column as the app pages
+   (the how-it-works grid keeps its original tighter 1100px width) */
+.hero-text {
   max-width: var(--content-w);
 }
 
