@@ -42,9 +42,13 @@ export default async function handler(req, res) {
   const priceCents = (reviewer.price ?? 0) * 100;
   if (priceCents <= 0) return res.status(200).json({ skipped: true, reason: "No price set." });
 
+  // Platform keeps a 3% commission; the reviewer receives the remaining 97%.
+  const PLATFORM_FEE_PCT = 0.03;
+  const payoutCents = Math.round(priceCents * (1 - PLATFORM_FEE_PCT));
+
   const stripe = new Stripe(STRIPE_SECRET_KEY);
   const transfer = await stripe.transfers.create({
-    amount:         priceCents,
+    amount:         payoutCents,
     currency:       "usd",
     destination:    reviewer.stripe_account_id,
     transfer_group: request_id,
