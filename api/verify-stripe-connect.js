@@ -29,7 +29,20 @@ export default async function handler(req, res) {
   }
 
   const stripe = new Stripe(STRIPE_SECRET_KEY);
-  const account = await stripe.accounts.retrieve(profile.stripe_account_id);
+
+  // A stored account from the other Stripe mode (live vs. test) can't be
+  // retrieved — treat it as not onboarded and clear it so the reviewer can
+  // reconnect in the current mode.
+  let account;
+  try {
+    account = await stripe.accounts.retrieve(profile.stripe_account_id);
+  } catch {
+    await supabase
+      .from("profiles")
+      .update({ stripe_account_id: null, stripe_onboarded: false })
+      .eq("id", user.id);
+    return res.status(200).json({ onboarded: false });
+  }
 
   const onboarded = account.details_submitted;
   await supabase

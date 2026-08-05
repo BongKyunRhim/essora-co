@@ -33,6 +33,21 @@ export default async function handler(req, res) {
   try {
     // Reuse existing account or create a new Express account
     let accountId = profile?.stripe_account_id;
+
+    // A stored account can be from the other Stripe mode (live vs. test) —
+    // retrieve fails for those, so discard the stale ID and start fresh.
+    if (accountId) {
+      try {
+        await stripe.accounts.retrieve(accountId);
+      } catch {
+        accountId = null;
+        await supabase
+          .from("profiles")
+          .update({ stripe_account_id: null, stripe_onboarded: false })
+          .eq("id", user.id);
+      }
+    }
+
     if (!accountId) {
       const account = await stripe.accounts.create({ type: "express" });
       accountId = account.id;
