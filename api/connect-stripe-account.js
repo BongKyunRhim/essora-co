@@ -30,37 +30,36 @@ export default async function handler(req, res) {
   const stripe = new Stripe(STRIPE_SECRET_KEY);
   const origin = req.headers.origin || "https://essora.co";
 
-  try {
-    // Reuse existing account or create a new Express account
-    let accountId = profile?.stripe_account_id;
+  const makeFreshAccount = async () => {
+    const account = await stripe.accounts.create({ type: "express" });
+    await supabase
+      .from("profiles")
+      .update({ stripe_account_id: account.id, stripe_onboarded: false })
+      .eq("id", user.id);
+    return account.id;
+  };
 
-    // A stored account can be from the other Stripe mode (live vs. test) —
-    // retrieve fails for those, so discard the stale ID and start fresh.
-    if (accountId) {
-      try {
-        await stripe.accounts.retrieve(accountId);
-      } catch {
-        accountId = null;
-        await supabase
-          .from("profiles")
-          .update({ stripe_account_id: null, stripe_onboarded: false })
-          .eq("id", user.id);
-      }
-    }
-
-    if (!accountId) {
-      const account = await stripe.accounts.create({ type: "express" });
-      accountId = account.id;
-      await supabase.from("profiles").update({ stripe_account_id: accountId }).eq("id", user.id);
-    }
-
-    // Generate onboarding link
-    const accountLink = await stripe.accountLinks.create({
+  const makeLink = (accountId) =>
+    stripe.accountLinks.create({
       account: accountId,
       refresh_url: `${origin}/#/reviewer?stripe=refresh`,
       return_url:  `${origin}/#/reviewer?stripe=connected`,
       type: "account_onboarding",
     });
+
+  try {
+    let accountId = profile?.stripe_account_id || (await makeFreshAccount());
+
+    let accountLink;
+    try {
+      accountLink = await makeLink(accountId);
+    } catch (err) {
+      // The stored account belongs to the other Stripe mode (live account
+      // while testing, or test account after going live) — link creation is
+      // the only call that rejects it. Discard it and retry with a fresh one.
+      accountId = await makeFreshAccount();
+      accountLink = await makeLink(accountId);
+    }
 
     return res.status(200).json({ url: accountLink.url });
   } catch (err) {
