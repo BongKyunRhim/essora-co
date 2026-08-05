@@ -232,8 +232,6 @@ export default function RequestDetail() {
         </div>
       )}
 
-      <div className="rdp-divider" />
-
       <div className="rdp-body">
 
         {/* Essay meta */}

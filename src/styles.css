@@ -2397,17 +2397,23 @@ button:disabled {
   margin: 2.5rem 0 2.5rem calc(50% - 50vw);
 }
 
+/* Essay meta + applicant message sit side by side as cards */
 .rdp-body {
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
-  max-width: 680px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
 }
 
 .rdp-section {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem 1.75rem;
+  box-shadow: var(--shadow-sm);
 }
 
 .rdp-section-label {
@@ -2486,7 +2492,11 @@ button:disabled {
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  max-width: 680px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem 1.75rem;
+  box-shadow: var(--shadow-sm);
 }
 
 .rw-applicant-bio {
@@ -2767,7 +2777,7 @@ button:disabled {
   padding: 1.25rem;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: var(--surface);
+  background: var(--surface-soft);
 }
 
 .rw-count {
@@ -2913,12 +2923,13 @@ button:disabled {
 
 /* ---- Ratings + final comments card ---- */
 .rw-review-card {
-  margin-top: 2.5rem;
+  margin: 2.5rem auto 0;
+  width: 100%;
   max-width: 780px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: #fff;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-sm);
   padding: 2rem 2.25rem;
   display: flex;
   flex-direction: column;
