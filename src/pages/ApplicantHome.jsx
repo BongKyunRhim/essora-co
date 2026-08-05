@@ -76,7 +76,8 @@ export default function ApplicantHome() {
         .from("profiles")
         .select("*")
         .eq("role", "reviewer")
-        .eq("is_listed", true),
+        .eq("is_listed", true)
+        .eq("stripe_onboarded", true),
       supabase.from("reviewer_ratings").select("reviewer_id, stars"),
     ]).then(([{ data }, { data: rats }]) => {
       if (!active) return;

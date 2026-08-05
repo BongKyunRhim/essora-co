@@ -476,7 +476,7 @@ export default function ReviewerHome() {
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
               <div>
                 <strong>Stripe account setup is necessary to receive money.</strong>
-                <span> You will not be paid for completed reviews until your Stripe account is connected.</span>
+                <span> Your profile is hidden from applicants until your Stripe account is connected — you can't receive submissions or get paid yet.</span>
                 {stripeMsg && (
                   <p className={`notice${stripeMsg.startsWith("Error") ? " error" : ""}`} style={{ marginTop: "0.4rem", marginBottom: 0 }}>
                     {stripeMsg}
