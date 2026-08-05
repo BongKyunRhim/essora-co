@@ -2349,7 +2349,7 @@ button:disabled {
 .rdp-header {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 2.5rem;
   margin-top: 2rem;
 }
 
@@ -2358,17 +2358,19 @@ button:disabled {
   min-width: 0;
 }
 
+/* Same type scale as the reviewer profile header (.rdl-name) */
 .rdp-name {
   font-family: var(--font-display);
-  font-size: clamp(1.3rem, 3.5vw, 1.6rem);
+  font-size: clamp(1.4rem, 4vw, 1.8rem);
   font-weight: 600;
+  line-height: 1.2;
   margin: 0;
 }
 
 .rdp-school {
-  font-size: 0.95rem;
+  font-size: 0.97rem;
   color: #555;
-  margin: 0.25rem 0 0;
+  margin: 0.3rem 0 0;
 }
 
 .rdp-tag-row {
@@ -4728,6 +4730,40 @@ button:disabled {
 .notif-item:nth-child(7), .cards > *:nth-child(7) { animation-delay: 0.34s; }
 .notif-item:nth-child(n + 8), .cards > *:nth-child(n + 8) { animation-delay: 0.39s; }
 
+/* Review workspace: the page's blocks cascade in with the same stagger */
+.rw-applicant-card,
+.rdp-body > .rdp-section,
+.rw-workspace,
+.rw-review-card {
+  animation: page-enter 0.45s cubic-bezier(0.22, 0.9, 0.35, 1) backwards;
+}
+.rw-applicant-card               { animation-delay: 0.05s; }
+.rdp-body > .rdp-section:nth-child(1) { animation-delay: 0.11s; }
+.rdp-body > .rdp-section:nth-child(2) { animation-delay: 0.17s; }
+.rw-workspace                    { animation-delay: 0.23s; }
+.rw-review-card                  { animation-delay: 0.29s; }
+
+/* New suggestions ease into the panel as they're added */
+.rw-suggestion {
+  animation: page-enter 0.3s cubic-bezier(0.22, 0.9, 0.35, 1) backwards;
+}
+
+/* Stars pop when selected */
+@keyframes star-pop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.rw-star--on svg {
+  animation: star-pop 0.25s ease;
+}
+
+/* Submission confirmation eases down into place */
+.rw-submitted-banner {
+  animation: page-enter 0.4s cubic-bezier(0.22, 0.9, 0.35, 1) backwards;
+}
+
 /* 3 ▸ Micro-interactions */
 
 /* Pressed feel on the hero/CTA links (buttons already have it globally) */
@@ -4746,7 +4782,10 @@ button:disabled {
 /* Cards settle with a soft transition everywhere */
 .ss-card,
 .rrl-price-col,
-.auth-card {
+.auth-card,
+.rdp-section,
+.rw-applicant-card,
+.rw-review-card {
   transition: box-shadow 0.25s ease;
 }
 
