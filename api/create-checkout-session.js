@@ -28,7 +28,7 @@ export default async function handler(req, res) {
   // Price comes from the database, never from the client
   const { data: reviewer } = await supabase
     .from("profiles")
-    .select("price, full_name")
+    .select("price, full_name, stripe_account_id, stripe_onboarded")
     .eq("id", reviewer_id)
     .single();
 
@@ -37,12 +37,27 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "This reviewer has no price set." });
   }
 
+  // Destination charges need a fully onboarded connected account up front.
+  if (!reviewer?.stripe_onboarded || !reviewer?.stripe_account_id) {
+    return res.status(400).json({
+      error: "This reviewer isn't set up to receive payments yet.",
+    });
+  }
+
   // The applicant covers Stripe's processing fee (2.9% + 30¢) on top of the
   // review price, so the platform's commission isn't eaten by it. Grossed up
   // because Stripe charges its fee on the total: total = (price + 30¢) / (1 - 2.9%).
   // Keep in sync with the same formula in src/pages/RequestReview.jsx.
   const totalCents = Math.ceil((priceCents + 30) / (1 - 0.029));
   const feeCents   = totalCents - priceCents;
+
+  // Destination charge: Stripe routes the payment to the reviewer at charge
+  // time and keeps our application fee on the platform. The reviewer receives
+  // 97% of their price; the application fee (processing surcharge + 3%
+  // commission) stays with the platform, out of which Stripe takes its cut.
+  const PLATFORM_FEE_PCT = 0.03;
+  const reviewerCents    = Math.round(priceCents * (1 - PLATFORM_FEE_PCT));
+  const applicationFee   = totalCents - reviewerCents;
 
   const stripe = new Stripe(STRIPE_SECRET_KEY);
   const origin = req.headers.origin || "https://essora.co";
@@ -71,6 +86,10 @@ export default async function handler(req, res) {
         quantity: 1,
       },
     ],
+    payment_intent_data: {
+      transfer_data: { destination: reviewer.stripe_account_id },
+      application_fee_amount: applicationFee,
+    },
     metadata: {
       request_id,
       reviewer_id,

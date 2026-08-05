@@ -1,22 +1,28 @@
 # Testing payments locally (Stripe test mode) — step by step
 
-## How the money flows in ESSORA
+## How the money flows in ESSORA (destination charges)
 
 1. **Applicant pays** — a high schooler pays the reviewer's price **plus a
    processing fee** (2.9% + 30¢, grossed up) via Stripe Checkout
-   (`api/create-checkout-session.js`). Checkout shows both line items. The
-   full amount lands in the platform's Stripe balance, and the surcharge
-   covers Stripe's own processing cost.
-2. **Webhook confirms** — Stripe calls `api/stripe-webhook.js`
+   (`api/create-checkout-session.js`). Checkout shows both line items.
+2. **Stripe splits the payment automatically at charge time** (a *destination
+   charge*): the reviewer's connected account receives **97% of the price**
+   immediately, and the platform keeps the application fee (processing
+   surcharge + **3% commission**), out of which Stripe takes its cut. There is
+   no separate payout step and no transfer to trigger later.
+3. **Webhook confirms** — Stripe calls `api/stripe-webhook.js`
    (`checkout.session.completed`) which marks the request `paid` in Supabase.
-3. **Reviewer is paid out** — when the review is submitted,
-   `api/payout-reviewer.js` transfers **97%** of the price to the reviewer's
-   connected Stripe Express account. The remaining **3% commission stays in the
-   platform's balance**.
+
+Because the destination account must exist at charge time, **reviewers must
+finish Stripe onboarding before applicants can submit to them** — the server
+rejects checkout otherwise, and the UI shows "Not accepting submissions yet".
 
 > Example on a $25 essay: applicant pays $26.07 ($25 + $1.07 processing fee),
-> Stripe takes ~$1.06, the reviewer receives $24.25 (97%), and the platform
-> keeps the 75¢ commission.
+> the reviewer receives $24.25 (97%) at charge time, Stripe takes ~$1.06 from
+> the platform's share, and the platform keeps the 75¢ commission.
+>
+> If a review never gets delivered, refund the payment in the Stripe
+> dashboard — Stripe automatically reverses the reviewer's share too.
 
 ---
 
@@ -173,18 +179,15 @@ Supabase (Table Editor → `profiles`): set `stripe_account_id` to NULL and
 
    | Card number | What it tests |
    |---|---|
-   | `4000 0000 0000 0077` | **Use this to test payouts** — funds land directly in your *available* balance |
-   | `4242 4242 4242 4242` | Successful payment (funds sit in *pending* for days — transfers will fail!) |
+   | `4242 4242 4242 4242` | Successful payment (split happens inside the charge) |
    | `4000 0000 0000 9995` | Card declined (insufficient funds) |
    | `4000 0025 0000 3155` | 3-D Secure challenge (click **Complete** in the modal) |
 
    Expiry: any future date · CVC: any 3 digits · ZIP: any 5 digits
 
-   > **Why `0077` matters:** transfers to reviewers can only spend your
-   > *available* balance. A normal test charge (`4242...`) goes to *pending*
-   > first (Stripe simulates real settlement timing), so the payout fails
-   > with "insufficient funds" until the funds clear days later. The `0077`
-   > card bypasses pending, so the payout works immediately.
+   > With destination charges the reviewer's share moves as part of the
+   > payment itself, so there is no available-balance timing issue — the
+   > normal `4242` card is all you need.
 
 6. On success you're redirected to the payment-success page
 
@@ -200,13 +203,20 @@ checkout.session.completed  --> POST http://localhost:3000/api/stripe-webhook [2
 reviewer's notifications, and Supabase (`requests` table) shows
 `payment_status = 'paid'`.
 
-### 3.4 Complete the review and check the payout
+### 3.4 Verify the split
 
-1. As the reviewer, open the submission from notifications and submit feedback
-2. In the Stripe **test** dashboard (Test mode ON):
-   - **Payments** → the full charge (e.g. $26.07)
-   - **Connect → Transfers** → the 97% transfer (e.g. $24.25)
-   - **Balance** → what remains is Stripe's fee + your 3% commission
+The split happens at payment time — no review needed first. In the Stripe
+**test** dashboard (Test mode ON):
+
+1. **Transactions → Payments** → open the charge (e.g. $26.07). Its
+   **"Transferred to"** column/field now shows the reviewer's connected
+   account, and the payment detail page breaks down: amount, Stripe fee,
+   application fee, and the reviewer's net.
+2. **Connected accounts** → click the reviewer → their balance shows the
+   $24.25 they received, and their Payouts section shows the sweep to their
+   (test) bank.
+3. Supabase `requests` row shows `payment_status = 'paid'` and
+   `payout_status = 'paid'` together.
 
 ### 3.5 Test the cancel path
 
@@ -243,8 +253,8 @@ only apply to new deployments).
 | "Server misconfiguration." | A var in `.env` is missing/empty. Restart `vercel dev` after editing. |
 | Payment succeeds but request stays unpaid | `stripe listen` not running, or `STRIPE_WEBHOOK_SECRET` doesn't match its printed secret. |
 | Webhook shows `[400]` | Secret mismatch — recopy from `stripe listen`, restart `vercel dev`. |
-| Payout fails: "No such destination" | Reviewer's `stripe_account_id` is from live mode. Clear it in Supabase and reconnect in test mode (§3.1). |
-| No transfer appears; `payout_status` stays unpaid | Platform balance is in *pending*, not *available* — you paid with `4242...`. Redo the payment with `4000 0000 0000 0077` (§3.2). Check Vercel → Logs for the "insufficient funds" error. |
+| "This reviewer isn't set up to receive payments yet." | Reviewer hasn't finished Stripe onboarding in the current mode (test accounts don't carry over from live). Redo onboarding (§3.1). |
+| Payment fails with a destination/account error | Reviewer's `stripe_account_id` is from the other mode. The connect flow self-heals — have the reviewer reconnect (§3.1). |
 | Checkout shows real card form / no TEST badge | `STRIPE_SECRET_KEY` is a live key. Swap to `sk_test_...`. |
 | `vercel dev` port already in use | `vercel dev --listen 3001` and update `stripe listen --forward-to` to match. |
 
@@ -252,11 +262,12 @@ only apply to new deployments).
 
 ## Pre-launch checklist
 
-- [ ] Full flow passes on localhost: success card, decline card, 3DS card
+- [ ] Full flow passes: success card, decline card, 3DS card
 - [ ] Both line items (review + processing fee) show on Checkout
 - [ ] Webhook returns 200 and the request flips to `paid`
-- [ ] Transfer = 97% of price; platform balance keeps the 3% commission
-- [ ] Payout is skipped gracefully when the reviewer hasn't connected Stripe
+- [ ] Payment's "Transferred to" shows the reviewer; their share = 97% of price
+- [ ] Un-onboarded reviewer shows "Not accepting submissions yet" and checkout is blocked
 - [ ] Cancelled checkout deletes the unpaid request
+- [ ] Refunding a payment also reverses the reviewer's share
 - [ ] Vercel env vars swapped back to live key + live webhook secret, redeployed
 - [ ] One real small-value live transaction end-to-end, then refund it

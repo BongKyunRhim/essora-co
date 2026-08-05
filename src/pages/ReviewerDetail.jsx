@@ -108,6 +108,8 @@ export default function ReviewerDetail() {
         {profile?.role === "applicant" && (
           justRequested ? (
             <p className="notice">Essay submitted! {reviewer.full_name || "Your reviewer"} will start reviewing it.</p>
+          ) : !reviewer.stripe_onboarded ? (
+            <p className="rdl-not-accepting">Not accepting submissions yet</p>
           ) : (
             <button
               type="button"

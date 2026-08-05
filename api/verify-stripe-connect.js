@@ -50,40 +50,5 @@ export default async function handler(req, res) {
     .update({ stripe_onboarded: onboarded })
     .eq("id", user.id);
 
-  // Catch-up sweep: pay out any completed, paid-for reviews whose payout was
-  // skipped (e.g. the review was submitted before Stripe was connected).
-  let sweptCount = 0;
-  const priceCents = Math.round((profile.price ?? 0) * 100);
-  if (onboarded && priceCents > 0) {
-    const PLATFORM_FEE_PCT = 0.03;
-    const payoutCents = Math.round(priceCents * (1 - PLATFORM_FEE_PCT));
-
-    const { data: pending } = await supabase
-      .from("requests")
-      .select("id")
-      .eq("reviewer_id", user.id)
-      .eq("status", "completed")
-      .eq("payment_status", "paid")
-      .neq("payout_status", "paid");
-
-    for (const reqRow of pending ?? []) {
-      try {
-        const transfer = await stripe.transfers.create({
-          amount:         payoutCents,
-          currency:       "usd",
-          destination:    profile.stripe_account_id,
-          transfer_group: reqRow.id,
-        });
-        await supabase
-          .from("requests")
-          .update({ payout_status: "paid", stripe_transfer_id: transfer.id })
-          .eq("id", reqRow.id);
-        sweptCount++;
-      } catch (err) {
-        console.error("Catch-up payout failed for request", reqRow.id, err);
-      }
-    }
-  }
-
-  return res.status(200).json({ onboarded, swept: sweptCount });
+  return res.status(200).json({ onboarded });
 }

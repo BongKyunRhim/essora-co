@@ -155,6 +155,12 @@ export default function RequestReview() {
 
   if (loading) return <p className="page">Loading…</p>;
   if (!reviewer) return <p className="page">Reviewer not found. <Link to="/applicant">Back to reviewers</Link></p>;
+  if (!reviewer.stripe_onboarded) return (
+    <p className="page">
+      {reviewer.full_name || "This reviewer"} isn&apos;t accepting submissions yet.{" "}
+      <Link to="/applicant">Back to reviewers</Link>
+    </p>
+  );
 
   const price = reviewer.price ?? 0;
 
