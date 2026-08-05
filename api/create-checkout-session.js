@@ -20,10 +20,29 @@ export default async function handler(req, res) {
   const { data: { user }, error: authErr } = await supabase.auth.getUser(authHeader.slice(7));
   if (authErr || !user) return res.status(401).json({ error: "Unauthorized" });
 
-  const { request_id, reviewer_id, price_cents, reviewer_name, essay_type } = req.body ?? {};
-  if (!request_id || !reviewer_id || !price_cents) {
+  const { request_id, reviewer_id, essay_type } = req.body ?? {};
+  if (!request_id || !reviewer_id) {
     return res.status(400).json({ error: "Missing required fields." });
   }
+
+  // Price comes from the database, never from the client
+  const { data: reviewer } = await supabase
+    .from("profiles")
+    .select("price, full_name")
+    .eq("id", reviewer_id)
+    .single();
+
+  const priceCents = Math.round((reviewer?.price ?? 0) * 100);
+  if (priceCents <= 0) {
+    return res.status(400).json({ error: "This reviewer has no price set." });
+  }
+
+  // The applicant covers Stripe's processing fee (2.9% + 30¢) on top of the
+  // review price, so the platform's commission isn't eaten by it. Grossed up
+  // because Stripe charges its fee on the total: total = (price + 30¢) / (1 - 2.9%).
+  // Keep in sync with the same formula in src/pages/RequestReview.jsx.
+  const totalCents = Math.ceil((priceCents + 30) / (1 - 0.029));
+  const feeCents   = totalCents - priceCents;
 
   const stripe = new Stripe(STRIPE_SECRET_KEY);
   const origin = req.headers.origin || "https://essora.co";
@@ -35,11 +54,19 @@ export default async function handler(req, res) {
       {
         price_data: {
           currency: "usd",
-          unit_amount: price_cents,
+          unit_amount: priceCents,
           product_data: {
-            name: `Essay Review by ${reviewer_name}`,
+            name: `Essay Review by ${reviewer?.full_name ?? "Reviewer"}`,
             description: essay_type ? `Essay type: ${essay_type}` : undefined,
           },
+        },
+        quantity: 1,
+      },
+      {
+        price_data: {
+          currency: "usd",
+          unit_amount: feeCents,
+          product_data: { name: "Processing fee" },
         },
         quantity: 1,
       },

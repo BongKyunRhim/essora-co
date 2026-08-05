@@ -1765,6 +1765,21 @@ button:disabled {
   line-height: 1;
 }
 
+.rrl-price-breakdown {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.83rem;
+  color: var(--ink-soft);
+}
+
+.rrl-price-breakdown--total {
+  font-weight: 700;
+  color: var(--navy-ink);
+  border-top: 1px solid var(--line);
+  padding-top: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
 .rrl-price-note {
   font-size: 0.83rem;
   color: var(--ink-soft);

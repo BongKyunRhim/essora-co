@@ -136,11 +136,9 @@ export default function RequestReview() {
       method:  "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify({
-        request_id:    req.id,
-        reviewer_id:   id,
-        price_cents:   (reviewer.price ?? 0) * 100,
-        reviewer_name: reviewer.full_name ?? "Reviewer",
-        essay_type:    ESSAY_TYPE_LABELS[essayType] ?? essayType,
+        request_id:  req.id,
+        reviewer_id: id,
+        essay_type:  ESSAY_TYPE_LABELS[essayType] ?? essayType,
       }),
     });
 
@@ -159,6 +157,13 @@ export default function RequestReview() {
   if (!reviewer) return <p className="page">Reviewer not found. <Link to="/applicant">Back to reviewers</Link></p>;
 
   const price = reviewer.price ?? 0;
+
+  // Applicant covers Stripe's processing fee (2.9% + 30¢), grossed up because
+  // Stripe takes its cut of the total. Must match api/create-checkout-session.js.
+  const priceCents = Math.round(price * 100);
+  const totalCents = Math.ceil((priceCents + 30) / (1 - 0.029));
+  const feeCents   = totalCents - priceCents;
+  const fmt = (c) => (c / 100).toFixed(2);
 
   return (
     <section className="request-review-page">
@@ -255,7 +260,7 @@ export default function RequestReview() {
           {/* Submit */}
           <div className="rrl-submit-row">
             <button type="submit" className="rrl-submit-btn" disabled={submitting || extracting}>
-              {submitting ? status.replace(/^Error: /, "") || "Processing…" : `Pay $${price} & Submit`}
+              {submitting ? status.replace(/^Error: /, "") || "Processing…" : `Pay $${fmt(totalCents)} & Submit`}
             </button>
             {status && (
               <p className={`notice${status.startsWith("Error") ? " error" : ""}`}>
@@ -270,6 +275,14 @@ export default function RequestReview() {
           <aside className="rrl-price-card">
             <p className="rrl-price-label">Review fee</p>
             <p className="rrl-price-amount">${price}</p>
+            <div className="rrl-price-breakdown">
+              <span>Processing fee</span>
+              <span>${fmt(feeCents)}</span>
+            </div>
+            <div className="rrl-price-breakdown rrl-price-breakdown--total">
+              <span>Total</span>
+              <span>${fmt(totalCents)}</span>
+            </div>
             <p className="rrl-price-note">
               Charged once via Stripe. Your essay will be visible to{" "}
               {reviewer.full_name || "the reviewer"} immediately after payment.

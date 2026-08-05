@@ -2,9 +2,11 @@
 
 How money flows in ESSORA:
 
-1. **Applicant pays** — a high schooler pays the reviewer's price via Stripe Checkout
-   (`api/create-checkout-session.js`). The full amount lands in the platform's
-   Stripe balance.
+1. **Applicant pays** — a high schooler pays the reviewer's price **plus a
+   processing fee** (2.9% + 30¢, grossed up) via Stripe Checkout
+   (`api/create-checkout-session.js`). Checkout shows both line items. The
+   full amount lands in the platform's Stripe balance, and the surcharge
+   covers Stripe's own processing cost.
 2. **Webhook confirms** — Stripe calls `api/stripe-webhook.js`
    (`checkout.session.completed`) which marks the request `paid` in Supabase.
 3. **Reviewer is paid out** — when the review is submitted,
@@ -12,10 +14,9 @@ How money flows in ESSORA:
    connected Stripe Express account. The remaining **3% commission stays in the
    platform's balance**.
 
-> Note: Stripe's own processing fee (~2.9% + 30¢ per card charge) is deducted
-> from the platform's balance, not the reviewer's share. On small prices the 3%
-> commission does not fully cover Stripe's fee — e.g. on a $25 essay you keep
-> 75¢ commission but pay ~$1.03 in Stripe fees. Keep this in mind when pricing.
+> Example on a $25 essay: applicant pays $26.07 ($25 + $1.07 processing fee),
+> Stripe takes ~$1.06, the reviewer receives $24.25 (97%), and the platform
+> keeps the 75¢ commission.
 
 ---
 
