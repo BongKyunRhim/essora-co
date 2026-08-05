@@ -22,13 +22,16 @@ export default async function handler(req, res) {
   if (!request_id) return res.status(400).json({ error: "request_id required." });
 
   // Fetch the request + reviewer profile
-  const { data: request } = await supabase
+  const { data: request, error: reqErr } = await supabase
     .from("requests")
     .select("*, profiles!requests_reviewer_id_fkey(price, stripe_account_id, stripe_onboarded)")
     .eq("id", request_id)
     .single();
 
-  if (!request) return res.status(404).json({ error: "Request not found." });
+  if (!request) {
+    console.error("payout-reviewer: request lookup failed for", request_id, "—", JSON.stringify(reqErr));
+    return res.status(404).json({ error: "Request not found.", detail: reqErr?.message });
+  }
   if (request.reviewer_id !== user.id) return res.status(403).json({ error: "Not your review." });
   if (request.payment_status !== "paid") {
     console.log("payout-reviewer: request", request_id, "not paid yet — skipping.");
