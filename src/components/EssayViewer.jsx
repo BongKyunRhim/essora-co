@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getDocument, GlobalWorkerOptions, TextLayer } from "pdfjs-dist";
 import workerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+import { MIN_SUGGESTION_WORDS, wordCount } from "../lib/reviewLimits.js";
 
 GlobalWorkerOptions.workerSrc = workerUrl;
 
@@ -226,7 +227,7 @@ export default function EssayViewer({
   }
 
   function saveSuggestion() {
-    if (!draftComment.trim()) return;
+    if (wordCount(draftComment) < MIN_SUGGESTION_WORDS) return;
     onCreate({
       page: pending.page,
       quote: pending.quote,
@@ -343,12 +344,20 @@ export default function EssayViewer({
             placeholder="What would you improve here, and why?"
           />
           <div className="ev-composer-actions">
-            <button type="button" className="ev-composer-save" disabled={!draftComment.trim()} onClick={saveSuggestion}>
+            <button
+              type="button"
+              className="ev-composer-save"
+              disabled={wordCount(draftComment) < MIN_SUGGESTION_WORDS}
+              onClick={saveSuggestion}
+            >
               Save suggestion
             </button>
             <button type="button" className="linklike" onClick={dismissPending}>
               Cancel
             </button>
+            <span className={`rw-word-count${wordCount(draftComment) >= MIN_SUGGESTION_WORDS ? " rw-word-count--ok" : ""}`}>
+              {wordCount(draftComment)} / {MIN_SUGGESTION_WORDS} words
+            </span>
           </div>
         </div>
       )}

@@ -2873,6 +2873,24 @@ button:disabled {
   white-space: pre-wrap;
 }
 
+.rw-suggestion-short {
+  font-size: 0.78rem;
+  color: var(--danger);
+  margin: 0.35rem 0 0;
+}
+
+/* Live word counters on suggestion composers and final comments */
+.rw-word-count {
+  margin-left: auto;
+  font-size: 0.78rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.rw-word-count--ok {
+  color: #16a34a;
+}
+
 .rw-manual-btn {
   border: 1.5px dashed #bbb;
   border-radius: var(--radius-sm);
@@ -2979,6 +2997,17 @@ button:disabled {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.rw-final-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.rw-final-head .rdp-section-label {
+  margin: 0;
 }
 
 .rw-final textarea {

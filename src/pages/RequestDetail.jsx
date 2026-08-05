@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { supabase } from "../lib/supabase.js";
 import { useAuth } from "../app/AuthContext.jsx";
 import Avatar from "../components/Avatar.jsx";
+import { MIN_SUGGESTION_WORDS, MIN_FINAL_WORDS, wordCount } from "../lib/reviewLimits.js";
 
 // pdf.js is heavy — load the viewer only when a reviewer opens the workspace
 const EssayViewer = lazy(() => import("../components/EssayViewer.jsx"));
@@ -136,7 +137,7 @@ export default function RequestDetail() {
   }
 
   function addManualSuggestion() {
-    if (!manualText.trim()) return;
+    if (wordCount(manualText) < MIN_SUGGESTION_WORDS) return;
     addSuggestion({ page: null, quote: null, rects: null, comment: manualText.trim() });
     setManualText("");
     setManualOpen(false);
@@ -145,9 +146,14 @@ export default function RequestDetail() {
   const missing = [];
   if (suggestions.length < MIN_SUGGESTIONS)
     missing.push(`${MIN_SUGGESTIONS - suggestions.length} more suggestion${MIN_SUGGESTIONS - suggestions.length === 1 ? "" : "s"}`);
+  const shortSuggestions = suggestions.filter((s) => wordCount(s.comment) < MIN_SUGGESTION_WORDS);
+  if (shortSuggestions.length)
+    missing.push(`more detail on ${shortSuggestions.length} suggestion${shortSuggestions.length === 1 ? "" : "s"} (${MIN_SUGGESTION_WORDS}+ words each)`);
   const unrated = RATING_CATEGORIES.filter((c) => !ratings[c.key]);
   if (unrated.length) missing.push(`${unrated.length} rating${unrated.length === 1 ? "" : "s"}`);
-  if (!finalComment.trim()) missing.push("a final comment");
+  const finalWords = wordCount(finalComment);
+  if (finalWords < MIN_FINAL_WORDS)
+    missing.push(`a longer final comment (${MIN_FINAL_WORDS}+ words)`);
 
   async function submitReview() {
     if (missing.length) return;
@@ -337,6 +343,11 @@ export default function RequestDetail() {
                     </div>
                     {s.quote && <p className="rw-suggestion-quote">“{s.quote}”</p>}
                     <p className="rw-suggestion-comment">{s.comment}</p>
+                    {!submitted && wordCount(s.comment) < MIN_SUGGESTION_WORDS && (
+                      <p className="rw-suggestion-short">
+                        Too brief — delete and rewrite with at least {MIN_SUGGESTION_WORDS} words.
+                      </p>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -356,12 +367,20 @@ export default function RequestDetail() {
                     placeholder="A suggestion that isn't tied to one passage…"
                   />
                   <div className="ev-composer-actions">
-                    <button type="button" className="ev-composer-save" disabled={!manualText.trim()} onClick={addManualSuggestion}>
+                    <button
+                      type="button"
+                      className="ev-composer-save"
+                      disabled={wordCount(manualText) < MIN_SUGGESTION_WORDS}
+                      onClick={addManualSuggestion}
+                    >
                       Add
                     </button>
                     <button type="button" className="linklike" onClick={() => { setManualOpen(false); setManualText(""); }}>
                       Cancel
                     </button>
+                    <span className={`rw-word-count${wordCount(manualText) >= MIN_SUGGESTION_WORDS ? " rw-word-count--ok" : ""}`}>
+                      {wordCount(manualText)} / {MIN_SUGGESTION_WORDS} words
+                    </span>
                   </div>
                 </div>
               )}
@@ -387,7 +406,14 @@ export default function RequestDetail() {
             </div>
 
             <div className="rw-final">
-              <h2 className="rdp-section-label">Final Comments</h2>
+              <div className="rw-final-head">
+                <h2 className="rdp-section-label">Final Comments</h2>
+                {!submitted && (
+                  <span className={`rw-word-count${finalWords >= MIN_FINAL_WORDS ? " rw-word-count--ok" : ""}`}>
+                    {finalWords} / {MIN_FINAL_WORDS} words minimum
+                  </span>
+                )}
+              </div>
               <textarea
                 rows={5}
                 maxLength={2000}
