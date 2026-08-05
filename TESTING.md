@@ -173,11 +173,18 @@ Supabase (Table Editor → `profiles`): set `stripe_account_id` to NULL and
 
    | Card number | What it tests |
    |---|---|
-   | `4242 4242 4242 4242` | Successful payment |
+   | `4000 0000 0000 0077` | **Use this to test payouts** — funds land directly in your *available* balance |
+   | `4242 4242 4242 4242` | Successful payment (funds sit in *pending* for days — transfers will fail!) |
    | `4000 0000 0000 9995` | Card declined (insufficient funds) |
    | `4000 0025 0000 3155` | 3-D Secure challenge (click **Complete** in the modal) |
 
    Expiry: any future date · CVC: any 3 digits · ZIP: any 5 digits
+
+   > **Why `0077` matters:** transfers to reviewers can only spend your
+   > *available* balance. A normal test charge (`4242...`) goes to *pending*
+   > first (Stripe simulates real settlement timing), so the payout fails
+   > with "insufficient funds" until the funds clear days later. The `0077`
+   > card bypasses pending, so the payout works immediately.
 
 6. On success you're redirected to the payment-success page
 
@@ -237,6 +244,7 @@ only apply to new deployments).
 | Payment succeeds but request stays unpaid | `stripe listen` not running, or `STRIPE_WEBHOOK_SECRET` doesn't match its printed secret. |
 | Webhook shows `[400]` | Secret mismatch — recopy from `stripe listen`, restart `vercel dev`. |
 | Payout fails: "No such destination" | Reviewer's `stripe_account_id` is from live mode. Clear it in Supabase and reconnect in test mode (§3.1). |
+| No transfer appears; `payout_status` stays unpaid | Platform balance is in *pending*, not *available* — you paid with `4242...`. Redo the payment with `4000 0000 0000 0077` (§3.2). Check Vercel → Logs for the "insufficient funds" error. |
 | Checkout shows real card form / no TEST badge | `STRIPE_SECRET_KEY` is a live key. Swap to `sk_test_...`. |
 | `vercel dev` port already in use | `vercel dev --listen 3001` and update `stripe listen --forward-to` to match. |
 
