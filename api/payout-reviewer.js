@@ -30,29 +30,46 @@ export default async function handler(req, res) {
 
   if (!request) return res.status(404).json({ error: "Request not found." });
   if (request.reviewer_id !== user.id) return res.status(403).json({ error: "Not your review." });
-  if (request.payment_status !== "paid") return res.status(400).json({ error: "Not yet paid by applicant." });
+  if (request.payment_status !== "paid") {
+    console.log("payout-reviewer: request", request_id, "not paid yet — skipping.");
+    return res.status(400).json({ error: "Not yet paid by applicant." });
+  }
   if (request.payout_status === "paid") return res.status(200).json({ already: true });
 
   const reviewer = request.profiles;
   if (!reviewer?.stripe_onboarded || !reviewer?.stripe_account_id) {
-    // No Stripe account yet — skip silent so review can still be submitted
+    // No Stripe account yet — skip silent so review can still be submitted.
+    // retry-payouts sweeps it up once the reviewer connects.
+    console.log("payout-reviewer: request", request_id, "skipped — reviewer not onboarded.");
     return res.status(200).json({ skipped: true, reason: "Reviewer not connected to Stripe." });
   }
 
   const priceCents = (reviewer.price ?? 0) * 100;
-  if (priceCents <= 0) return res.status(200).json({ skipped: true, reason: "No price set." });
+  if (priceCents <= 0) {
+    console.log("payout-reviewer: request", request_id, "skipped — no price set.");
+    return res.status(200).json({ skipped: true, reason: "No price set." });
+  }
 
   // Platform keeps a 3% commission; the reviewer receives the remaining 97%.
   const PLATFORM_FEE_PCT = 0.03;
   const payoutCents = Math.round(priceCents * (1 - PLATFORM_FEE_PCT));
 
   const stripe = new Stripe(STRIPE_SECRET_KEY);
-  const transfer = await stripe.transfers.create({
-    amount:         payoutCents,
-    currency:       "usd",
-    destination:    reviewer.stripe_account_id,
-    transfer_group: request_id,
-  });
+  let transfer;
+  try {
+    transfer = await stripe.transfers.create({
+      amount:         payoutCents,
+      currency:       "usd",
+      destination:    reviewer.stripe_account_id,
+      transfer_group: request_id,
+    });
+  } catch (err) {
+    // Leave payout_status unpaid — retry-payouts will pick it up later.
+    console.error("payout-reviewer: transfer FAILED for request", request_id, "—", err.message);
+    return res.status(200).json({ skipped: true, reason: err.message });
+  }
+
+  console.log("payout-reviewer: PAID request", request_id, "transfer", transfer.id, "amount", payoutCents);
 
   // Record payout on the request
   await supabase

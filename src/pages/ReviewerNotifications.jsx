@@ -56,6 +56,22 @@ export default function ReviewerNotifications() {
 
   useEffect(() => { load(); }, [load]);
 
+  // Self-healing payouts: sweep any completed reviews that missed their
+  // payout (mistimed onboarding, temporary balance shortfall, …).
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      const token = data?.session?.access_token;
+      if (!token) return;
+      fetch("/api/retry-payouts", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((r) => r.json())
+        .then((json) => console.log("retry-payouts:", json))
+        .catch(() => {});
+    });
+  }, []);
+
   async function dismiss(id) {
     setItems((prev) => prev.filter((r) => r.id !== id));
     await supabase.from("requests").update({ reviewer_dismissed: true }).eq("id", id);
