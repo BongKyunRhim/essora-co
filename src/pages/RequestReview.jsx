@@ -301,6 +301,13 @@ export default function RequestReview() {
               </svg>
               Secure payment via Stripe
             </p>
+            <p className="rrl-price-secure">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              3-day delivery guarantee — full refund if your review isn&apos;t completed in time
+            </p>
           </aside>
         </div>
 

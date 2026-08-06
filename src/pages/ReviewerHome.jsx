@@ -846,6 +846,30 @@ export default function ReviewerHome() {
               )}
             </div>
 
+            {/* Review deadline & payment policy */}
+            <div className="settings-block">
+              <h3 className="settings-block-title">How reviews &amp; payments work</h3>
+              <ul className="settings-policy">
+                <li>
+                  <strong>You earn 97% of your listed price.</strong> Your share
+                  is sent to your Stripe account the moment an applicant pays —
+                  ESSORA keeps a 3% platform fee.
+                </li>
+                <li>
+                  <strong>Reviews are due within 3 days.</strong> Each new
+                  submission must be completed within 3 days of payment. Your
+                  open submissions show a due date in Notifications.
+                </li>
+                <li>
+                  <strong>Late reviews are refunded automatically.</strong> If a
+                  review isn&apos;t finished in time, the submission expires,
+                  the applicant gets a full refund, and your share is reversed
+                  — so only take on essays you have time for. If you&apos;re
+                  busy, hide your profile above to pause new submissions.
+                </li>
+              </ul>
+            </div>
+
             {/* Danger zone */}
             <div className="settings-block settings-block--danger">
               <h3 className="settings-block-title">Delete account</h3>

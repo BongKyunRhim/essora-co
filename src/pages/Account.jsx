@@ -649,6 +649,30 @@ export default function Account() {
               </form>
             </div>
 
+            {/* Payment protection policy */}
+            <div className="settings-block">
+              <h3 className="settings-block-title">Your payment protection</h3>
+              <ul className="settings-policy">
+                <li>
+                  <strong>Secure payments via Stripe.</strong> Your card details
+                  are handled entirely by Stripe and never touch ESSORA&apos;s
+                  servers.
+                </li>
+                <li>
+                  <strong>3-day delivery guarantee.</strong> Every review must
+                  be completed within 3 days of your payment. If it
+                  isn&apos;t, the submission expires and your full payment —
+                  including the processing fee — is refunded to your card
+                  automatically. No need to ask.
+                </li>
+                <li>
+                  <strong>Something else wrong?</strong> If a delivered review
+                  doesn&apos;t meet our standards, contact us and we&apos;ll
+                  make it right.
+                </li>
+              </ul>
+            </div>
+
             {/* Danger zone */}
             <div className="settings-block settings-block--danger">
               <h3 className="settings-block-title">Delete account</h3>
