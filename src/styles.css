@@ -4331,7 +4331,7 @@ button:disabled {
   }
 
   .app-main {
-    padding: 1.5rem 0.75rem;
+    padding: 1.5rem 1rem;
   }
 
   .app-main:has(.auth-card) {
@@ -4885,6 +4885,17 @@ button:disabled {
   .notif-page,
   .submission-status-page {
     width: 100%;
+  }
+
+  /* These pages suppress .app-main's padding via :has() rules, and the
+     shared-column rules above zero out their own side padding — which left
+     their content flush against the screen edge on small screens. Restore
+     a comfortable gutter here, where it wins the cascade. */
+  .reviewer-detail,
+  .request-review-page,
+  .request-detail-page {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 
