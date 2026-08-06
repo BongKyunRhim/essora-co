@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { supabase, isSupabaseConfigured } from "../lib/supabase.js";
 import AuthCard from "../components/AuthCard.jsx";
 
@@ -13,6 +13,7 @@ export default function SignUp() {
     role: "",
     schoolEmail: "",
   });
+  const [agreed, setAgreed] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -52,6 +53,9 @@ export default function SignUp() {
     }
     if (form.role === "reviewer" && form.schoolEmail && !form.schoolEmail.toLowerCase().endsWith(".edu")) {
       errs.schoolEmail = "Must be a valid .edu address.";
+    }
+    if (!agreed) {
+      errs.agree = "You must agree to the Terms of Service and Privacy Policy.";
     }
     if (Object.keys(errs).length) {
       setFieldErrors(errs);
@@ -172,6 +176,27 @@ export default function SignUp() {
             {fieldErrors.schoolEmail && <span className="field-error-msg">{fieldErrors.schoolEmail}</span>}
           </label>
         )}
+
+        <div className={`field${fieldErrors.agree ? " field--error" : ""}`}>
+          <label className="agree-row">
+            <input
+              type="checkbox"
+              checked={agreed}
+              onChange={(e) => {
+                setAgreed(e.target.checked);
+                if (fieldErrors.agree) setFieldErrors((prev) => ({ ...prev, agree: "" }));
+              }}
+            />
+            <span>
+              I agree to the{" "}
+              <Link to="/terms" target="_blank">Terms of Service</Link> and{" "}
+              <Link to="/privacy" target="_blank">Privacy Policy</Link>. If I am
+              under 18, I confirm a parent or guardian consents to my use of
+              ESSORA.
+            </span>
+          </label>
+          {fieldErrors.agree && <span className="field-error-msg">{fieldErrors.agree}</span>}
+        </div>
 
         <button type="submit" disabled={busy}>
           {busy ? "Creating…" : "Create account"}
