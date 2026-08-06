@@ -4534,14 +4534,84 @@ button:disabled {
   }
 
   /* Request pages: narrow padding + correct divider bleed */
-  .request-review-page { padding: 0 1.25rem 3rem; }
+  .request-review-page { padding: 0 1rem 3rem; }
 
-  .request-detail-page { padding: 1rem 1.25rem 3rem; }
+  .request-detail-page { padding: 1rem 1rem 3rem; }
   .rdp-divider { margin-top: 2rem; margin-bottom: 2rem; }
 
   .rdp-header {
     flex-wrap: wrap;
     gap: 1rem;
+  }
+
+  /* Info cards slim down and sit closer together */
+  .rdp-section,
+  .rw-applicant-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .rdp-body { gap: 1rem; }
+
+  .rw-suggestions { padding: 1rem; }
+
+  /* Submit Your Essay: back link flows above the title instead of
+     absolutely overlapping it */
+  .rrl-page-header {
+    margin-top: 1.25rem;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .rrl-page-header .back-link {
+    position: static;
+    display: block;
+    text-align: left;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Reviewer profile: header stacks and centers */
+  .reviewer-detail .rdl-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .reviewer-detail .rdl-header .avatar {
+    width: 110px !important;
+    height: 110px !important;
+  }
+
+  .rdl-meta-row { justify-content: center; }
+
+  .rdl-request-btn { width: 100%; }
+
+  .rdl-not-accepting {
+    width: 100%;
+    text-align: center;
+    white-space: normal;
+  }
+
+  /* Submission status card hugs the screen */
+  .ss-card { padding: 1.5rem 1rem; }
+
+  /* Reviewer cards grid breathes on small screens */
+  .cards { gap: 0.75rem; }
+  .find-reviewers-main { padding: 0 1rem; }
+
+  /* Static pages: tighter title block */
+  .static-header {
+    margin-top: 0;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Footer: slimmer, centered links */
+  .app-footer { padding: 2rem 1.25rem; }
+
+  .footer-links {
+    justify-content: center;
+    gap: 1.25rem;
   }
 
   .rrl-submit-btn { width: 100%; }
