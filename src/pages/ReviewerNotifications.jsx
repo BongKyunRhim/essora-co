@@ -9,14 +9,25 @@ const STATUS_LABEL = {
   accepted: "To review",
   declined: "Declined",
   completed: "Completed",
+  expired: "Expired",
 };
 
-const DISMISSIBLE = new Set(["completed", "declined"]);
+const DISMISSIBLE = new Set(["completed", "declined", "expired"]);
+
+const REVIEW_DEADLINE_DAYS = 3;
 
 function getItemMod(status) {
   if (status === "completed") return "done";
-  if (status === "declined") return "declined";
+  if (status === "declined" || status === "expired") return "declined";
   return "review";
+}
+
+function dueText(r) {
+  const paid = new Date(r.paid_at ?? r.created_at).getTime();
+  const daysLeft = Math.ceil((paid + REVIEW_DEADLINE_DAYS * 86400000 - Date.now()) / 86400000);
+  if (daysLeft <= 0) return "Due now";
+  if (daysLeft === 1) return "Due today";
+  return `Due in ${daysLeft} days`;
 }
 
 function relativeTime(dateStr) {
@@ -95,7 +106,12 @@ export default function ReviewerNotifications() {
                     {r.essay_type && (
                       <p className="notif-sub">{r.essay_type.replace(/_/g, " ")}</p>
                     )}
-                    <p className="notif-date">{relativeTime(r.created_at)}</p>
+                    <p className="notif-date">
+                      {relativeTime(r.created_at)}
+                      {(r.status === "pending" || r.status === "accepted") && (
+                        <span className="notif-due"> · {dueText(r)}</span>
+                      )}
+                    </p>
                   </div>
                   <span className={`notif-badge notif-badge--${mod}`}>
                     {STATUS_LABEL[r.status] ?? r.status}

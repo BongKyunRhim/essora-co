@@ -2978,6 +2978,11 @@ button:disabled {
   white-space: pre-wrap;
 }
 
+.notif-due {
+  color: #b45309;
+  font-weight: 600;
+}
+
 .rw-suggestion-short {
   font-size: 0.78rem;
   color: var(--danger);

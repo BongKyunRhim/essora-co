@@ -88,8 +88,11 @@ export default function Terms() {
       <h2>4. Refunds and buyer protection</h2>
       <ul>
         <li>
-          If a review is never delivered, the Applicant is entitled to a full
-          refund, including the reversal of the Reviewer&apos;s share.
+          <strong>3-day delivery guarantee:</strong> if a Reviewer does not
+          complete a review within 3 days of payment, the submission expires
+          automatically and the Applicant receives a full refund — including
+          the processing fee — with the Reviewer&apos;s share reversed. No
+          action is needed from the Applicant.
         </li>
         <li>
           If a delivered review clearly fails to meet the Service&apos;s

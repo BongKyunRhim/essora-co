@@ -9,18 +9,19 @@ const STATUS_LABEL = {
   accepted: "In review",
   declined: "Declined",
   completed: "Feedback ready",
+  expired: "Expired — refunded",
 };
 
-const DISMISSIBLE = new Set(["completed", "declined"]);
+const DISMISSIBLE = new Set(["completed", "declined", "expired"]);
 
 function getItemMod(status, isNew) {
-  if (status === "declined") return "declined";
+  if (status === "declined" || status === "expired") return "declined";
   if (status === "completed") return isNew ? "new" : "done";
   return "review";
 }
 
 function getBadgeMod(status) {
-  if (status === "declined") return "declined";
+  if (status === "declined" || status === "expired") return "declined";
   if (status === "completed") return "done";
   return "review";
 }

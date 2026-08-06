@@ -51,6 +51,9 @@ async function emailReviewer(supabase, { request_id, reviewer_id, applicant_id }
           <p><strong>${applicantName}</strong> just submitted their essay
           (${essayType}) and is waiting on your feedback. Payment is complete —
           your share is already on its way to your account.</p>
+          <p><strong>Please complete your review within 3 days.</strong> If it
+          isn't finished by then, the submission expires and the payment is
+          automatically refunded, including your share.</p>
           <p style="margin: 28px 0;">
             <a href="${link}"
                style="background: #1e3355; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600;">
@@ -116,7 +119,7 @@ export default async function handler(req, res) {
     // payment itself, so the payout is settled the moment the charge succeeds.
     await supabase
       .from("requests")
-      .update({ payment_status: "paid", payout_status: "paid" })
+      .update({ payment_status: "paid", payout_status: "paid", paid_at: new Date().toISOString() })
       .eq("id", request_id);
 
     try {

@@ -16,6 +16,7 @@ const STATUS_LABEL = {
   accepted:  "In review",
   declined:  "Declined",
   completed: "Feedback ready",
+  expired:   "Expired — refunded",
 };
 
 const STATUS_CLASS = {
@@ -23,6 +24,7 @@ const STATUS_CLASS = {
   accepted:  "pending",
   declined:  "declined",
   completed: "accepted",
+  expired:   "declined",
 };
 
 export default function SubmissionStatus() {
@@ -97,6 +99,12 @@ export default function SubmissionStatus() {
         <div className="ss-status-message">
           {req.status === "declined" ? (
             <p>This submission was declined by the reviewer.</p>
+          ) : req.status === "expired" ? (
+            <p>
+              Your reviewer didn&apos;t complete this review within 3 days, so
+              your full payment was automatically refunded.{" "}
+              <Link to="/applicant">Find another reviewer →</Link>
+            </p>
           ) : req.status === "completed" ? (
             <p>Your feedback is ready. <Link to={`/feedback/${req.id}`}>View feedback →</Link></p>
           ) : (
