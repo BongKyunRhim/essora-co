@@ -20,6 +20,10 @@ import RequestDetail from "../pages/RequestDetail.jsx";
 import PaymentSuccess from "../pages/PaymentSuccess.jsx";
 import SubmissionStatus from "../pages/SubmissionStatus.jsx";
 import Landing from "../pages/Landing.jsx";
+import About from "../pages/About.jsx";
+import Contact from "../pages/Contact.jsx";
+import Terms from "../pages/Terms.jsx";
+import Privacy from "../pages/Privacy.jsx";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -224,16 +228,20 @@ export default function App() {
           <Route path="/feedback/:id" element={<ProtectedRoute><ApplicantFeedback /></ProtectedRoute>} />
           <Route path="/submissions/:id" element={<ProtectedRoute><SubmissionStatus /></ProtectedRoute>} />
           <Route path="/payment-success" element={<ProtectedRoute><PaymentSuccess /></ProtectedRoute>} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </main>
 
       <footer className="app-footer">
         <div className="footer-links">
-          <a href="#">About</a>
-          <a href="#">Contact</a>
-          <a href="#">Terms</a>
-          <a href="#">Privacy</a>
+          <Link to="/about">About</Link>
+          <Link to="/contact">Contact</Link>
+          <Link to="/terms">Terms</Link>
+          <Link to="/privacy">Privacy</Link>
         </div>
       </footer>
 

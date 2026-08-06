@@ -361,6 +361,70 @@ a {
   padding: 3rem 2rem;
 }
 
+/* ---- Static pages (About, Contact, Terms, Privacy) ---- */
+.static-page {
+  width: 100%;
+  max-width: 760px;
+}
+
+.static-header {
+  text-align: center;
+  margin-top: -0.5rem;
+  padding-bottom: 2.25rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 2.25rem;
+}
+
+.static-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4.5vw, 2rem);
+  font-weight: 700;
+  margin: 0;
+}
+
+.static-updated {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0.5rem 0 0;
+}
+
+.static-page h2 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 2.25rem 0 0.75rem;
+}
+
+.static-page p {
+  font-size: 0.97rem;
+  color: var(--ink-soft);
+  line-height: 1.75;
+  margin: 0 0 1rem;
+}
+
+.static-page ul {
+  margin: 0 0 1rem;
+  padding-left: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.static-page li {
+  font-size: 0.97rem;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
+.static-page a {
+  color: var(--navy);
+  font-weight: 500;
+}
+
+.static-contact-email {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
 /* Landing page: hero fills behind transparent nav */
 .app-main:has(.landing) {
   margin-top: 0;
