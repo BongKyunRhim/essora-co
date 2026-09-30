@@ -88,7 +88,7 @@ export default function SignUp() {
 
   return (
     <AuthCard>
-      <p className="auth-intro">Create your account.</p>
+      <p className="auth-intro">Let&apos;s get you set up!</p>
 
       {error && <p className="error">{error}</p>}
       {notice && <p className="notice">{notice}</p>}

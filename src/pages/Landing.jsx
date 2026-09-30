@@ -12,7 +12,7 @@ const STEPS = [
   {
     num: "01",
     title: "Find a Reviewer",
-    desc: "Filter and search a verified college student with recent admissions experience.",
+    desc: "Browse real college students who just went through admissions, and pick the one who feels right for you.",
     icon: <SearchIcon />,
     color: "#1e3355",
     tint: "#e8edf5",
@@ -20,15 +20,15 @@ const STEPS = [
   {
     num: "02",
     title: "Upload Your Essay",
-    desc: "Paste or upload a draft and pick the essay type (Common App, supplemental, or scholarship).",
+    desc: "Paste or upload your draft and tell us what kind of essay it is — Common App, supplemental, or scholarship.",
     icon: <UploadIcon />,
     color: "#8fa6c6",
     tint: "#f1f3f7",
   },
   {
     num: "03",
-    title: "Receive Feedback",
-    desc: "Receive detailed scores and personalized feedback from a reviewer.",
+    title: "Get Your Feedback",
+    desc: "Your reviewer reads every line and sends back honest suggestions, scores, and advice written just for you.",
     icon: <FeedbackIcon />,
     color: "#1e3355",
     tint: "#e8edf5",
@@ -36,7 +36,7 @@ const STEPS = [
   {
     num: "04",
     title: "Improve & Rate",
-    desc: "Use the feedback to revise and rate the reviewer to build trust in the community.",
+    desc: "Use what you learned to make your essay shine — then rate your reviewer to help other students find them.",
     icon: <StarIcon />,
     color: "#8fa6c6",
     tint: "#f1f3f7",
@@ -56,12 +56,13 @@ export default function Landing() {
             <span className="accent">who just got in.</span>
           </h1>
           <p className="lead">
-            Get personalized feedback from verified college students — affordable, authentic, and powered by real human insight.
+            Real feedback from college students who were in your shoes a year
+            ago — honest, personal, and way more affordable than a consultant.
           </p>
           {!user && (
             <div className="hero-buttons">
               <Link className="btn" to="/signup">
-                Improve your essay
+                Improve my essay
               </Link>
               <Link className="btn" to="/signup">
                 Become a reviewer

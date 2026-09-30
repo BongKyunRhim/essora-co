@@ -101,14 +101,15 @@ export default function SubmissionStatus() {
             <p>This submission was declined by the reviewer.</p>
           ) : req.status === "expired" ? (
             <p>
-              Your reviewer didn&apos;t complete this review within 3 days, so
-              your full payment was automatically refunded.{" "}
+              Your reviewer didn&apos;t finish this review within 3 days, so we
+              refunded your full payment automatically — no need to do
+              anything.{" "}
               <Link to="/applicant">Find another reviewer →</Link>
             </p>
           ) : req.status === "completed" ? (
-            <p>Your feedback is ready. <Link to={`/feedback/${req.id}`}>View feedback →</Link></p>
+            <p>Great news — your feedback is ready! <Link to={`/feedback/${req.id}`}>Read it now →</Link></p>
           ) : (
-            <p>Your essay is currently being reviewed. You'll be notified here when feedback is ready.</p>
+            <p>Your essay is with your reviewer right now. Your feedback will show up right here — check back soon!</p>
           )}
         </div>
 

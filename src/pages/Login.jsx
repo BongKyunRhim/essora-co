@@ -51,7 +51,7 @@ export default function Login() {
 
   return (
     <AuthCard>
-      <p className="auth-intro">Welcome back.</p>
+      <p className="auth-intro">Welcome back!</p>
 
       {error && <p className="error">{error}</p>}
 

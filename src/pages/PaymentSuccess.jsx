@@ -45,10 +45,10 @@ export default function PaymentSuccess() {
       ) : (
         <div className="ps-box">
           <div className="ps-check" aria-hidden="true">✓</div>
-          <h1 className="ps-title">Payment confirmed!</h1>
+          <h1 className="ps-title">You&apos;re all set!</h1>
           <p className="ps-msg">
-            Your essay has been submitted. You'll get a notification here as
-            soon as your reviewer completes their feedback.
+            Your essay is on its way to your reviewer. As soon as your
+            feedback is ready, it&apos;ll show up right here — keep an eye out!
           </p>
           <Link to="/notifications" className="ps-link">Go to my essays →</Link>
         </div>

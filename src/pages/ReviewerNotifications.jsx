@@ -87,7 +87,7 @@ export default function ReviewerNotifications() {
 
       {items.length === 0 ? (
         <div className="notif-empty">
-          <p>No submissions yet. Check back once applicants request reviews.</p>
+          <p>No essays yet — when an applicant picks you, their essay will show up right here.</p>
         </div>
       ) : (
         <ul className="notif-list">

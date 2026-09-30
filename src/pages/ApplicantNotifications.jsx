@@ -84,8 +84,9 @@ export default function ApplicantNotifications() {
       {items.length === 0 ? (
         <div className="notif-empty">
           <p>
-            No submissions yet.{" "}
-            <Link to="/applicant">Find a reviewer</Link> to get started.
+            Nothing here yet! Once you send your essay to a reviewer,
+            you&apos;ll see it here.{" "}
+            <Link to="/applicant">Find your reviewer</Link> to get started.
           </p>
         </div>
       ) : (

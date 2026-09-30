@@ -196,7 +196,7 @@ export default function RequestReview() {
                 rows={14}
                 value={essayText}
                 onChange={(e) => setEssayText(e.target.value)}
-                placeholder="Paste the full text of your essay here…"
+                placeholder="Paste your whole essay here — only your reviewer will see it."
               />
             </div>
 
@@ -258,7 +258,7 @@ export default function RequestReview() {
                 maxLength={600}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="e.g. Does my story feel authentic? Is the structure clear? Are there any sections that feel weak or unclear?"
+                placeholder="e.g. Does my story sound like me? Is the beginning interesting? Which parts feel confusing?"
               />
             </div>
           </div>
@@ -290,8 +290,9 @@ export default function RequestReview() {
               <span>${fmt(totalCents)}</span>
             </div>
             <p className="rrl-price-note">
-              Charged once via Stripe. Your essay will be visible to{" "}
-              {reviewer.full_name || "the reviewer"} immediately after payment.
+              You only pay once, securely through Stripe. The moment
+              you&apos;re done, {reviewer.full_name || "your reviewer"} can
+              start reading your essay.
             </p>
             <div className="rrl-price-divider" />
             <p className="rrl-price-secure">
