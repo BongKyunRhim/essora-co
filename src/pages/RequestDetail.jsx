@@ -210,45 +210,40 @@ export default function RequestDetail() {
         </span>
       </div>
 
-      {/* Applicant profile details */}
-      {(applicant?.bio || applicant?.intended_major || applicant?.dream_schools) && (
-        <div className="rw-applicant-card">
-          <h2 className="rdp-section-label">About the Applicant</h2>
-          {applicant?.bio && <p className="rw-applicant-bio">{applicant.bio}</p>}
-          <div className="rw-applicant-meta">
-            {applicant?.intended_major && (
-              <div className="rdp-meta-row">
-                <span className="rdp-meta-key">Intended major</span>
-                <span className="rdp-meta-val">{applicant.intended_major}</span>
-              </div>
-            )}
-            {applicant?.dream_schools && (
-              <div className="rdp-meta-row">
-                <span className="rdp-meta-key">College list</span>
-                <span className="rdp-meta-val">{applicant.dream_schools}</span>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
+      {/* Submission details — one compact card */}
       <div className="rdp-body">
-
-        {/* Essay meta */}
         <div className="rdp-section">
-          <h2 className="rdp-section-label">Essay</h2>
+          <h2 className="rdp-section-label">Submission Details</h2>
           {request.essay_type && (
             <div className="rdp-meta-row">
-              <span className="rdp-meta-key">Type</span>
+              <span className="rdp-meta-key">Essay type</span>
               <span className="rdp-meta-val">
                 {ESSAY_TYPE_LABELS[request.essay_type] ?? request.essay_type}
               </span>
             </div>
           )}
-          {request.essay_name && (
+          {applicant?.intended_major && (
             <div className="rdp-meta-row">
-              <span className="rdp-meta-key">File</span>
-              <span className="rdp-meta-val">{request.essay_name}</span>
+              <span className="rdp-meta-key">Intended major</span>
+              <span className="rdp-meta-val">{applicant.intended_major}</span>
+            </div>
+          )}
+          {applicant?.dream_schools && (
+            <div className="rdp-meta-row">
+              <span className="rdp-meta-key">College list</span>
+              <span className="rdp-meta-val">{applicant.dream_schools}</span>
+            </div>
+          )}
+          {applicant?.bio && (
+            <div className="rdp-meta-row">
+              <span className="rdp-meta-key">About</span>
+              <span className="rdp-meta-val">{applicant.bio}</span>
+            </div>
+          )}
+          {request.notes && (
+            <div className="rdp-meta-row">
+              <span className="rdp-meta-key">Focus on</span>
+              <span className="rdp-meta-val">{request.notes}</span>
             </div>
           )}
           {request.essay_url && (
@@ -262,14 +257,6 @@ export default function RequestDetail() {
             </a>
           )}
         </div>
-
-        {/* Notes from applicant */}
-        {request.notes && (
-          <div className="rdp-section">
-            <h2 className="rdp-section-label">Message from Applicant</h2>
-            <p className="rdp-notes">{request.notes}</p>
-          </div>
-        )}
 
       </div>
 
